@@ -1,11 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\eng\pkg.props"/>
 	<PropertyGroup>
-		<TargetFrameworks>netstandard1.0;net4.0</TargetFrameworks>
+		<TargetFrameworks>netstandard1.0;</TargetFrameworks>
 	</PropertyGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net4.0'">
-		<PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
-	</ItemGroup>
 
 </Project>

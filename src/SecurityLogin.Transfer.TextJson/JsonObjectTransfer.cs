@@ -9,7 +9,7 @@ namespace SecurityLogin.Transfer.TextJson
     {
         public JsonObjectTransfer(JsonSerializerOptions options, Encoding encoding)
         {
-            Options = options ?? throw new ArgumentNullException(nameof(options));
+            Options = options;
             Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
         }
 

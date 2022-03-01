@@ -19,7 +19,7 @@ namespace SecurityLogin.AspNetCore.Controllers
         public async Task<IActionResult> FlushKey()
         {
             var res = await loginService.FlushRSAKeyAsync();
-            return Ok(res);
+            return Ok(new { res .Identity, res .PublicKey});
         }
         [HttpGet("[action]")]
         public async Task<IActionResult> Regist(string connectId,string userName,string password)

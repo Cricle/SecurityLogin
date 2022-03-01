@@ -42,9 +42,7 @@ builder.Services.AddSingleton<IDistributedLockFactory>(new RedLockFactory(new Re
 {
     new RedLockEndPoint(new DnsEndPoint("127.0.0.1",6379))
 })));
-builder.Services.AddSingleton<ILockerFactory>(x => new RedisLockFactory(x.GetRequiredService<IDistributedLockFactory>()));
-builder.Services.AddSingleton<IObjectTransfer>(new JsonObjectTransfer(new JsonSerializerOptions(), Encoding.UTF8));
-builder.Services.AddSingleton<ICacheVisitor>(x=>new RedisCacheVisitor(x.GetRequiredService<IConnectionMultiplexer>().GetDatabase(),x.GetRequiredService<IObjectTransfer>()));
+builder.Services.AddNormalSecurityService();
 builder.Services.AddTransient<LoginService>();
 
 var app = builder.Build();

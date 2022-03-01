@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using SecurityLogin.Mode.AES;
 using SecurityLogin.Mode.RSA;
 using SecurityLogin.Mode.RSA.Helpers;
 using System;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.AspNetCore.Services
 {
-    public class LoginService : RSALoginService<AsymmetricFullKey>
+    public class LoginService : RSALoginService
     {
         public static readonly string HeaderKey = "SecurityLogin.AspNetCore.Services.LoginService";
         public static readonly string SharedIdentityKey = "SecurityLogin.AspNetCore.Services.LoginService.SharedIdentity";
@@ -21,26 +22,7 @@ namespace SecurityLogin.AspNetCore.Services
         {
             UserManager = userManager;
         }
-
-        protected override AsymmetricFullKey GetFullKey()
-        {
-            return RSAHelper.GenerateRSASecretKey();
-        }
-
-        protected override string GetHeader()
-        {
-            return HeaderKey;
-        }
-
-        protected override string GetSharedIdentityKey()
-        {
-            return SharedIdentityKey;
-        }
-
-        protected override string GetSharedLockKey()
-        {
-            return SharedLockKey;
-        }
+        
         public async Task<bool> RegistAsync(string connectId, string userName, string passwordHash)
         {
             try

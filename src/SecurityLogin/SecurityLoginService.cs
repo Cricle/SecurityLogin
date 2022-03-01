@@ -8,7 +8,7 @@ namespace SecurityLogin
     public abstract class SecurityLoginService<TFullKey>
         where TFullKey : IIdentityable
     {
-        public static readonly TimeSpan DefaultKeyCacheTime = TimeSpan.FromMinutes(3);
+        public static readonly TimeSpan DefaultKeyCacheTime = TimeSpan.FromHours(1);
         public static readonly TimeSpan DefaultLockerWaitTime = TimeSpan.FromSeconds(10);
 
         protected SecurityLoginService(ILockerFactory lockerFactory, ICacheVisitor cacheVisitor)
@@ -20,9 +20,7 @@ namespace SecurityLogin
         public ILockerFactory LockerFactory { get; }
         public ICacheVisitor CacheVisitor { get; }
 
-        protected abstract SecurityKeyIdentity Transfer(TFullKey fullKey);
-
-        public async Task<SecurityKeyIdentity> FlushRSAKeyAsync()
+        public async Task<TFullKey> FlushRSAKeyAsync()
         {
             var header = GetHeader();
             if (IsShared())
@@ -35,34 +33,33 @@ namespace SecurityLogin
                     var val = await CacheVisitor.GetAsync<TFullKey>(redisKey);
                     if (val != null)
                     {
-                        return Transfer(val);
+                        return val;
                     }
                 }
                 using (var locker = LockerFactory.CreateLock(GetSharedLockKey(), GetLockWaitTime()))
                 {
-
                     if (locker.IsAcquired)
                     {
-                        var rsaIdentity = GetFullKey();
-                        await CacheVisitor.SetStringAsync(identityKey, rsaIdentity.Identity, GetCacheTime());
-                        await SetRSAIdentityAsync(header, rsaIdentity);
-                        return Transfer(rsaIdentity);
+                        var fullKey = GetFullKey();
+                        await CacheVisitor.SetStringAsync(identityKey, fullKey.Identity, GetKeyCacheTime());
+                        await SetRSAIdentityAsync(header, fullKey);
+                        return fullKey;
                     }
                 }
-                return null;
+                return default;
             }
             else
             {
-                var rsaIdentity = GetFullKey();
-                await SetRSAIdentityAsync(header, rsaIdentity);
-                return Transfer(rsaIdentity);
+                var fullKey = GetFullKey();
+                await SetRSAIdentityAsync(header, fullKey);
+                return fullKey;
             }
         }
         protected virtual bool IsShared()
         {
             return true;
         }
-        protected virtual TimeSpan GetCacheTime()
+        protected virtual TimeSpan GetKeyCacheTime()
         {
             return DefaultKeyCacheTime;
         }
@@ -73,7 +70,7 @@ namespace SecurityLogin
         private Task SetRSAIdentityAsync(string header, TFullKey fullKey)
         {
             var redisKey = KeyGenerator.Concat(header, fullKey.Identity);
-            return CacheVisitor.SetAsync(redisKey, fullKey, GetCacheTime());
+            return CacheVisitor.SetAsync(redisKey, fullKey, GetKeyCacheTime());
         }
         protected Task<TFullKey> GetFullKeyAsync(string header, string connectId)
         {
@@ -87,9 +84,33 @@ namespace SecurityLogin
             return CacheVisitor.DeleteAsync(key);
         }
         protected abstract TFullKey GetFullKey();
-        protected abstract string GetHeader();
-        protected abstract string GetSharedIdentityKey();
-        protected abstract string GetSharedLockKey();
+        protected virtual string GetHeader()
+        {
+            return GetType().FullName;
+        }
+        protected virtual string GetSharedIdentityKey()
+        {
+            return GetHeader()+".Identity";            
+        }
+        protected virtual string GetSharedLockKey()
+        {
+            return "Lock."+GetHeader() + ".Shared";
+        }
+        public async Task<string> DecryptAsync(string connectId, string textHash,IEncryptor<TFullKey> encrypter)
+        {
+            if (encrypter is null)
+            {
+                throw new ArgumentNullException(nameof(encrypter));
+            }
 
+            var header = GetHeader();
+            var fullKey = await GetFullKeyAsync(header, connectId);
+            if (fullKey == null)
+            {
+                return null;
+            }
+            var strx= encrypter.EncryptToString(fullKey, "hello");
+            return encrypter.DecryptToString(fullKey, textHash);
+        }
     }
 }

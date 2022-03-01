@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin
 {
-    public abstract class AsymmetricLoginService<TFullKey> : SecurityLoginService<TFullKey>
+    public abstract class AsymmetricLoginService<TFullKey> : SecurityLoginService<TFullKey>, IEncryptable<TFullKey>
            where TFullKey : AsymmetricFullKey
     {
         public IEncryptor<TFullKey> Encryptor { get; }
@@ -15,19 +15,9 @@ namespace SecurityLogin
         {
             Encryptor = encryptor ?? throw new ArgumentNullException(nameof(encryptor));
         }
-        protected override SecurityKeyIdentity Transfer(TFullKey fullKey)
+        public Task<string> DecryptAsync(string connectId, string textHash)
         {
-            return new SecurityKeyIdentity(fullKey.Identity,fullKey.PublicKey);
-        }
-        protected async Task<string> DecryptAsync(string connectId, string textHash)
-        {
-            var header = GetHeader();
-            var fullKey= await GetFullKeyAsync(header, connectId);
-            if (fullKey is null)
-            {
-                return null;
-            }
-            return Encryptor.DecryptToString(fullKey, textHash);
+            return DecryptAsync(connectId, textHash, Encryptor);
         }
     }
 }

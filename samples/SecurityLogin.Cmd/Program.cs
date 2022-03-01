@@ -20,7 +20,7 @@ namespace SecurityLogin.Cmd
             var ser = new MyLoginService(fc, cv);
             var res = await ser.FlushRSAKeyAsync();
 
-            Console.WriteLine(res.Key);
+            Console.WriteLine(res.PublicKey);
             Console.WriteLine();
 
             var d=Console.ReadLine();
