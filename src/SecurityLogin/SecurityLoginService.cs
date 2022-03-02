@@ -20,7 +20,7 @@ namespace SecurityLogin
         public ILockerFactory LockerFactory { get; }
         public ICacheVisitor CacheVisitor { get; }
 
-        public async Task<TFullKey> FlushRSAKeyAsync()
+        public async Task<TFullKey> FlushKeyAsync()
         {
             var header = GetHeader();
             if (IsShared())

@@ -18,7 +18,7 @@ namespace SecurityLogin.Cmd
             var cv = new MemoryCacheVisitor(cache);
             var fc = new MemoryLockFactory();
             var ser = new MyLoginService(fc, cv);
-            var res = await ser.FlushRSAKeyAsync();
+            var res = await ser.FlushKeyAsync();
 
             Console.WriteLine(res.PublicKey);
             Console.WriteLine();
