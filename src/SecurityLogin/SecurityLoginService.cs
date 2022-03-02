@@ -109,7 +109,6 @@ namespace SecurityLogin
             {
                 return null;
             }
-            var strx= encrypter.EncryptToString(fullKey, "hello");
             return encrypter.DecryptToString(fullKey, textHash);
         }
     }
