@@ -38,12 +38,15 @@ builder.Services.AddDbContext<AppDbContext>(x=>x.UseSqlite("Data Source=app.db")
     .AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddStackExchangeRedisCache(x => x.Configuration = "127.0.0.1:6379");
 builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("127.0.0.1:6379"));
+builder.Services.AddSingleton<IDatabase>(x=>x.GetRequiredService<IConnectionMultiplexer>().GetDatabase());
 builder.Services.AddSingleton<IDistributedLockFactory>(new RedLockFactory(new RedLockConfiguration(new RedLockEndPoint[]
 {
     new RedLockEndPoint(new DnsEndPoint("127.0.0.1",6379))
 })));
 builder.Services.AddNormalSecurityService();
-builder.Services.AddTransient<LoginService>();
+builder.Services.AddScoped<LoginService>();
+builder.Services.AddScoped<StudentCacheFinder>();
+builder.Services.AddScoped<StudentIdCacheFinder>();
 
 var app = builder.Build();
 

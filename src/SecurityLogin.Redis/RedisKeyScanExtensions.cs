@@ -8,18 +8,17 @@ namespace StackExchange.Redis
     {
         public const int DefaultPageSize = 200;
 
-        public static Task<int> DeleteScanKeysAsync(this IDatabase database, string pattern)
+        public static Task<long> DeleteScanKeysAsync(this IDatabase database, string pattern)
         {
             return DeleteScanKeysAsync(database, pattern, DefaultPageSize);
         }
-        public static async Task<int> DeleteScanKeysAsync(this IDatabase database, string pattern, int pageSize)
+        public static async Task<long> DeleteScanKeysAsync(this IDatabase database, string pattern, int pageSize)
         {
-            var count = 0;
+            var count = 0L;
             await foreach (var item in ScanKeys(database, pattern, pageSize))
             {
                 var keys = AsRedisKey(item);
-                count += keys.Length;
-                await database.KeyDeleteAsync(keys);
+                count += await database.KeyDeleteAsync(keys);
             }
             return count;
         }

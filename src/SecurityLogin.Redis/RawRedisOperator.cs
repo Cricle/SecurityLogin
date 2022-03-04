@@ -1,11 +1,24 @@
 ﻿using SecurityLogin.Redis.Converters;
 using StackExchange.Redis;
 using System;
+using System.Collections.Generic;
 
 namespace SecurityLogin.Redis
 {
     public class RawRedisOperator : IRedisOperator
     {
+        private static readonly Dictionary<Type, RawRedisOperator> defaultRedisOpCache = new Dictionary<Type, RawRedisOperator>();
+
+        public static RawRedisOperator GetRedisOperator(Type type)
+        {
+            if (!defaultRedisOpCache.TryGetValue(type, out var @operator))
+            {
+                @operator = new RawRedisOperator(type);
+                defaultRedisOpCache[type] = @operator;
+                @operator.Build();
+            }
+            return @operator;
+        }
         public static readonly RedisValue defaultName = new RedisValue("Default");
 
         private IRedisValueConverter converter;

@@ -11,8 +11,8 @@ namespace SecurityLogin.Redis
 {
     public static class RedisColumnHelper
     {
-        public static readonly Dictionary<Type, IReadOnlyList<IRedisColumn>> redisColumnMap = new Dictionary<Type, IReadOnlyList<IRedisColumn>>();
-        public static readonly Dictionary<Type, IReadOnlyDictionary<string, IRedisColumn>> redisColumnMapMap = new Dictionary<Type, IReadOnlyDictionary<string, IRedisColumn>>();
+        private static readonly Dictionary<Type, IReadOnlyList<IRedisColumn>> redisColumnMap = new Dictionary<Type, IReadOnlyList<IRedisColumn>>();
+        private static readonly Dictionary<Type, IReadOnlyDictionary<string, IRedisColumn>> redisColumnMapMap = new Dictionary<Type, IReadOnlyDictionary<string, IRedisColumn>>();
 
         public static IReadOnlyDictionary<string, IRedisColumn> GetRedisColumnMap(Type type)
         {
@@ -26,7 +26,7 @@ namespace SecurityLogin.Redis
         }
         public static IReadOnlyList<IRedisColumn> GetRedisColumns(Type type)
         {
-            if (type.IsValueType || type == typeof(string))
+            if (type.IsPrimitive || type == typeof(string))
             {
                 throw new ArgumentException($"Type {type} can't parse!");
             }

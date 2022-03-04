@@ -21,7 +21,7 @@ namespace SecurityLogin.Redis.Converters
 
         public object ConvertBack(in RedisValue value, IRedisColumn column)
         {
-            if (value.HasValue)
+            if (!value.HasValue)
             {
                 return RedisValueConverterConst.DoNothing;
             }
