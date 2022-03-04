@@ -10,12 +10,37 @@ namespace SecurityLogin.Redis.Converters
 
         public RedisValue Convert(object instance, object value, IRedisColumn column)
         {
-            return (string)value;
+            return (double)value;
         }
 
         public object ConvertBack(in RedisValue value, IRedisColumn column)
         {
-            return value.ToString();
+            if (!value.HasValue)
+            {
+                return RedisValueConverterConst.DoNothing;
+            }
+            return (double)value;
+        }
+    }
+
+    public class CharRedisValueConverter : IRedisValueConverter
+    {
+        public static readonly CharRedisValueConverter Instance = new CharRedisValueConverter();
+
+        private CharRedisValueConverter() { }
+
+        public RedisValue Convert(object instance, object value, IRedisColumn column)
+        {
+            return (long)(char)value;
+        }
+
+        public object ConvertBack(in RedisValue value, IRedisColumn column)
+        {
+            if (!value.HasValue)
+            {
+                return RedisValueConverterConst.DoNothing;
+            }
+            return (char)(long)value;
         }
     }
 }

@@ -28,12 +28,14 @@ namespace StackExchange.Redis
         }
         public static async IAsyncEnumerable<string[]> ScanKeys(this IDatabase database, string pattern, int pageSize)
         {
-            var count = 0;
+            var count = 0L;
             do
             {
-                var res = await database.ExecuteAsync($"scan {count} match {pattern} count {pageSize}");
-                yield return ((string[])res);
-            } while (count == 0);
+                var res = await database.ExecuteAsync("scan", count, "match", pattern, "count", pageSize);
+                var f = ((RedisResult[])res);
+                count = ((long)f[0]);
+                yield return ((string[])f[1]);
+            } while (count != 0);
         }
         private static RedisKey[] AsRedisKey(string[] keys)
         {

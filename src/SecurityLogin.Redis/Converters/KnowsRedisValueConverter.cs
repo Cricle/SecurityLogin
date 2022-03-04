@@ -23,6 +23,38 @@ namespace SecurityLogin.Redis.Converters
             }
             if (type.IsValueType)
             {
+                if (type.IsEquivalentTo(typeof(char)))
+                {
+                    return CharRedisValueConverter.Instance;
+                }
+                if (type.IsEquivalentTo(typeof(char?)))
+                {
+                    return NullableCharRedisValueConverter.Instance;
+                }
+                if (type.IsEquivalentTo(typeof(short)))
+                {
+                    return ShortRedisValueConverter.Instance;
+                }
+                if (type.IsEquivalentTo(typeof(short?)))
+                {
+                    return NullableShortRedisValueConverter.Instance;
+                }
+                if (type.IsEquivalentTo(typeof(uint)))
+                {
+                    return UIntRedisValueConverter.Instance;
+                }
+                if (type.IsEquivalentTo(typeof(uint?)))
+                {
+                    return NullableUIntRedisValueConverter.Instance;
+                }
+                if (type.IsEquivalentTo(typeof(ulong)))
+                {
+                    return ULongRedisValueConverter.Instance;
+                }
+                if (type.IsEquivalentTo(typeof(ulong?)))
+                {
+                    return NullableULongRedisValueConverter.Instance;
+                }
                 if (type.IsEquivalentTo(typeof(int)))
                 {
                     return IntRedisValueConverter.Instance;
