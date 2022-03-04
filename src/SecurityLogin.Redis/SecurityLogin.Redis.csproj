@@ -8,6 +8,7 @@
 	<ItemGroup>
 		<PackageReference Include="Ao.ObjectDesign" Version="0.3.3" />
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
 	</ItemGroup>
 
