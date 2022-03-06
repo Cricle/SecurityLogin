@@ -6,13 +6,71 @@ using StackExchange.Redis;
 using System.Text;
 using System.Linq;
 using System;
+using SecurityLogin.Redis;
+using SecurityLogin.Redis.Converters;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using SecurityLogin.Redis.Annotations;
 
 namespace SecurityLogin.RedisCmd
 {
     internal class Program
     {
+        public class JsonRedisValueConverter : IRedisValueConverter
+        {
+
+            public RedisValue Convert(object instance, object value, IRedisColumn column)
+            {
+                return JsonConvert.SerializeObject(value);
+            }
+
+            public object ConvertBack(in RedisValue value, IRedisColumn column)
+            {
+                if (!value.HasValue)
+                {
+                    return RedisValueConverterConst.DoNothing;
+                }
+                return JsonConvert.DeserializeObject(value, column.Property.PropertyType);
+            }
+        }
+
+        class A
+        {
+            public int Id { get; set; }
+
+            public long UID { get; set; }
+
+            public B B { get; set; }
+        }
+        class B
+        {
+            public string Name { get; set; }
+
+            public int Age { get; set; }
+
+            public C C { get; set; }
+        }
+        class C
+        {
+            public int CX { get; set; }
+
+            public string Dx { get; set; }
+
+            public List<int> Lst { get; set; }
+        }
         static void Main(string[] args)
         {
+            KnowsRedisValueConverter.EndValueConverter = new JsonRedisValueConverter();
+            var a = new A { B = new B { Age = 23, Name = "dsadsa" ,C=new C { CX = 44, Dx = "aaa", Lst = new List<int> { 1, 23, 241, 1 } } }, Id = 2, UID = 4213 };
+            var val=ExpressionRedisOperator.GetRedisOperator(a.GetType());
+            var m=val.As(a);
+            var na = new A();
+            val.Write(ref na, m);
+            var d = val.As(a);
+            var x = new A();
+            object w = x;
+            val.Write(ref w,d);
+            return;
             Run().GetAwaiter().GetResult();
         }
         private static async Task Run()

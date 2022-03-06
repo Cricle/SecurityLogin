@@ -1,6 +1,7 @@
 ﻿using Ao.ObjectDesign;
 using SecurityLogin.Redis.Converters;
 using StackExchange.Redis;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace SecurityLogin.Redis
@@ -18,5 +19,9 @@ namespace SecurityLogin.Redis
         string Name { get; }
 
         RedisValue NameRedis { get; }
+
+        string Path { get; }
+
+        IReadOnlyList<IRedisColumn> Nexts { get; }
     }
 }

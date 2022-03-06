@@ -1,11 +1,19 @@
-﻿using SecurityLogin.Redis.Converters;
+﻿using Ao.ObjectDesign;
+using FastExpressionCompiler;
+using SecurityLogin.Redis.Converters;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 
 namespace SecurityLogin.Redis
 {
-    public class DefaultRedisOperator : IRedisOperator
+    public class DefaultRedisOperator : ComplexRedisOperator
     {
         private static readonly Dictionary<Type, DefaultRedisOperator> defaultRedisOpCache = new Dictionary<Type, DefaultRedisOperator>();
 
@@ -13,78 +21,77 @@ namespace SecurityLogin.Redis
         {
             if (!defaultRedisOpCache.TryGetValue(type, out var @operator))
             {
-                @operator = new DefaultRedisOperator(type);
+                @operator = new DefaultRedisOperator(type, SharedAnalysis);
                 defaultRedisOpCache[type] = @operator;
                 @operator.Build();
             }
             return @operator;
         }
 
-        private IReadOnlyList<IRedisColumn> redisColumns;
-        private IReadOnlyDictionary<string, IRedisColumn> redisColumnMap;
-
-        public DefaultRedisOperator(Type target)
+        public DefaultRedisOperator(Type target, IRedisColumnAnalysis columnAnalysis)
+            :base(target, columnAnalysis)
         {
-            Target = target ?? throw new ArgumentNullException(nameof(target));
         }
 
-        public Type Target { get; }
-
-        public IReadOnlyList<IRedisColumn> RedisColumns => redisColumns;
-
-        public IReadOnlyDictionary<string, IRedisColumn> RedisColumnMap => redisColumnMap;
-
-        public void Build()
+        public override void Write(ref object instance, HashEntry[] entries)
         {
-            redisColumns = BuildColumns();
-            redisColumnMap = BuildColumnMap();
+            WriteAll(ref instance, RedisColumns, entries.ToDictionary(x => x.Name.ToString(), x => x.Value));
         }
-        protected virtual IReadOnlyList<IRedisColumn> BuildColumns()
+        private void WriteAll(ref object instance, IEnumerable<IRedisColumn> columns, IDictionary<string, RedisValue> map)
         {
-            return RedisColumnHelper.GetRedisColumns(Target);
-        }
-        protected virtual IReadOnlyDictionary<string, IRedisColumn> BuildColumnMap()
-        {
-            return RedisColumnHelper.GetRedisColumnMap(Target);
-        }
-
-        public void Write(ref object instance, HashEntry[] entries)
-        {
-            var count = entries.Length;
-            for (int i = 0; i < count; i++)
+            foreach (var column in columns)
             {
-                var item = entries[i];
-                if (redisColumnMap.TryGetValue(item.Name, out var column) && column.Setter != null)
+                if (map.TryGetValue(column.Path, out var val))
                 {
-                    object val = item.Value;
+                    object value = val;
                     if (column.Converter != null)
                     {
-                        val = column.Converter.ConvertBack(item.Value, column);
+                        value = column.Converter.ConvertBack(val, column);
                     }
-                    if (val != RedisValueConverterConst.DoNothing)
+                    if (value != RedisValueConverterConst.DoNothing)
                     {
-                        column.Setter(instance, val);
+                        column.Setter(instance, value);
                     }
+                }
+                if (column.Nexts != null && column.Nexts.Count != 0)
+                {
+                    var next = CreateInstance(column.Property.PropertyType);
+                    WriteAll(ref next, column.Nexts, map);
+                    column.Setter(instance, next);
                 }
             }
         }
 
-        public HashEntry[] As(object instance)
+        protected virtual object CreateInstance(Type type)
         {
-            var count = redisColumns.Count;
-            var entries = new HashEntry[count];
-            for (int i = 0; i < count; i++)
+            return ReflectionHelper.Create(type);
+        }
+
+        public override HashEntry[] As(object instance)
+        {
+            return GetHashEntries(instance, RedisColumns).ToArray();
+        }
+
+        private IEnumerable<HashEntry> GetHashEntries(object instance, IEnumerable<IRedisColumn> columns)
+        {
+            foreach (var column in columns)
             {
-                var item = redisColumns[i];
-                var val = item.Getter(instance);
-                var redisVal = item.Converter.Convert(instance, val, item);
-                if (redisVal.IsNull)
+                var val = column.Getter(instance);
+                if (column.Nexts != null && column.Nexts.Count != 0)
+                {
+                    foreach (var item in GetHashEntries(val, column.Nexts))
+                    {
+                        yield return item;
+                    }
+                    continue;
+                }
+                var redisVal = column.Converter?.Convert(instance, val, column);
+                if (redisVal == null || redisVal.Value.IsNull)
                 {
                     redisVal = RedisValue.EmptyString;
                 }
-                entries[i] = new HashEntry(item.NameRedis, redisVal);
+                yield return new HashEntry(column.Path, redisVal.Value);
             }
-            return entries;
         }
     }
 }

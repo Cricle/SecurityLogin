@@ -9,39 +9,76 @@ using System.Reflection;
 
 namespace SecurityLogin.Redis
 {
-    public static class RedisColumnHelper
+    public interface IRedisColumnAnalysis
     {
-        private static readonly Dictionary<Type, IReadOnlyList<IRedisColumn>> redisColumnMap = new Dictionary<Type, IReadOnlyList<IRedisColumn>>();
-        private static readonly Dictionary<Type, IReadOnlyDictionary<string, IRedisColumn>> redisColumnMapMap = new Dictionary<Type, IReadOnlyDictionary<string, IRedisColumn>>();
+        IReadOnlyDictionary<string, IRedisColumn> GetRedisColumnMap(Type type, string prefx);
 
-        public static IReadOnlyDictionary<string, IRedisColumn> GetRedisColumnMap(Type type)
+        IReadOnlyList<IRedisColumn> GetRedisColumns(Type type, string prefx);
+    }
+    public class ColumnAnalysis : IRedisColumnAnalysis
+    {
+        public static readonly Type StringType = typeof(string);
+        public static readonly Type IListType = typeof(IList<>);
+        public static readonly Type IDictionaryType= typeof(IDictionary<,>);
+
+        public ColumnAnalysis()
         {
-            if (!redisColumnMapMap.TryGetValue(type, out var map))
-            {
-                var columns = GetRedisColumns(type);
-                map = columns.ToDictionary(x => x.Name);
-                redisColumnMapMap[type] = map;
-            }
+            IgnoreTypes = new HashSet<Type>();
+            IgnoreProperties = new HashSet<PropertyInfo>();
+            IgnoreNames = new HashSet<string>();
+        }
+
+        public HashSet<Type> IgnoreTypes { get; }
+
+        public HashSet<PropertyInfo> IgnoreProperties { get; }
+
+        public HashSet<string> IgnoreNames { get; }
+
+        public bool IgnoreNoSetter { get; set; }
+
+        public IReadOnlyDictionary<string, IRedisColumn> GetRedisColumnMap(Type type, string prefx)
+        {
+            var columns = GetRedisColumns(type, prefx);
+            var map = columns.ToDictionary(x => x.Name);
             return map;
         }
-        public static IReadOnlyList<IRedisColumn> GetRedisColumns(Type type)
+
+        public IReadOnlyList<IRedisColumn> GetRedisColumns(Type type, string prefx)
         {
             if (type.IsPrimitive || type == typeof(string))
             {
                 throw new ArgumentException($"Type {type} can't parse!");
             }
-            if (!redisColumnMap.TryGetValue(type, out var columns))
-            {
-                columns = Analysis(type);
-                redisColumnMap[type] = columns;
-            }
-            return columns;
+            return Analysis(type, prefx);
         }
-
-        private static IReadOnlyList<IRedisColumn> Analysis(Type type)
+        protected virtual bool CanLookup(PropertyInfo info)
+        {
+            return info.GetCustomAttribute<IgnoreColumnAttribute>() == null &&
+                info.GetIndexParameters().Length == 0 &&
+                !IgnoreTypes.Contains(info.PropertyType) &&
+                !IgnoreProperties.Contains(info) &&
+                !IgnoreNames.Contains(info.Name);
+        }
+        protected virtual bool CanDeep(PropertyInfo info,IRedisColumn column)
+        {
+            var code = Convert.GetTypeCode(info.PropertyType);
+            return code == TypeCode.Object && info.PropertyType != StringType &&
+                info.GetCustomAttribute<NotDeepAttribute>() == null&&
+                !info.PropertyType.GetInterfaces().Any(x =>
+                {
+                    if (x.IsGenericType)
+                    {
+                        var typeDef = x.GetGenericTypeDefinition();
+                        return typeDef == IListType || typeDef == IDictionaryType;
+                    }
+                    return false;
+                }); ;
+        }
+        private IRedisColumn[] Analysis(Type type, string prefx)
         {
             var columns = new List<IRedisColumn>();
-            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.GetCustomAttribute<IgnoreColumnAttribute>() == null);
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(CanLookup);
             var convertTypeCache = new Dictionary<Type, IRedisValueConverter>();
             var nameSet = new HashSet<string>();
 
@@ -75,13 +112,20 @@ namespace SecurityLogin.Redis
                 {
                     setter = CompiledPropertyInfo.GetSetter(identity);
                 }
+                else
+                {
+                    if (IgnoreNoSetter)
+                    {
+                        continue;
+                    }
+                }
                 var name = item.Name;
                 var nameAttr = item.GetCustomAttribute<ColumnAttribute>();
                 if (nameAttr != null)
                 {
                     name = nameAttr.Name;
                 }
-                if(!nameSet.Add(name))
+                if (!nameSet.Add(name))
                 {
                     throw new ArgumentException($"Name {name} in type {type} is not only");
                 }
@@ -91,12 +135,19 @@ namespace SecurityLogin.Redis
                     Getter = getter,
                     Setter = setter,
                     Name = name,
+                    Path = string.IsNullOrEmpty(prefx) ? name : string.Concat(prefx, ".", name),
                     Property = item,
                     NameRedis = name,
                 };
                 columns.Add(column);
+                if (CanDeep(item,column))
+                {
+                    var nexts = Analysis(item.PropertyType, name);
+                    column.Nexts = nexts;
+                }
             }
             return columns.ToArray();
         }
+
     }
 }
