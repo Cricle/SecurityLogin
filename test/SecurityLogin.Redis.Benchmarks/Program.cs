@@ -72,22 +72,30 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark]
         public void ToEntities()
         {
-            @operator.As(a);
+            for (int i = 0; i < 1000; i++)
+            {
+                @operator.As(a);
+            }
         }
         [Benchmark]
         public void AotToEntities()
         {
-            @exoperator.As(a);
+            for (int i = 0; i < 1000; i++)
+                @exoperator.As(a);
         }
         [Benchmark]
         public void JsonToEntities()
         {
-            RedisValue str=JsonSerializer.Serialize(a);
+            for (int i = 0; i < 1000; i++)
+            {
+                RedisValue str = JsonSerializer.Serialize(a);
+            }
         }
         [Benchmark(Baseline = true)]
         public void RawToEntities()
         {
-            _ = new HashEntry[]
+            for (int i = 0; i < 1000; i++)
+                _ = new HashEntry[]
              {
                 new HashEntry("Id",a.Id),
                 new HashEntry("UID",a.UID),
@@ -110,54 +118,67 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark]
         public void AotToObject()
         {
-            var x = new A();
-            @exoperator.Write(ref x, hashEntries);
+            for (int i = 0; i < 1000; i++)
+            {
+                var x = new A();
+                @exoperator.Write(ref x, hashEntries);
+            }
         }
         [Benchmark]
         public void AotToObjectWithCreate()
         {
-            @exoperator.Create<A>(hashEntries);
+            for (int i = 0; i < 1000; i++)
+            {
+                var x = (A)@exoperator.Write(hashEntries);
+            }
         }
         [Benchmark]
         public void JsonToObject()
         {
-            JsonSerializer.Deserialize<A>(str);
+            for (int i = 0; i < 1000; i++)
+                JsonSerializer.Deserialize<A>(str);
         }
         [Benchmark]
         public void ToObject()
         {
-            var x = new A();
-            @operator.Write(ref x, hashEntries);
+            for (int i = 0; i < 1000; i++)
+            {
+                var x = new A();
+                @operator.Write(ref x, hashEntries);
+            }
         }
         [Benchmark(Baseline =true)]
         public void RawToObject()
         {
-            var map = hashEntries.ToDictionary(x => x.Name.ToString(), x => x.Value);
-            var x = new A
+            for (int i = 0; i < 1000; i++)
             {
-                Id = Find<int>("Id"),
-                UID = Find<int>("UID"),
-                B = new B
+                var map = hashEntries.ToDictionary(w => w.Name.ToString(), w => w.Value);
+                var x = new A
                 {
-                    Age = Find<int>("B.Age"),
-                    Name = Find<string>("B.Name"),
-                    C = new C
+                    Id = Find<int>("Id"),
+                    UID = Find<int>("UID"),
+                    B = new B
                     {
-                        CX = Find<int>("B.C.CX"),
-                        Dx = Find<string>("B.C.Dx"),
+                        Age = Find<int>("B.Age"),
+                        Name = Find<string>("B.Name"),
+                        C = new C
+                        {
+                            CX = Find<int>("B.C.CX"),
+                            Dx = Find<string>("B.C.Dx"),
+                        }
+
                     }
-
-                }
-            };
+                };
 
 
-            T Find<T>(string path)
-            {
-                if (map.TryGetValue(path, out var val))
+                T Find<T>(string path)
                 {
-                    return val.Get<T>();
+                    if (map.TryGetValue(path, out var val))
+                    {
+                        return val.Get<T>();
+                    }
+                    return default;
                 }
-                return default;
             }
         }
     }

@@ -65,7 +65,7 @@ namespace SecurityLogin.RedisCmd
             var val=ExpressionRedisOperator.GetRedisOperator(a.GetType());
             var m=val.As(a);
             var na = new A();
-            val.Write(ref na, m);
+            val.Write(m);
             var d = val.As(a);
             var x = new A();
             object w = x;

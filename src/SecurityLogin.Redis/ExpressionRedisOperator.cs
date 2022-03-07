@@ -4,8 +4,8 @@ using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
+using FastExpressionCompiler.LightExpression;
 
 namespace SecurityLogin.Redis
 {
@@ -35,11 +35,13 @@ namespace SecurityLogin.Redis
         
         private Action<object, IDictionary<string, RedisValue>> writeMethod;
         private Func<object, HashEntry[]> asMethod;
+        private Func<IDictionary<string, RedisValue>,object> writeWithObjectMethod;
 
         protected override void OnBuild()
         {
             writeMethod = AotCompileWrite();
             asMethod = AotCompileAs();
+            writeWithObjectMethod = AotCompileWithInstanceWrite();
         }
         private IEnumerable<Expression> AotWriteAll(Expression instance, IEnumerable<IRedisColumn> columns, Expression map)
         {
@@ -75,7 +77,19 @@ namespace SecurityLogin.Redis
                 }
             }
         }
-
+        private Func<IDictionary<string, RedisValue>,object> AotCompileWithInstanceWrite()
+        {
+            var map = Expression.Parameter(typeof(IDictionary<string, RedisValue>));
+            var inst = Expression.Variable(Target);
+            var assign = Expression.Assign(inst, Expression.New(Target));
+            var exps = AotWriteAll(inst, RedisColumns, map);
+            var allExps = new List<Expression> { assign };
+            allExps.AddRange(exps);
+            allExps.Add(Expression.Convert(inst, Target));
+            var body = Expression.Block(new ParameterExpression[] {inst},allExps);
+            return Expression.Lambda<Func<IDictionary<string, RedisValue>, object>>(body, map)
+                .CompileSys();
+        }
         private Action<object,IDictionary<string, RedisValue>> AotCompileWrite()
         {
             var map = Expression.Parameter(typeof(IDictionary<string, RedisValue>));
@@ -94,7 +108,7 @@ namespace SecurityLogin.Redis
             var exps = CompileGetEntities(Expression.Convert(inst, Target), RedisColumns);
             var listExp = Expression.NewArrayInit(typeof(HashEntry), exps);
             return Expression.Lambda<Func<object, HashEntry[]>>(listExp, inst)
-                .CompileSys();
+                .CompileFast();
         }
         private IEnumerable<Expression> CompileGetEntities(Expression instance, IEnumerable<IRedisColumn> columns)
         {
@@ -125,10 +139,25 @@ namespace SecurityLogin.Redis
                 }
             }
         }
-
+        public object Write(HashEntry[] entries)
+        {
+            return writeWithObjectMethod(ToMap(entries));
+        }
+        private static Dictionary<string, RedisValue> ToMap(HashEntry[] entries)
+        {
+            var len = entries.Length;
+            var d = new Dictionary<string, RedisValue>(len);
+            for (int i = 0; i < len; i++)
+            {
+                var item = entries[i];
+                d.Add(item.Name.ToString(), item.Value);
+            }
+            return d;
+        }
         public override void Write(ref object instance, HashEntry[] entries)
         {
-            writeMethod(instance, entries.ToDictionary(x => x.Name.ToString(), x => x.Value));
+            var map = ToMap(entries);
+            writeMethod(instance, map);
         }
 
         public override HashEntry[] As(object value)

@@ -1,4 +1,5 @@
-﻿using StackExchange.Redis;
+﻿using Ao.ObjectDesign;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 
@@ -8,6 +9,7 @@ namespace SecurityLogin.Redis
     {
         private IReadOnlyList<IRedisColumn> redisColumns;
         private IReadOnlyDictionary<string, IRedisColumn> redisColumnMap;
+        private TypeCreator creator;
 
         protected static readonly ColumnAnalysis SharedAnalysis = new ColumnAnalysis();
 
@@ -29,6 +31,7 @@ namespace SecurityLogin.Redis
         {
             redisColumns = BuildColumns();
             redisColumnMap = BuildColumnMap();
+            creator = CompiledPropertyInfo.GetCreator(Target);
             OnBuild();
         }
 
@@ -48,5 +51,10 @@ namespace SecurityLogin.Redis
 
         public abstract void Write(ref object instance, HashEntry[] entries);
         public abstract HashEntry[] As(object value);
+
+        public object Create()
+        {
+            return creator();
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace SecurityLogin.Redis
         }
         public static object Create(this ComplexRedisOperator @operator, HashEntry[] entries)
         {
-            var inst = ReflectionHelper.Create(@operator.Target);
+            var inst = @operator.Create();
             @operator.Write(ref inst, entries);
             return inst;
         }
