@@ -1,7 +1,12 @@
-﻿using SecurityLogin.Redis.Finders;
+﻿using SecurityLogin.Redis.Annotations;
+using SecurityLogin.Redis.Converters;
+using SecurityLogin.Redis.Finders;
 using StackExchange.Redis;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Compression;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.AspNetCore.Services
@@ -16,7 +21,7 @@ namespace SecurityLogin.AspNetCore.Services
         {
             return Task.FromResult<int?>(new Random().Next(0, 9999));
         }
-        protected override TimeSpan GetCacheTime(string identity, int? entity)
+        protected override TimeSpan? GetCacheTime(string identity, int? entity)
         {
             return TimeSpan.FromSeconds(10);
         }
@@ -26,19 +31,25 @@ namespace SecurityLogin.AspNetCore.Services
         public StudentCacheFinder(IDatabase database) : base(database)
         {
         }
-
+        public async Task<long> GetSizeAsync(string identity)
+        {
+            var key = GetEntryKey(identity);
+            var data = await Database.HashGetAllAsync(key);
+            return data.Sum(x => x.Value.Length());
+        }
         protected override Task<Student> OnFindInDbAsync(string identity)
         {
             var rand=new Random();
-            return Task.FromResult<Student>(new Student
+            return Task.FromResult(new Student
             {
                 Id = rand.Next(1111, 9999),
-                Name = Guid.NewGuid().ToString(),
+                Name = Student.CreateLargeText(10240),
+                Name1 = Student.CreateLargeText(10240),
                 CarId = rand.Next(2222, 1111111),
                 CreateTime = DateTime.Now,
             });
         }
-        protected override TimeSpan GetCacheTime(string identity, Student entity)
+        protected override TimeSpan? GetCacheTime(string identity, Student entity)
         {
             return TimeSpan.FromSeconds(10);
         }
@@ -47,7 +58,11 @@ namespace SecurityLogin.AspNetCore.Services
     {
         public int Id { get; set; }
 
+        [RedisValueConverter(typeof(GzipStringRedisValueConverter))]
         public string Name { get; set; }
+
+        [RedisValueConverter(typeof(GzipStringRedisValueConverter))]
+        public string Name1 { get; set; }
 
         public DateTime CreateTime { get; set; }
 
@@ -62,6 +77,15 @@ namespace SecurityLogin.AspNetCore.Services
                     s.CarId==CarId;
             }
             return false;
+        }
+        public static string CreateLargeText(int size)
+        {
+            var s = new StringBuilder(size*36);
+            for (int i = 0; i < size; i++)
+            {
+                s.Append(Guid.NewGuid().ToString());
+            }
+            return s.ToString();
         }
         public override int GetHashCode()
         {

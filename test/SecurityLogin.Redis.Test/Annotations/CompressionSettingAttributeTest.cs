@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 namespace SecurityLogin.Redis.Test.Annotations
 {
     [TestClass]
-    public class GzipSettingAttributeTest
+    public class CompressionSettingAttributeTest
     {
         [TestMethod]
         public void NullEncodingName_MustUTF8()
         {
-            var attr = new GzipSettingAttribute();
+            var attr = new CompressionSettingAttribute();
             Assert.AreEqual(Encoding.UTF8, attr.Encoding);
         }
         [TestMethod]
         public void GivenEncodingName_GotMustEqualsName()
         {
-            var attr = new GzipSettingAttribute { EncodingName= "ASCII" };
+            var attr = new CompressionSettingAttribute { EncodingName= "ASCII" };
             Assert.AreEqual(Encoding.ASCII, attr.Encoding);
         }
     }

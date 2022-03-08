@@ -14,38 +14,14 @@ namespace SecurityLogin.Redis.Converters
     {
         public static readonly GzipRedisValueConverter Instance = new GzipRedisValueConverter();
 
-        private static readonly GzipSettingAttribute defaultGzipSetting = new GzipSettingAttribute();
 
         private GzipRedisValueConverter() { }
 
-        private GzipSettingAttribute GetAttribute(IRedisColumn column)
-        {
-            return column.Property.GetCustomAttribute<GzipSettingAttribute>() ?? defaultGzipSetting;
-        }
-
         public RedisValue Convert(object instance, object value, IRedisColumn column)
         {
-            var attr = GetAttribute(column);
-            byte[] buffer;
-            if (value is string str)
-            {
-                buffer = attr.Encoding.GetBytes(str);
-            }
-            else if (value is byte[] bytes)
-            {
-                buffer = bytes;
-            }
-            else
-            {
-                throw new ArgumentException($"{value?.GetType()} is not string or byte[]");
-            }
-            using (var s1 = SharedMemoryStream.StreamManager.GetStream())
-            using (var gs = new GZipStream(s1, attr.Level))
-            {
-                gs.Write(buffer, 0, buffer.Length);
-                gs.Flush();
-                return s1.ToArray();
-            }
+            var attr = CompressionHelper.GetAttribute(column);
+            var buffer=(byte[])value;
+            return CompressionHelper.Gzip(buffer, attr.Level);
         }
 
         public object ConvertBack(in RedisValue value, IRedisColumn column)
@@ -55,13 +31,7 @@ namespace SecurityLogin.Redis.Converters
                 return RedisValueConverterConst.DoNothing;
             }
             var buffer= (byte[])value;
-            using (var s = SharedMemoryStream.StreamManager.GetStream(buffer))
-            using (var s1 = SharedMemoryStream.StreamManager.GetStream())
-            using (var gs = new GZipStream(s,CompressionMode.Decompress))
-            {
-                gs.CopyTo(s1);
-                return s1.ToArray();
-            }
+            return CompressionHelper.UnGzip(buffer);
         }
     }
 }

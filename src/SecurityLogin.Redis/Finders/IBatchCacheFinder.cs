@@ -5,10 +5,10 @@ namespace SecurityLogin.Redis.Finders
 {
     public interface IBatchCacheFinder<TIdentity, TEntity>
     {
-        Task<IReadOnlyDictionary<TIdentity, TEntity>> FindInDbAsync(IEnumerable<TIdentity> identity, bool cache = true);
+        Task<IDictionary<TIdentity, TEntity>> FindInDbAsync(IEnumerable<TIdentity> identity, bool cache = true);
        
-        Task<bool> SetInCahceAsync(IReadOnlyDictionary<TIdentity, TEntity> pairs);
+        Task<bool> SetInCahceAsync(IEnumerable<KeyValuePair<TIdentity, TEntity>> pairs);
        
-        Task<IReadOnlyDictionary<TIdentity, TEntity>> FindInCahceAsync(IEnumerable<TIdentity> identity);
+        Task<IDictionary<TIdentity, TEntity>> FindInCahceAsync(IEnumerable<TIdentity> identity);
     }
 }

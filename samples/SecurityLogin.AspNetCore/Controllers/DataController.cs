@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityLogin.AspNetCore.Services;
 using SecurityLogin.Redis.Finders;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.AspNetCore.Controllers
@@ -21,8 +23,16 @@ namespace SecurityLogin.AspNetCore.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> Get()
         {
+            var sw = Stopwatch.GetTimestamp();
             var res = await studentCacheFinder.FindAsync("aaa");
-            return Ok(res);
+            var ed = new TimeSpan(Stopwatch.GetTimestamp() - sw);
+            var size =await studentCacheFinder.GetSizeAsync("aaa");
+            return Ok(new
+            {
+                //res,
+                size= size,
+                Elase = ed
+            });
         }
         [HttpGet("[action]")]
         public async Task<IActionResult> GetId()

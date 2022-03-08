@@ -2,6 +2,7 @@
 using SecurityLogin.Redis.Annotations;
 using SecurityLogin.Redis.Converters;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -18,8 +19,8 @@ namespace SecurityLogin.Redis
     public class ColumnAnalysis : IRedisColumnAnalysis
     {
         public static readonly Type StringType = typeof(string);
-        public static readonly Type IListType = typeof(IList<>);
-        public static readonly Type IDictionaryType= typeof(IDictionary<,>);
+        public static readonly string IListName = typeof(IList).FullName;
+        public static readonly string IDictionaryName = typeof(IDictionary).FullName;
 
         public ColumnAnalysis()
         {
@@ -59,20 +60,12 @@ namespace SecurityLogin.Redis
                 !IgnoreProperties.Contains(info) &&
                 !IgnoreNames.Contains(info.Name);
         }
-        protected virtual bool CanDeep(PropertyInfo info,IRedisColumn column)
+        protected virtual bool CanDeep(PropertyInfo info, IRedisColumn column)
         {
-            var code = Convert.GetTypeCode(info.PropertyType);
-            return code == TypeCode.Object && info.PropertyType != StringType &&
-                info.GetCustomAttribute<NotDeepAttribute>() == null&&
-                !info.PropertyType.GetInterfaces().Any(x =>
-                {
-                    if (x.IsGenericType)
-                    {
-                        var typeDef = x.GetGenericTypeDefinition();
-                        return typeDef == IListType || typeDef == IDictionaryType;
-                    }
-                    return false;
-                }); ;
+            return !info.PropertyType.IsValueType&& info.PropertyType != StringType &&
+                info.GetCustomAttribute<NotDeepAttribute>() == null &&
+                info.PropertyType.GetInterface(IListName) == null &&
+                info.PropertyType.GetInterface(IDictionaryName) == null;
         }
         private IRedisColumn[] Analysis(Type type, string prefx)
         {
@@ -90,7 +83,27 @@ namespace SecurityLogin.Redis
                 {
                     if (!convertTypeCache.TryGetValue(converterAttr.ConvertType, out converter))
                     {
-                        converter = (IRedisValueConverter)ReflectionHelper.Create(converterAttr.ConvertType);
+                        var members = converterAttr.ConvertType.GetMember("Instance", BindingFlags.Static| BindingFlags.Public);
+                        if (members.Length == 0)
+                        {
+                            converter = (IRedisValueConverter)ReflectionHelper.Create(converterAttr.ConvertType);
+                        }
+                        else
+                        {
+                            var member = members[0];
+                            if (member.MemberType== MemberTypes.Field)
+                            {
+                                converter = (IRedisValueConverter)((FieldInfo)member).GetValue(null);
+                            }
+                            else if (member.MemberType== MemberTypes.Property)
+                            {
+                                converter = (IRedisValueConverter)((PropertyInfo)member).GetValue(null);
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException("Error to get static member value");
+                            }
+                        }
                         convertTypeCache[converterAttr.ConvertType] = converter;
                     }
                 }

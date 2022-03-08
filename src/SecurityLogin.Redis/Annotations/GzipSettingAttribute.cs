@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SecurityLogin.Redis.Annotations
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-    public sealed class GzipSettingAttribute : Attribute
+    public sealed class CompressionSettingAttribute : Attribute
     {
         public string EncodingName { get; set; }
 
