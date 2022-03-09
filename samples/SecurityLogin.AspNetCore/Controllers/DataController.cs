@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityLogin.AspNetCore.Services;
+using SecurityLogin.Cache.Finders;
 using SecurityLogin.Redis.Finders;
 using System;
 using System.Diagnostics;

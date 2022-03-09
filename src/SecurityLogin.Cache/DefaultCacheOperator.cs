@@ -48,7 +48,7 @@ namespace SecurityLogin.Cache
                     {
                         value = column.Converter.ConvertBack(val, column);
                     }
-                    if (value != RedisValueConverterConst.DoNothing)
+                    if (value != CacheValueConverterConst.DoNothing)
                     {
                         column.Setter(instance, value);
                     }

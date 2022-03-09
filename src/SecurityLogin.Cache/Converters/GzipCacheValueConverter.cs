@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.Cache.Converters
 {
-    public class GzipRedisValueConverter : ICacheValueConverter
+    public class GzipCacheValueConverter : ICacheValueConverter
     {
-        public static readonly GzipRedisValueConverter Instance = new GzipRedisValueConverter();
+        public static readonly GzipCacheValueConverter Instance = new GzipCacheValueConverter();
 
 
-        private GzipRedisValueConverter() { }
+        private GzipCacheValueConverter() { }
 
         public BufferValue Convert(object instance, object value, ICacheColumn column)
         {
@@ -28,7 +28,7 @@ namespace SecurityLogin.Cache.Converters
         {
             if (!value.HasValue)
             {
-                return RedisValueConverterConst.DoNothing;
+                return CacheValueConverterConst.DoNothing;
             }
             var buffer= (byte[])value;
             return CompressionHelper.UnGzip(buffer);

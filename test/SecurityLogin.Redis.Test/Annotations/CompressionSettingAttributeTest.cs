@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityLogin.Redis.Annotations;
+using SecurityLogin.Cache.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;

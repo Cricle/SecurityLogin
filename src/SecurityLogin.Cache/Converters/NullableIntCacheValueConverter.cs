@@ -2,24 +2,24 @@
 
 namespace SecurityLogin.Cache.Converters
 {
-    public class NullableDoubleRedisValueConverter : ICacheValueConverter
+    public class NullableIntCacheValueConverter : ICacheValueConverter
     {
-        public static readonly NullableDoubleRedisValueConverter Instance = new NullableDoubleRedisValueConverter();
+        public static readonly NullableIntCacheValueConverter Instance = new NullableIntCacheValueConverter();
 
-        private NullableDoubleRedisValueConverter() { }
+        private NullableIntCacheValueConverter() { }
 
         public BufferValue Convert(object instance, object value, ICacheColumn column)
         {
-            return (double?)value;
+            return (int?)value;
         }
 
         public object ConvertBack(in BufferValue value, ICacheColumn column)
         {
             if (!value.HasValue)
             {
-                return null;
+                return null; 
             }
-            if (value.TryParse(out double val))
+            if (value.TryParse(out int val))
             {
                 return val;
             }

@@ -59,7 +59,7 @@ namespace SecurityLogin.Cache
                         Expression.Constant(column)));
                 }
                 var doNothingCheck = Expression.IfThen(
-                    Expression.NotEqual(value, Expression.Constant(RedisValueConverterConst.DoNothing)),
+                    Expression.NotEqual(value, Expression.Constant(CacheValueConverterConst.DoNothing)),
                     Expression.Call(instance, column.Property.SetMethod, Expression.Convert(value, column.Property.PropertyType)));
                 var ifThen = Expression.IfThen(
                     Expression.Equal(tryGet, Expression.Constant(true)),

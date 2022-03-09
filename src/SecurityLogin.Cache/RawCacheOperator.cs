@@ -28,7 +28,7 @@ namespace SecurityLogin.Cache
         public override void Build()
         {
             base.Build();
-            converter = KnowsRedisValueConverter.GetConverter(Target);
+            converter = KnowsCacheValueConverter.GetConverter(Target);
         }
 
         protected override void WriteCore(ref object instance,in BufferValue entry)

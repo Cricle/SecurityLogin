@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityLogin.Redis.Converters;
+using SecurityLogin.Cache;
+using SecurityLogin.Cache.Converters;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -16,14 +17,14 @@ namespace SecurityLogin.Redis.Test.Converters
         public void Convert()
         {
             var value = new byte[] { 1, 2, 3, 4, 5 };
-            var val = (byte[])ByteArrayRedisValueConverter.Instance.Convert(null, value, null);
+            var val = (byte[])ByteArrayCacheValueConverter.Instance.Convert(null, value, null);
             Assert.IsTrue(value.SequenceEqual(val));
         }
         [TestMethod]
         public void ConvertBack()
         {
-            RedisValue value = new byte[] { 1, 2, 3, 4, 5 };
-            var val = ByteArrayRedisValueConverter.Instance.ConvertBack(value, null);
+            BufferValue value = new byte[] { 1, 2, 3, 4, 5 };
+            var val = ByteArrayCacheValueConverter.Instance.ConvertBack(value, null);
             Assert.IsTrue(((byte[])value).SequenceEqual((byte[])val));
         }
     }

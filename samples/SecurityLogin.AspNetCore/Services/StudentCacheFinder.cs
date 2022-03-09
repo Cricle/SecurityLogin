@@ -1,4 +1,5 @@
 ﻿using SecurityLogin.Cache.Annotations;
+using SecurityLogin.Cache.Converters;
 using SecurityLogin.Redis.Finders;
 using StackExchange.Redis;
 using System;
@@ -57,10 +58,10 @@ namespace SecurityLogin.AspNetCore.Services
     {
         public int Id { get; set; }
 
-        [CacheValueConverter(typeof(GzipStringRedisValueConverter))]
+        [CacheValueConverter(typeof(GzipStringCacheValueConverter))]
         public string Name { get; set; }
 
-        [CacheValueConverter(typeof(GzipStringRedisValueConverter))]
+        [CacheValueConverter(typeof(GzipStringCacheValueConverter))]
         public string Name1 { get; set; }
 
         public DateTime CreateTime { get; set; }

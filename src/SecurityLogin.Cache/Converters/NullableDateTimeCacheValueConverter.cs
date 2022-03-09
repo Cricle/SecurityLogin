@@ -3,11 +3,11 @@ using System;
 
 namespace SecurityLogin.Cache.Converters
 {
-    public class NullableDateTimeRedisValueConverter : ICacheValueConverter
+    public class NullableDateTimeCacheValueConverter : ICacheValueConverter
     {
-        public static readonly NullableDateTimeRedisValueConverter Instance = new NullableDateTimeRedisValueConverter();
+        public static readonly NullableDateTimeCacheValueConverter Instance = new NullableDateTimeCacheValueConverter();
 
-        private NullableDateTimeRedisValueConverter() { }
+        private NullableDateTimeCacheValueConverter() { }
 
         public BufferValue Convert(object instance, object value, ICacheColumn column)
         {
@@ -23,7 +23,7 @@ namespace SecurityLogin.Cache.Converters
         {
             if (!value.HasValue)
             {
-                return RedisValueConverterConst.DoNothing;
+                return CacheValueConverterConst.DoNothing;
             }
             if (value.TryParse(out long tick))
             {

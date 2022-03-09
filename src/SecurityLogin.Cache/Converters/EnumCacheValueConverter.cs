@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace SecurityLogin.Cache.Converters
 {
-    public class EnumRedisValueConverter : ICacheValueConverter
+    public class EnumCacheValueConverter : ICacheValueConverter
     {
-        public static readonly EnumRedisValueConverter Instance = new EnumRedisValueConverter();
+        public static readonly EnumCacheValueConverter Instance = new EnumCacheValueConverter();
 
-        private EnumRedisValueConverter() { }
+        private EnumCacheValueConverter() { }
 
         public BufferValue Convert(object instance, object value, ICacheColumn column)
         {
@@ -24,7 +24,7 @@ namespace SecurityLogin.Cache.Converters
             {
                 return enumVal;
             }
-            return RedisValueConverterConst.DoNothing;
+            return CacheValueConverterConst.DoNothing;
         }
         class EnumHelper
         {

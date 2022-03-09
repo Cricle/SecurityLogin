@@ -2,15 +2,15 @@
 
 namespace SecurityLogin.Cache.Converters
 {
-    public class NullableLongRedisValueConverter : ICacheValueConverter
+    public class NullableDoubleCacheValueConverter : ICacheValueConverter
     {
-        public static readonly NullableLongRedisValueConverter Instance = new NullableLongRedisValueConverter();
+        public static readonly NullableDoubleCacheValueConverter Instance = new NullableDoubleCacheValueConverter();
 
-        private NullableLongRedisValueConverter() { }
+        private NullableDoubleCacheValueConverter() { }
 
         public BufferValue Convert(object instance, object value, ICacheColumn column)
         {
-            return (long?)value;
+            return (double?)value;
         }
 
         public object ConvertBack(in BufferValue value, ICacheColumn column)
@@ -19,7 +19,7 @@ namespace SecurityLogin.Cache.Converters
             {
                 return null;
             }
-            if (value.TryParse(out long val))
+            if (value.TryParse(out double val))
             {
                 return val;
             }

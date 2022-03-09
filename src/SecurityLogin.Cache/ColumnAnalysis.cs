@@ -63,7 +63,7 @@ namespace SecurityLogin.Cache
         }
         protected virtual ICacheValueConverter CreateConverter(PropertyInfo info)
         {
-            return KnowsRedisValueConverter.GetConverter(info.PropertyType);
+            return KnowsCacheValueConverter.GetConverter(info.PropertyType);
         }
         protected readonly Dictionary<Type, ICacheValueConverter> convertTypeCache = new Dictionary<Type, ICacheValueConverter>();
         protected virtual bool TryGetConverter(PropertyInfo info,out ICacheValueConverter converter)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.Cache.Converters
 {
-    public static class KnowsRedisValueConverter
+    public static class KnowsCacheValueConverter
     {
         public static ICacheValueConverter EndValueConverter { get; set; }
 
@@ -15,102 +15,102 @@ namespace SecurityLogin.Cache.Converters
         {
             if (type.IsEquivalentTo(typeof(string)))
             {
-                return StringRedisValueConverter.Instance;
+                return StringCacheValueConverter.Instance;
             }
             if (type.IsEquivalentTo(typeof(BufferValue)))
             {
-                return EmptyRedisValueConverter.Instance;
+                return EmptyCacheValueConverter.Instance;
             }
             if (type.IsValueType)
             {
                 if (type.IsEquivalentTo(typeof(char)))
                 {
-                    return CharRedisValueConverter.Instance;
+                    return CharCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(char?)))
                 {
-                    return NullableCharRedisValueConverter.Instance;
+                    return NullableCharCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(short)))
                 {
-                    return ShortRedisValueConverter.Instance;
+                    return ShortCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(short?)))
                 {
-                    return NullableShortRedisValueConverter.Instance;
+                    return NullableShortCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(uint)))
                 {
-                    return UIntRedisValueConverter.Instance;
+                    return UIntCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(uint?)))
                 {
-                    return NullableUIntRedisValueConverter.Instance;
+                    return NullableUIntCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(ulong)))
                 {
-                    return ULongRedisValueConverter.Instance;
+                    return ULongCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(ulong?)))
                 {
-                    return NullableULongRedisValueConverter.Instance;
+                    return NullableULongCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(int)))
                 {
-                    return IntRedisValueConverter.Instance;
+                    return IntCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(int?)))
                 {
-                    return NullableIntRedisValueConverter.Instance;
+                    return NullableIntCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(long)))
                 {
-                    return LongRedisValueConverter.Instance;
+                    return LongCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(long?)))
                 {
-                    return NullableLongRedisValueConverter.Instance;
+                    return NullableLongCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(double)))
                 {
-                    return DoubleRedisValueConverter.Instance;
+                    return DoubleCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(double?)))
                 {
-                    return NullableDoubleRedisValueConverter.Instance;
+                    return NullableDoubleCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(float)))
                 {
-                    return FloatRedisValueConverter.Instance;
+                    return FloatCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(float?)))
                 {
-                    return NullableFloatRedisValueConverter.Instance;
+                    return NullableFloatCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(decimal)))
                 {
-                    return DecimalRedisValueConverter.Instance;
+                    return DecimalCacheValueConverter.Instance;
                 }
                 if (type.IsEquivalentTo(typeof(decimal?)))
                 {
-                    return NullableDecimalRedisValueConverter.Instance;
+                    return NullableDecimalCacheValueConverter.Instance;
                 }                
             }
             if (type.IsEquivalentTo(typeof(byte[])))
             {
-                return ByteArrayRedisValueConverter.Instance;
+                return ByteArrayCacheValueConverter.Instance;
             }
             if (type.IsEquivalentTo(typeof(DateTime)))
             {
-                return DateTimeRedisValueConverter.Instance;
+                return DateTimeCacheValueConverter.Instance;
             }
             if (type.IsEquivalentTo(typeof(DateTime?)))
             {
-                return NullableDateTimeRedisValueConverter.Instance;
+                return NullableDateTimeCacheValueConverter.Instance;
             }
             if (type.IsEnum)
             {
-                return EnumRedisValueConverter.Instance;
+                return EnumCacheValueConverter.Instance;
             }
 
             return EndValueConverter;

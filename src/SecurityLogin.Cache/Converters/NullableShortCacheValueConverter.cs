@@ -2,15 +2,15 @@
 
 namespace SecurityLogin.Cache.Converters
 {
-    public class NullableDecimalRedisValueConverter : ICacheValueConverter
+    public class NullableShortCacheValueConverter : ICacheValueConverter
     {
-        public static readonly NullableDecimalRedisValueConverter Instance = new NullableDecimalRedisValueConverter();
+        public static readonly NullableShortCacheValueConverter Instance = new NullableShortCacheValueConverter();
 
-        private NullableDecimalRedisValueConverter() { }
+        private NullableShortCacheValueConverter() { }
 
         public BufferValue Convert(object instance, object value, ICacheColumn column)
         {
-            return (double?)((decimal?)value);
+            return (short?)(char?)value;
         }
 
         public object ConvertBack(in BufferValue value, ICacheColumn column)
@@ -19,7 +19,7 @@ namespace SecurityLogin.Cache.Converters
             {
                 return null;
             }
-            return (decimal?)value;
+            return (short?)(int?)value;
         }
     }
 }

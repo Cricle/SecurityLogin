@@ -2,24 +2,24 @@
 
 namespace SecurityLogin.Cache.Converters
 {
-    public class IntRedisValueConverter : ICacheValueConverter
+    public class LongCacheValueConverter : ICacheValueConverter
     {
-        public static readonly IntRedisValueConverter Instance = new IntRedisValueConverter();
+        public static readonly LongCacheValueConverter Instance = new LongCacheValueConverter();
 
-        private IntRedisValueConverter() { }
+        private LongCacheValueConverter() { }
 
         public BufferValue Convert(object instance, object value, ICacheColumn column)
         {
-            return (int)value;
+            return (long)value;
         }
 
         public object ConvertBack(in BufferValue value, ICacheColumn column)
         {
-            if (value .TryParse(out int val))
+            if (value.TryParse(out long val))
             {
                 return val;
             }
-            return default(int);
+            return default(long);
         }
     }
 }

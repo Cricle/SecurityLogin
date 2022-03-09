@@ -40,7 +40,7 @@ namespace SecurityLogin.Cache
                     return null;
                 }
             }
-            var convert = KnowsRedisValueConverter.GetConverter(type);
+            var convert = KnowsCacheValueConverter.GetConverter(type);
             return convert?.ConvertBack(value, null);
         }
     }

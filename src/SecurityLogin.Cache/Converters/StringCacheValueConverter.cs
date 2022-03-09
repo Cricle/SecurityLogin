@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.Cache.Converters
 {
-    internal class EmptyRedisValueConverter: ICacheValueConverter
+    public class StringCacheValueConverter : ICacheValueConverter
     {
-        public static readonly EmptyRedisValueConverter Instance = new EmptyRedisValueConverter();
-
-        private EmptyRedisValueConverter() { }
+        public static readonly StringCacheValueConverter Instance = new StringCacheValueConverter();
+        
+        private StringCacheValueConverter() { }
 
         public BufferValue Convert(object instance, object value, ICacheColumn column)
         {
-            return (BufferValue)value;
+            return (string)value;
         }
 
         public object ConvertBack(in BufferValue value, ICacheColumn column)
         {
-            return value;
+            return value.ToString();
         }
     }
 }

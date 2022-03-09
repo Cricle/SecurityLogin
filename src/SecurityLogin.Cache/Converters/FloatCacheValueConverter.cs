@@ -2,11 +2,11 @@
 
 namespace SecurityLogin.Cache.Converters
 {
-    public class FloatRedisValueConverter : ICacheValueConverter
+    public class FloatCacheValueConverter : ICacheValueConverter
     {
-        public static readonly FloatRedisValueConverter Instance = new FloatRedisValueConverter();
+        public static readonly FloatCacheValueConverter Instance = new FloatCacheValueConverter();
 
-        private FloatRedisValueConverter() { }
+        private FloatCacheValueConverter() { }
 
         public BufferValue Convert(object instance, object value, ICacheColumn column)
         {
@@ -17,7 +17,7 @@ namespace SecurityLogin.Cache.Converters
         {
             if (!value.HasValue)
             {
-                return RedisValueConverterConst.DoNothing;
+                return CacheValueConverterConst.DoNothing;
             }
             return (float)value;
         }

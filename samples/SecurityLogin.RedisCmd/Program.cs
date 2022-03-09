@@ -7,28 +7,29 @@ using System.Text;
 using System.Linq;
 using System;
 using SecurityLogin.Redis;
-using SecurityLogin.Redis.Converters;
+using SecurityLogin.Cache.Converters;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using SecurityLogin.Redis.Annotations;
+using SecurityLogin.Cache.Annotations;
+using SecurityLogin.Cache;
 
 namespace SecurityLogin.RedisCmd
 {
     internal class Program
     {
-        public class JsonRedisValueConverter : IRedisValueConverter
+        public class JsonRedisValueConverter : ICacheValueConverter
         {
 
-            public RedisValue Convert(object instance, object value, IRedisColumn column)
+            public BufferValue Convert(object instance, object value, ICacheColumn column)
             {
                 return JsonConvert.SerializeObject(value);
             }
 
-            public object ConvertBack(in RedisValue value, IRedisColumn column)
+            public object ConvertBack(in BufferValue value, ICacheColumn column)
             {
                 if (!value.HasValue)
                 {
-                    return RedisValueConverterConst.DoNothing;
+                    return CacheValueConverterConst.DoNothing;
                 }
                 return JsonConvert.DeserializeObject(value, column.Property.PropertyType);
             }
@@ -60,9 +61,9 @@ namespace SecurityLogin.RedisCmd
         }
         static void Main(string[] args)
         {
-            KnowsRedisValueConverter.EndValueConverter = new JsonRedisValueConverter();
+            KnowsCacheValueConverter.EndValueConverter = new JsonRedisValueConverter();
             var a = new A { B = new B { Age = 23, Name = "dsadsa" ,C=new C { CX = 44, Dx = "aaa", Lst = new List<int> { 1, 23, 241, 1 } } }, Id = 2, UID = 4213 };
-            var val=ExpressionRedisOperator.GetRedisOperator(a.GetType());
+            var val=ExpressionCacheOperator.GetRedisOperator(a.GetType());
             var m=val.As(a);
             var na = new A();
             val.Write(m);

@@ -2,11 +2,11 @@
 
 namespace SecurityLogin.Cache.Converters
 {
-    public class ShortRedisValueConverter : ICacheValueConverter
+    public class ShortCacheValueConverter : ICacheValueConverter
     {
-        public static readonly ShortRedisValueConverter Instance = new ShortRedisValueConverter();
+        public static readonly ShortCacheValueConverter Instance = new ShortCacheValueConverter();
 
-        private ShortRedisValueConverter() { }
+        private ShortCacheValueConverter() { }
 
         public BufferValue Convert(object instance, object value, ICacheColumn column)
         {
@@ -17,7 +17,7 @@ namespace SecurityLogin.Cache.Converters
         {
             if (!value.HasValue)
             {
-                return RedisValueConverterConst.DoNothing;
+                return CacheValueConverterConst.DoNothing;
             }
             return (short)(long)value;
         }

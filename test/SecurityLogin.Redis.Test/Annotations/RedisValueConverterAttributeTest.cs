@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityLogin.Redis.Annotations;
-using SecurityLogin.Redis.Converters;
+using SecurityLogin.Cache;
+using SecurityLogin.Cache.Annotations;
+using SecurityLogin.Cache.Converters;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.Redis.Test.Annotations
 {
-    internal class NullRedisValueConverter : IRedisValueConverter
+    internal class NullCacheValueConverter : ICacheValueConverter
     {
-        public RedisValue Convert(object instance, object value, IRedisColumn column)
+        public BufferValue Convert(object instance, object value, ICacheColumn column)
         {
             return default;
         }
 
-        public object ConvertBack(in RedisValue value, IRedisColumn column)
+        public object ConvertBack(in BufferValue value, ICacheColumn column)
         {
             return null;
         }
@@ -28,18 +29,18 @@ namespace SecurityLogin.Redis.Test.Annotations
         [TestMethod]
         public void GivenNull_MustThrowException()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new RedisValueConverterAttribute(null));
+            Assert.ThrowsException<ArgumentNullException>(() => new CacheValueConverterAttribute(null));
         }
         [TestMethod]
         public void GivenNotImplmentIRedisValueConverter_MustThrowException()
         {
-            Assert.ThrowsException<ArgumentException>(() => new RedisValueConverterAttribute(typeof(object)));
+            Assert.ThrowsException<ArgumentException>(() => new CacheValueConverterAttribute(typeof(object)));
         }
         [TestMethod]
         public void GivenType_PropertyMustEqualInput()
         {
-            var t = typeof(NullRedisValueConverter);
-            var attr = new RedisValueConverterAttribute(t);
+            var t = typeof(NullCacheValueConverter);
+            var attr = new CacheValueConverterAttribute(t);
             Assert.AreEqual(t, attr.ConvertType);
         }
     }
