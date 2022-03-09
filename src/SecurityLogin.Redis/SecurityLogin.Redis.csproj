@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\..\eng\pkg.props" />
 
 	<PropertyGroup>
@@ -6,11 +6,14 @@
 		<LangVersion>8.0</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Ao.ObjectDesign" Version="0.3.3" />
+		<PackageReference Include="Ao.ObjectDesign" Version="0.3.4" />
 		<PackageReference Include="FastExpressionCompiler.LightExpression" Version="3.2.2" />
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\SecurityLogin.Cache\SecurityLogin.Cache.csproj" />
 	</ItemGroup>
 
 </Project>

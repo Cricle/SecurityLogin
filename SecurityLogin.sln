@@ -31,7 +31,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{39318083-1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Redis.Benchmarks", "test\SecurityLogin.Redis.Benchmarks\SecurityLogin.Redis.Benchmarks.csproj", "{E3A386DD-FA75-46C4-8BF1-C5E56B6AD707}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityLogin.Redis.Test", "test\SecurityLogin.Redis.Test\SecurityLogin.Redis.Test.csproj", "{99745AC9-BF8E-47AD-8D75-1CBEF9E54B4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Redis.Test", "test\SecurityLogin.Redis.Test\SecurityLogin.Redis.Test.csproj", "{99745AC9-BF8E-47AD-8D75-1CBEF9E54B4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityLogin.Cache", "src\SecurityLogin.Cache\SecurityLogin.Cache.csproj", "{DAD84D43-D974-4661-97A4-5D32256EE41D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,10 @@ Global
 		{99745AC9-BF8E-47AD-8D75-1CBEF9E54B4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99745AC9-BF8E-47AD-8D75-1CBEF9E54B4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99745AC9-BF8E-47AD-8D75-1CBEF9E54B4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAD84D43-D974-4661-97A4-5D32256EE41D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAD84D43-D974-4661-97A4-5D32256EE41D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAD84D43-D974-4661-97A4-5D32256EE41D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAD84D43-D974-4661-97A4-5D32256EE41D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,6 @@
 ﻿using Ao.ObjectDesign;
+using SecurityLogin.Cache;
+using SecurityLogin.Cache.Finders;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -8,9 +10,9 @@ namespace SecurityLogin.Redis.Finders
 {
     internal static class OperatorCacher
     {
-        private static readonly Dictionary<Type, IRedisOperator> operatorMap = new Dictionary<Type, IRedisOperator>();
+        private static readonly Dictionary<Type, ICacheOperator> operatorMap = new Dictionary<Type, ICacheOperator>();
 
-        public static IRedisOperator GetOperator(Type type)
+        public static ICacheOperator GetOperator(Type type)
         {
             if (!operatorMap.TryGetValue(type, out var @operator))
             {
@@ -18,11 +20,11 @@ namespace SecurityLogin.Redis.Finders
                     type == typeof(string) ||
                     Nullable.GetUnderlyingType(type) != null)
                 {
-                    @operator = RawRedisOperator.GetRedisOperator(type);
+                    @operator = RawCacheOperator.GetRedisOperator(type);
                 }
                 else
                 {
-                    @operator = ExpressionRedisOperator.GetRedisOperator(type);
+                    @operator = ExpressionCacheOperator.GetRedisOperator(type);
                 }
                 operatorMap[type] = @operator;
             }
@@ -36,8 +38,8 @@ namespace SecurityLogin.Redis.Finders
         private static readonly bool IsNormalType = typeof(TEntity).IsPrimitive || typeof(TEntity) == typeof(string);
         private static readonly bool IsArray = typeof(TEntity).IsArray;
         private static readonly Type EntityType = typeof(TEntity);
-        private readonly IRedisOperator @operator;
-        private readonly ExpressionRedisOperator expressionRedis;
+        private readonly ICacheOperator @operator;
+        private readonly ExpressionCacheOperator expressionRedis;
         private readonly TypeCreator Creator;
 
 
@@ -49,7 +51,7 @@ namespace SecurityLogin.Redis.Finders
                 Creator = CompiledPropertyInfo.GetCreator(EntityType);
             }
             @operator = OperatorCacher.GetOperator(EntityType);
-            expressionRedis = @operator as ExpressionRedisOperator;
+            expressionRedis = @operator as ExpressionCacheOperator;
         }
 
         public IDatabase Database { get; }
@@ -62,10 +64,10 @@ namespace SecurityLogin.Redis.Finders
             {
                 if (expressionRedis != null)
                 {
-                    return (TEntity)expressionRedis.Write(data);
+                    return (TEntity)expressionRedis.Write(data.AsBuffer());
                 }
                 object inst = Create();
-                @operator.Write(ref inst, data);
+                @operator.WriteRedis(ref inst, data);
                 return (TEntity)inst;
             }
             return default;
@@ -109,7 +111,7 @@ namespace SecurityLogin.Redis.Finders
         public async Task<bool> SetInCahceAsync(TIdentity identity, TEntity entity)
         {
             var key = GetEntryKey(identity);
-            var h = @operator.As(entity);
+            var h = @operator.AsRedis(entity);
             var cacheTime = GetCacheTime(identity, entity);
             await Database.HashSetAsync(key, h);
             return await Database.KeyExpireAsync(key, cacheTime);
