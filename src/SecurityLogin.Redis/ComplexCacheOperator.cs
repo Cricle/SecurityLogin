@@ -1,11 +1,11 @@
 ﻿using Ao.ObjectDesign;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
-using StackExchange.Redis;
 
 namespace SecurityLogin.Cache
 {
-    public abstract class ComplexCacheOperator : ICacheOperator 
+    public abstract class ComplexCacheOperator
     {
         private IReadOnlyList<ICacheColumn> redisColumns;
         private IReadOnlyDictionary<string, ICacheColumn> redisColumnMap;
@@ -51,9 +51,6 @@ namespace SecurityLogin.Cache
         {
             return ColumnAnalysis.GetRedisColumnMap(Target, null);
         }
-
-        public abstract void Write(ref object instance, HashEntry[] entries);
-        public abstract HashEntry[] As(object value);
 
         public object Create()
         {

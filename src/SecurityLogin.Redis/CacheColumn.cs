@@ -26,5 +26,10 @@ namespace SecurityLogin.Cache
         IReadOnlyList<ICacheColumn> ICacheColumn.Nexts => Nexts;
 
         public ICacheColumn[] Nexts { get; set; }
+
+        public override string ToString()
+        {
+            return $"{{Name: {Name}, Path: {Path}}}";
+        }
     }
 }

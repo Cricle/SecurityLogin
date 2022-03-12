@@ -4,17 +4,13 @@ namespace SecurityLogin.Cache
 {
     public static class CacheOperatorWriteExtensions
     {
-        public static T Create<T>(this ComplexCacheOperator @operator, HashEntry[] entries)
+        public static void Write<T>(this IHashCacheOperator @operator,ref T instance, HashEntry[] entries)
         {
-            return (T)Create(@operator,entries);
+            object val = instance;
+            @operator.Write(ref val, entries);
+            instance = (T)val;
         }
-        public static object Create(this ComplexCacheOperator @operator, HashEntry[] entries)
-        {
-            var inst = @operator.Create();
-            @operator.Write(ref inst, entries);
-            return inst;
-        }
-        public static void Write<T>(this ICacheOperator @operator,ref T instance, HashEntry[] entries)
+        public static void Write<T>(this IListCacheOperator @operator, ref T instance, RedisValue[] entries)
         {
             object val = instance;
             @operator.Write(ref val, entries);

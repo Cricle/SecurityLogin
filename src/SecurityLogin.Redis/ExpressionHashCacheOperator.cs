@@ -6,18 +6,19 @@ using System.Reflection;
 using FastExpressionCompiler.LightExpression;
 using SecurityLogin.Cache.Converters;
 using StackExchange.Redis;
+using System.Diagnostics;
 
 namespace SecurityLogin.Cache
 {
-    public class ExpressionCacheOperator: ComplexCacheOperator
+    public class ExpressionHashCacheOperator: ComplexCacheOperator,IHashCacheOperator
     {
-        private static readonly Dictionary<Type, ExpressionCacheOperator> defaultRedisOpCache = new Dictionary<Type, ExpressionCacheOperator>();
+        private static readonly Dictionary<Type, ExpressionHashCacheOperator> defaultRedisOpCache = new Dictionary<Type, ExpressionHashCacheOperator>();
 
-        public static ExpressionCacheOperator GetRedisOperator(Type type)
+        public static ExpressionHashCacheOperator GetRedisOperator(Type type)
         {
             if (!defaultRedisOpCache.TryGetValue(type, out var @operator))
             {
-                @operator = new ExpressionCacheOperator(type, SharedAnalysis);
+                @operator = new ExpressionHashCacheOperator(type, SharedAnalysis);
                 defaultRedisOpCache[type] = @operator;
                 @operator.Build();
             }
@@ -29,7 +30,7 @@ namespace SecurityLogin.Cache
         private static readonly MethodInfo ConvertMethod = typeof(ICacheValueConverter).GetMethod("Convert");
         private static readonly MethodInfo ConvertBackMethod = typeof(ICacheValueConverter).GetMethod("ConvertBack");
 
-        public ExpressionCacheOperator(Type target, ICacheColumnAnalysis columnAnalysis) : base(target, columnAnalysis)
+        public ExpressionHashCacheOperator(Type target, ICacheColumnAnalysis columnAnalysis) : base(target, columnAnalysis)
         {
         }
         
@@ -154,13 +155,13 @@ namespace SecurityLogin.Cache
             }
             return d;
         }
-        public override void Write(ref object instance, HashEntry[] entries)
+        public void Write(ref object instance, HashEntry[] entries)
         {
             var map = ToMap(entries);
             writeMethod(instance, map);
         }
 
-        public override HashEntry[] As(object value)
+        public HashEntry[] As(object value)
         {
             return asMethod(value);
         }

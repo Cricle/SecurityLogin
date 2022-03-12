@@ -10,9 +10,9 @@ namespace SecurityLogin.Redis.Finders
 {
     internal static class OperatorCacher
     {
-        private static readonly Dictionary<Type, ICacheOperator> operatorMap = new Dictionary<Type, ICacheOperator>();
+        private static readonly Dictionary<Type, IListCacheOperator> operatorMap = new Dictionary<Type, IListCacheOperator>();
 
-        public static ICacheOperator GetOperator(Type type)
+        public static IListCacheOperator GetOperator(Type type)
         {
             if (!operatorMap.TryGetValue(type, out var @operator))
             {
@@ -24,26 +24,26 @@ namespace SecurityLogin.Redis.Finders
                 }
                 else
                 {
-                    @operator = ExpressionCacheOperator.GetRedisOperator(type);
+                    @operator = ExpressionListCacheOperator.GetRedisOperator(type);
                 }
                 operatorMap[type] = @operator;
             }
             return @operator;
         }
     }
-    public abstract class HashSetCacheFinder<TIdentity, TEntity> : ICacheFinder<TIdentity, TEntity>
+    public abstract class ListCacheFinder<TIdentity, TEntity> : ICacheFinder<TIdentity, TEntity>
     {
         public static readonly TimeSpan DefaultCacheTime = TimeSpan.FromSeconds(3);
 
         private static readonly bool IsNormalType = typeof(TEntity).IsPrimitive || typeof(TEntity) == typeof(string);
         private static readonly bool IsArray = typeof(TEntity).IsArray;
         private static readonly Type EntityType = typeof(TEntity);
-        private readonly ICacheOperator @operator;
-        private readonly ExpressionCacheOperator expressionRedis;
+        private readonly IListCacheOperator @operator;
+        private readonly ExpressionListCacheOperator expressionRedis;
         private readonly TypeCreator Creator;
 
 
-        protected HashSetCacheFinder(IDatabase database)
+        protected ListCacheFinder(IDatabase database)
         {
             Database = database ?? throw new ArgumentNullException(nameof(database));
             if (!IsNormalType)
@@ -51,15 +51,20 @@ namespace SecurityLogin.Redis.Finders
                 Creator = CompiledPropertyInfo.GetCreator(EntityType);
             }
             @operator = OperatorCacher.GetOperator(EntityType);
-            expressionRedis = @operator as ExpressionCacheOperator;
+            expressionRedis = @operator as ExpressionListCacheOperator;
         }
 
         public IDatabase Database { get; }
 
+        public void Build()
+        {
+
+        }
+
         public async Task<TEntity> FindInCahceAsync(TIdentity identity)
         {
             var key = GetEntryKey(identity);
-            var data = await Database.HashGetAllAsync(key);
+            var data = await Database.ListRangeAsync(key);
             if (data.Length != 0)
             {
                 if (expressionRedis != null)
@@ -113,7 +118,7 @@ namespace SecurityLogin.Redis.Finders
             var key = GetEntryKey(identity);
             var h = @operator.As(entity);
             var cacheTime = GetCacheTime(identity, entity);
-            await Database.HashSetAsync(key, h);
+            await Database.ListRightPushAsync(key, h);
             return await Database.KeyExpireAsync(key, cacheTime);
         }
         protected virtual TimeSpan? GetCacheTime(TIdentity identity, TEntity entity)

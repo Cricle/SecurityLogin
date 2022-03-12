@@ -14,7 +14,7 @@ using StackExchange.Redis;
 
 namespace SecurityLogin.Cache
 {
-    public class DefaultCacheOperator : ComplexCacheOperator
+    public class DefaultCacheOperator : ComplexCacheOperator,IHashCacheOperator
     {
         private static readonly Dictionary<Type, DefaultCacheOperator> defaultRedisOpCache = new Dictionary<Type, DefaultCacheOperator>();
 
@@ -34,7 +34,7 @@ namespace SecurityLogin.Cache
         {
         }
 
-        public override void Write(ref object instance, HashEntry[] entries)
+        public void Write(ref object instance, HashEntry[] entries)
         {
             WriteAll(ref instance, RedisColumns, entries.ToDictionary(x => x.Name.ToString(), x => x.Value));
         }
@@ -68,7 +68,7 @@ namespace SecurityLogin.Cache
             return ReflectionHelper.Create(type);
         }
 
-        public override HashEntry[] As(object instance)
+        public HashEntry[] As(object instance)
         {
             return GetHashEntries(instance, RedisColumns).ToArray();
         }

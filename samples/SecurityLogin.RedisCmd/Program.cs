@@ -57,16 +57,16 @@ namespace SecurityLogin.RedisCmd
 
             public string Dx { get; set; }
 
-            public List<int> Lst { get; set; }
+            //public List<int> Lst { get; set; }
         }
         static void Main(string[] args)
         {
             KnowsCacheValueConverter.EndValueConverter = new JsonRedisValueConverter();
-            var a = new A { B = new B { Age = 23, Name = "dsadsa" ,C=new C { CX = 44, Dx = "aaa", Lst = new List<int> { 1, 23, 241, 1 } } }, Id = 2, UID = 4213 };
-            var val=ExpressionCacheOperator.GetRedisOperator(a.GetType());
+            var a = new A { B = new B { Age = 23, Name = "dsadsa" ,C=new C { CX = 44, Dx = "aaa", } }, Id = 2, UID = 4213 };
+            var val= ExpressionListCacheOperator.GetRedisOperator(a.GetType());
             var m=val.As(a);
             var na = new A();
-            val.Write(m);
+            val.Write(ref na,m);
             var d = val.As(a);
             var x = new A();
             object w = x;

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.AspNetCore.Services
 {
-    public class StudentIdCacheFinder : HashSetCacheFinder<string, int?>
+    public class StudentIdCacheFinder : ListCacheFinder<string, int?>
     {
         public StudentIdCacheFinder(IDatabase database) : base(database)
         {
@@ -29,7 +29,7 @@ namespace SecurityLogin.AspNetCore.Services
             return TimeSpan.FromSeconds(10);
         }
     }
-    public class StudentCacheFinder : HashSetCacheFinder<string, Student>
+    public class StudentCacheFinder : ListCacheFinder<string, Student>
     {
         public StudentCacheFinder(IDatabase database) : base(database)
         {
@@ -37,8 +37,8 @@ namespace SecurityLogin.AspNetCore.Services
         public async Task<long> GetSizeAsync(string identity)
         {
             var key = GetEntryKey(identity);
-            var data = await Database.HashGetAllAsync(key);
-            return data.Sum(x => x.Value.Length());
+            var data = await Database.ListRangeAsync(key);
+            return data.Sum(x => x.Length());
         }
         protected override Task<Student> OnFindInDbAsync(string identity)
         {
@@ -46,8 +46,8 @@ namespace SecurityLogin.AspNetCore.Services
             return Task.FromResult(new Student
             {
                 Id = rand.Next(1111, 9999),
-                Name = Student.CreateLargeText(70240),
-                Name1 = Student.CreateLargeText(70240),
+                Name = Student.CreateLargeText(10240),
+                Name1 = Student.CreateLargeText(10240),
                 CarId = rand.Next(2222, int.MaxValue),
                 CreateTime = DateTime.Now,
             });

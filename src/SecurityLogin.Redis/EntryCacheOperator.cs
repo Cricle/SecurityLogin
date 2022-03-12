@@ -6,7 +6,7 @@ using StackExchange.Redis;
 
 namespace SecurityLogin.Cache
 {
-    public abstract class EntryCacheOperator : ICacheOperator, IAutoWriteCache, IEntryCacheOperator
+    public abstract class EntryCacheOperator : IHashCacheOperator, IAutoWriteCache, IEntryCacheOperator,IListCacheOperator
     {
         public static readonly RedisValue defaultName = new RedisValue("Default");
 
@@ -34,7 +34,7 @@ namespace SecurityLogin.Cache
         }
 
 
-        HashEntry[] ICacheOperator.As(object value)
+        HashEntry[] IHashCacheOperator.As(object value)
         {
             return new HashEntry[]
             {
@@ -90,6 +90,19 @@ namespace SecurityLogin.Cache
         public RedisValue As(object value)
         {
             return AsCore(value);
+        }
+
+        public void Write(ref object instance, RedisValue[] entries)
+        {
+            WriteCore(ref instance, entries[0]);
+        }
+
+        RedisValue[] IListCacheOperator.As(object value)
+        {
+            return new RedisValue[]
+            {
+                AsCore(value),
+            };
         }
 
         private static readonly Dictionary<Type, object> structCache = new Dictionary<Type, object>();

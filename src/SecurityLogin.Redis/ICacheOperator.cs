@@ -2,7 +2,15 @@
 
 namespace SecurityLogin.Cache
 {
-    public interface ICacheOperator
+    public interface IListCacheOperator
+    {
+        void Build();
+
+        void Write(ref object instance, RedisValue[] entries);
+
+        RedisValue[] As(object value);
+    }
+    public interface IHashCacheOperator
     {
         void Build();
 

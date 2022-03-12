@@ -70,10 +70,12 @@ namespace SecurityLogin.Redis.Benchmarks
     public abstract class ConvertRedisBase
     {
         public DefaultCacheOperator @operator;
-        public ExpressionCacheOperator @exoperator;
+        public ExpressionHashCacheOperator @exoperator;
+        public ExpressionListCacheOperator @exloperator;
         public MPCacheOperator @mpoperator;
         public HashEntry[] hashEntries;
         public HashEntry[] hhashEntries;
+        public RedisValue[] lhashEntries;
         public RedisValue mphash;
         public A a;
         [GlobalSetup]
@@ -81,10 +83,12 @@ namespace SecurityLogin.Redis.Benchmarks
         {
             a = new A { B = new B { Age = 23, Name = "dsadsa", C = new C { CX = 44, Dx = "aaa" } }, Id = 2, UID = 4213 };
             @operator = DefaultCacheOperator.GetRedisOperator(a.GetType());
-            @exoperator= ExpressionCacheOperator.GetRedisOperator(a.GetType());
+            @exoperator = ExpressionHashCacheOperator.GetRedisOperator(a.GetType());
+            @exloperator = ExpressionListCacheOperator.GetRedisOperator(a.GetType());
             @mpoperator = new MPCacheOperator(a.GetType());
             hashEntries = @operator.As(a);
             hhashEntries = @exoperator.As(a);
+            lhashEntries=@exloperator.As(a);
             @exoperator.As(a);
             mphash =@mpoperator.As(a);
             var x = new A();
@@ -92,6 +96,7 @@ namespace SecurityLogin.Redis.Benchmarks
             @operator.Write(ref w, hashEntries);
             @exoperator.Write(ref w, hashEntries);
             @mpoperator.Write(mphash);
+            exloperator.Write(ref w, lhashEntries);
             OnSetup();
         }
 
@@ -124,6 +129,12 @@ namespace SecurityLogin.Redis.Benchmarks
         {
             for (int i = 0; i < 1; i++)
                 @exoperator.As(a);
+        }
+        [Benchmark]
+        public void AotLToEntities()
+        {
+            for (int i = 0; i < 1; i++)
+                @exloperator.As(a);
         }
         [Benchmark]
         public void MPToEntities()
@@ -186,6 +197,15 @@ namespace SecurityLogin.Redis.Benchmarks
             {
                 var x = new A();
                 @exoperator.Write(ref x, hashEntries);
+            }
+        }
+        [Benchmark]
+        public void AotLToObject()
+        {
+            for (int i = 0; i < 1; i++)
+            {
+                var x = new A();
+                @exloperator.Write(ref x, lhashEntries);
             }
         }
         [Benchmark]
