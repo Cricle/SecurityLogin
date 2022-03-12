@@ -20,12 +20,12 @@ namespace SecurityLogin.RedisCmd
         public class JsonRedisValueConverter : ICacheValueConverter
         {
 
-            public BufferValue Convert(object instance, object value, ICacheColumn column)
+            public RedisValue Convert(object instance, object value, ICacheColumn column)
             {
                 return JsonConvert.SerializeObject(value);
             }
 
-            public object ConvertBack(in BufferValue value, ICacheColumn column)
+            public object ConvertBack(in RedisValue value, ICacheColumn column)
             {
                 if (!value.HasValue)
                 {

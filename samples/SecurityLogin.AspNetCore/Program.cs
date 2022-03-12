@@ -47,6 +47,7 @@ builder.Services.AddNormalSecurityService();
 builder.Services.AddScoped<LoginService>();
 builder.Services.AddScoped<StudentCacheFinder>();
 builder.Services.AddScoped<StudentIdCacheFinder>();
+builder.Services.AddScoped<MessagePackCacheFinder>();
 
 var app = builder.Build();
 

@@ -14,10 +14,13 @@ namespace SecurityLogin.AspNetCore.Controllers
     {
         private readonly StudentCacheFinder studentCacheFinder;
         private readonly StudentIdCacheFinder studentIdCacheFinder;
+        private readonly MessagePackCacheFinder messagePackCacheFinder;
 
         public DataController(StudentCacheFinder studentCacheFinder,
-            StudentIdCacheFinder studentIdCacheFinder)
+            StudentIdCacheFinder studentIdCacheFinder,
+            MessagePackCacheFinder messagePackCacheFinder)
         {
+            this.messagePackCacheFinder = messagePackCacheFinder;
             this.studentIdCacheFinder= studentIdCacheFinder;
             this.studentCacheFinder = studentCacheFinder;
         }
@@ -32,6 +35,20 @@ namespace SecurityLogin.AspNetCore.Controllers
             {
                 //res,
                 size= size,
+                Elase = ed
+            });
+        }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetMP()
+        {
+            var sw = Stopwatch.GetTimestamp();
+            var res = await messagePackCacheFinder.FindAsync("bbb");
+            var ed = new TimeSpan(Stopwatch.GetTimestamp() - sw);
+            var size = await messagePackCacheFinder.GetSizeAsync("bbb");
+            return Ok(new
+            {
+                //res,
+                size = size,
                 Elase = ed
             });
         }

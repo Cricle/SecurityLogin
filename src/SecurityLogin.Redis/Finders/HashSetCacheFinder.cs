@@ -64,10 +64,10 @@ namespace SecurityLogin.Redis.Finders
             {
                 if (expressionRedis != null)
                 {
-                    return (TEntity)expressionRedis.Write(data.AsBuffer());
+                    return (TEntity)expressionRedis.Write(data);
                 }
                 object inst = Create();
-                @operator.WriteRedis(ref inst, data);
+                @operator.Write(ref inst, data);
                 return (TEntity)inst;
             }
             return default;
@@ -111,7 +111,7 @@ namespace SecurityLogin.Redis.Finders
         public async Task<bool> SetInCahceAsync(TIdentity identity, TEntity entity)
         {
             var key = GetEntryKey(identity);
-            var h = @operator.AsRedis(entity);
+            var h = @operator.As(entity);
             var cacheTime = GetCacheTime(identity, entity);
             await Database.HashSetAsync(key, h);
             return await Database.KeyExpireAsync(key, cacheTime);

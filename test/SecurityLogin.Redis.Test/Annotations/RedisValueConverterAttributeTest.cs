@@ -13,12 +13,12 @@ namespace SecurityLogin.Redis.Test.Annotations
 {
     internal class NullCacheValueConverter : ICacheValueConverter
     {
-        public BufferValue Convert(object instance, object value, ICacheColumn column)
+        public RedisValue Convert(object instance, object value, ICacheColumn column)
         {
             return default;
         }
 
-        public object ConvertBack(in BufferValue value, ICacheColumn column)
+        public object ConvertBack(in RedisValue value, ICacheColumn column)
         {
             return null;
         }

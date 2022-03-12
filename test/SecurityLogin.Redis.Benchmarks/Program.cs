@@ -14,26 +14,35 @@ namespace SecurityLogin.Redis.Benchmarks
     {
         static void Main(string[] args)
         {
+            //new ToEntitiesComparer().Setup();
+            //var m = new MPCacheOperator(typeof(A));
+            //var e = m.As(new A());
+            //m.Write(e);
             BenchmarkDotNet.Running.BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run();
         }
     }
     public class MPCacheOperator : EntryCacheOperator
     {
-        private static readonly MessagePackSerializerOptions opt = MessagePackSerializerOptions.Standard.WithResolver(TypelessObjectResolver.Instance);
+        private static readonly MessagePackSerializerOptions opt = MessagePackSerializerOptions.Standard.WithResolver(TypelessObjectResolver.Instance)
+            .WithCompression( MessagePackCompression.Lz4Block);
 
         public MPCacheOperator(Type type)
             :base(type)
         {
         }
 
-        protected override BufferValue AsCore(object value)
+        protected override RedisValue AsCore(object value)
         {
             return MessagePackSerializer.Serialize(Target, value, opt);
         }
 
-        protected override void WriteCore(ref object instance,in BufferValue entry)
+        protected override void WriteCore(ref object instance,in RedisValue entry)
         {
-            instance = MessagePackSerializer.Deserialize(Target, entry, opt);
+            instance = MessagePackSerializer.Deserialize(Target, (byte[])entry, opt);
+        }
+        protected override object CreateInstance()
+        {
+            return null;
         }
     }
     public class A
@@ -63,8 +72,9 @@ namespace SecurityLogin.Redis.Benchmarks
         public DefaultCacheOperator @operator;
         public ExpressionCacheOperator @exoperator;
         public MPCacheOperator @mpoperator;
-        public BufferEntry[] hashEntries;
-        public BufferEntry[] mphash;
+        public HashEntry[] hashEntries;
+        public HashEntry[] hhashEntries;
+        public RedisValue mphash;
         public A a;
         [GlobalSetup]
         public void Setup()
@@ -74,13 +84,14 @@ namespace SecurityLogin.Redis.Benchmarks
             @exoperator= ExpressionCacheOperator.GetRedisOperator(a.GetType());
             @mpoperator = new MPCacheOperator(a.GetType());
             hashEntries = @operator.As(a);
+            hhashEntries = @exoperator.As(a);
             @exoperator.As(a);
             mphash =@mpoperator.As(a);
             var x = new A();
             object w = x;
             @operator.Write(ref w, hashEntries);
             @exoperator.Write(ref w, hashEntries);
-            @mpoperator.Write(ref x, mphash);
+            @mpoperator.Write(mphash);
             OnSetup();
         }
 
@@ -90,6 +101,7 @@ namespace SecurityLogin.Redis.Benchmarks
         }
     }
     [MemoryDiagnoser]
+    [AllStatisticsColumn]
     public class ToEntitiesComparer: ConvertRedisBase
     {
         MessagePackSerializerOptions op;
@@ -102,7 +114,7 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark]
         public void ToEntities()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
             {
                 @operator.As(a);
             }
@@ -110,21 +122,21 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark]
         public void AotToEntities()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
                 @exoperator.As(a);
         }
         [Benchmark]
         public void MPToEntities()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
             {
-                _ = (RedisValue)MessagePackSerializer.Serialize(a, op);
+                var d = (RedisValue)MessagePackSerializer.Serialize(a, op);
             }
         }
         [Benchmark]
         public void MPCacheToEntities()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
             {
                 _ =mpoperator.As(a);
             }
@@ -132,7 +144,7 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark]
         public void JsonToEntities()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
             {
                 RedisValue str = JsonSerializer.Serialize(a);
             }
@@ -140,7 +152,7 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark(Baseline = true)]
         public void RawToEntities()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
                 _ = new HashEntry[]
              {
                 new HashEntry("Id",a.Id),
@@ -153,6 +165,7 @@ namespace SecurityLogin.Redis.Benchmarks
         }
     }
     [MemoryDiagnoser]
+    [AllStatisticsColumn]
     public class ToObjectComparer : ConvertRedisBase
     {
         private RedisValue str;
@@ -169,7 +182,7 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark]
         public void AotToObject()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
             {
                 var x = new A();
                 @exoperator.Write(ref x, hashEntries);
@@ -178,7 +191,7 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark]
         public void AotToObjectWithCreate()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
             {
                 var x = (A)@exoperator.Write(hashEntries);
             }
@@ -186,7 +199,7 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark]
         public void MPToObject()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
             {
                 var x = MessagePack.MessagePackSerializer.Deserialize<A>(bs, op);
             }
@@ -194,7 +207,7 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark]
         public void MPCacheToObject()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
             {
                 var x = mpoperator.Write(mphash);
             }
@@ -202,13 +215,13 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark]
         public void JsonToObject()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
                 JsonSerializer.Deserialize<A>(str);
         }
         [Benchmark]
         public void ToObject()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
             {
                 var x = new A();
                 @operator.Write(ref x, hashEntries);
@@ -217,7 +230,7 @@ namespace SecurityLogin.Redis.Benchmarks
         [Benchmark(Baseline =true)]
         public void RawToObject()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
             {
                 var map = hashEntries.ToDictionary(w => w.Name.ToString(), w => w.Value);
                 var x = new A

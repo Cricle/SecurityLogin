@@ -1,5 +1,8 @@
-﻿using SecurityLogin.Cache.Annotations;
+﻿using MessagePack;
+using MessagePack.Resolvers;
+using SecurityLogin.Cache.Annotations;
 using SecurityLogin.Cache.Converters;
+using SecurityLogin.Cache.Finders;
 using SecurityLogin.Redis.Finders;
 using StackExchange.Redis;
 using System;
@@ -43,15 +46,63 @@ namespace SecurityLogin.AspNetCore.Services
             return Task.FromResult(new Student
             {
                 Id = rand.Next(1111, 9999),
-                Name = Student.CreateLargeText(10240),
-                Name1 = Student.CreateLargeText(10240),
-                CarId = rand.Next(2222, 1111111),
+                Name = Student.CreateLargeText(70240),
+                Name1 = Student.CreateLargeText(70240),
+                CarId = rand.Next(2222, int.MaxValue),
                 CreateTime = DateTime.Now,
             });
         }
         protected override TimeSpan? GetCacheTime(string identity, Student entity)
         {
             return TimeSpan.FromSeconds(10);
+        }
+    }
+    public class MessagePackCacheFinder : CacheFinderBase<string, Student>
+    {
+        private static readonly Type type = typeof(Student);
+
+        private static readonly MessagePackSerializerOptions opt = MessagePackSerializerOptions.Standard.WithResolver(TypelessObjectResolver.Instance)
+            .WithCompression( MessagePackCompression.Lz4Block);
+
+        public MessagePackCacheFinder(IDatabase database)
+        {
+            Database = database;
+        }
+
+        public IDatabase Database { get; }
+        public async Task<long> GetSizeAsync(string identity)
+        {
+            var key = GetEntryKey(identity);
+            var data = await Database.StringGetAsync(key);
+            return data.Length();
+        }
+        protected override async Task<Student> CoreFindInCacheAsync(string key, string identity)
+        {
+            var str = await Database.StringGetAsync(key);
+            if (str.HasValue)
+            {
+                return (Student)MessagePackSerializer.Deserialize(type, str, opt);
+            }
+            return null;
+        }
+
+        protected override Task<Student> OnFindInDbAsync(string identity)
+        {
+            var rand = new Random();
+            return Task.FromResult(new Student
+            {
+                Id = rand.Next(1111, 9999),
+                Name = Student.CreateLargeText(70240),
+                Name1 = Student.CreateLargeText(70240),
+                CarId = rand.Next(2222, int.MaxValue),
+                CreateTime = DateTime.Now,
+            });
+        }
+
+        protected override Task<bool> WriteCacheAsync(string key, string identity, Student entity, TimeSpan? caheTime)
+        {
+            var bf= MessagePackSerializer.Serialize(entity, opt);
+            return Database.StringSetAsync(key, bf,caheTime);
         }
     }
     public class Student

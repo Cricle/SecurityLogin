@@ -23,7 +23,7 @@ namespace SecurityLogin.Redis.Test.Converters
         [TestMethod]
         public void ConvertBack()
         {
-            BufferValue value = new byte[] { 1, 2, 3, 4, 5 };
+            RedisValue value = new byte[] { 1, 2, 3, 4, 5 };
             var val = ByteArrayCacheValueConverter.Instance.ConvertBack(value, null);
             Assert.IsTrue(((byte[])value).SequenceEqual((byte[])val));
         }
