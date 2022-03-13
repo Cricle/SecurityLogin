@@ -1,5 +1,5 @@
 ﻿using StackExchange.Redis;
-using SecurityLogin.Cache.Annotations;
+using SecurityLogin.Redis.Annotations;
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SecurityLogin.Cache.Converters
+namespace SecurityLogin.Redis.Converters
 {
     public class GzipCacheValueConverter : ICacheValueConverter
     {

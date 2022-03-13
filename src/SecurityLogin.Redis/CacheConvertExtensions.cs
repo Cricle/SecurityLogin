@@ -1,8 +1,8 @@
-﻿using SecurityLogin.Cache.Converters;
+﻿using SecurityLogin.Redis.Converters;
 using StackExchange.Redis;
 using System;
 
-namespace SecurityLogin.Cache
+namespace SecurityLogin.Redis
 {
     public static class CacheConvertExtensions
     {

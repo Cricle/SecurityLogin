@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityLogin.Cache;
-using SecurityLogin.Cache.Converters;
+using SecurityLogin.Redis;
+using SecurityLogin.Redis.Converters;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;

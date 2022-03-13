@@ -1,7 +1,7 @@
 ﻿using StackExchange.Redis;
 using Microsoft.IO;
 
-namespace SecurityLogin.Cache.Converters
+namespace SecurityLogin.Redis.Converters
 {
     internal static class SharedMemoryStream
     {

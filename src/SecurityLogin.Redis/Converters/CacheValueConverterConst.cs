@@ -1,4 +1,4 @@
-﻿namespace SecurityLogin.Cache.Converters
+﻿namespace SecurityLogin.Redis.Converters
 {
     public static class CacheValueConverterConst
     {

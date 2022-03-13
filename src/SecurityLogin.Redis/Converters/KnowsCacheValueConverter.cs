@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SecurityLogin.Cache.Converters
+namespace SecurityLogin.Redis.Converters
 {
     public static class KnowsCacheValueConverter
     {

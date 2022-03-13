@@ -1,7 +1,7 @@
 ﻿using Ao.ObjectDesign;
 using FastExpressionCompiler;
-using SecurityLogin.Cache;
-using SecurityLogin.Cache.Converters;
+using SecurityLogin.Redis;
+using SecurityLogin.Redis.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,7 +12,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using StackExchange.Redis;
 
-namespace SecurityLogin.Cache
+namespace SecurityLogin.Redis
 {
     public class DefaultCacheOperator : ComplexCacheOperator,IHashCacheOperator
     {

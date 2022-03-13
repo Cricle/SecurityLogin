@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SecurityLogin.Cache
+namespace SecurityLogin.Redis
 {
     public interface ICacheColumnAnalysis
     {

@@ -1,7 +1,7 @@
 ﻿using StackExchange.Redis;
 
 
-namespace SecurityLogin.Cache.Converters
+namespace SecurityLogin.Redis.Converters
 {
     public class NullableIntCacheValueConverter : ICacheValueConverter
     {

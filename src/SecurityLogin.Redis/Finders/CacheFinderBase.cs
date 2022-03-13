@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SecurityLogin.Cache.Finders
+namespace SecurityLogin.Redis.Finders
 {
     public abstract class CacheFinderBase<TIdentity, TEntity> : ICacheFinder<TIdentity, TEntity>
     {

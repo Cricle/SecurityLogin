@@ -1,9 +1,9 @@
 ﻿using StackExchange.Redis;
-using SecurityLogin.Cache.Converters;
+using SecurityLogin.Redis.Converters;
 using System;
 using System.Collections.Generic;
 
-namespace SecurityLogin.Cache
+namespace SecurityLogin.Redis
 {
     public class RawCacheOperator : EntryCacheOperator
     {

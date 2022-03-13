@@ -2,7 +2,7 @@
 using System.Buffers;
 using System.Text;
 
-namespace SecurityLogin.Cache.Converters
+namespace SecurityLogin.Redis.Converters
 {
     public static class PoolEncoding
     {

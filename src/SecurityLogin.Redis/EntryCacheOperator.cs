@@ -1,10 +1,10 @@
 ﻿using Ao.ObjectDesign;
-using SecurityLogin.Cache.Converters;
+using SecurityLogin.Redis.Converters;
 using System;
 using System.Collections.Generic;
 using StackExchange.Redis;
 
-namespace SecurityLogin.Cache
+namespace SecurityLogin.Redis
 {
     public abstract class EntryCacheOperator : IHashCacheOperator, IAutoWriteCache, IEntryCacheOperator,IListCacheOperator
     {

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace SecurityLogin.Cache.Converters
+namespace SecurityLogin.Redis.Converters
 {
     public class NullableDateTimeCacheValueConverter : ICacheValueConverter
     {

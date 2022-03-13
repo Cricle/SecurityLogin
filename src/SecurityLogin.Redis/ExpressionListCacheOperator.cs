@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FastExpressionCompiler.LightExpression;
-using SecurityLogin.Cache.Converters;
+using SecurityLogin.Redis.Converters;
 using StackExchange.Redis;
 
-namespace SecurityLogin.Cache
+namespace SecurityLogin.Redis
 {
     public class ExpressionListCacheOperator : ComplexCacheOperator,IListCacheOperator
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SecurityLogin.Cache.Finders
+namespace SecurityLogin.Redis.Finders
 {
     public static class BatchCacheFinderExtensions
     {

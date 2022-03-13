@@ -1,10 +1,10 @@
 ﻿using StackExchange.Redis;
-using SecurityLogin.Cache.Annotations;
+using SecurityLogin.Redis.Annotations;
 using System;
 using System.IO.Compression;
 using System.Reflection;
 
-namespace SecurityLogin.Cache.Converters
+namespace SecurityLogin.Redis.Converters
 {
     internal static class CompressionHelper
     {

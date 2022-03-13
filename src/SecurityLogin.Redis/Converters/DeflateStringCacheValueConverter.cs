@@ -1,6 +1,6 @@
 ﻿using StackExchange.Redis;
 using Microsoft.IO;
-using SecurityLogin.Cache.Annotations;
+using SecurityLogin.Redis.Annotations;
 
 using System;
 using System.Buffers;
@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SecurityLogin.Cache.Converters
+namespace SecurityLogin.Redis.Converters
 {
     public class DeflateStringCacheValueConverter : ICacheValueConverter
     {

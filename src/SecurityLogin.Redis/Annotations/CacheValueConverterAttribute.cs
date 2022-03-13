@@ -1,11 +1,11 @@
-﻿using SecurityLogin.Cache.Converters;
+﻿using SecurityLogin.Redis.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SecurityLogin.Cache.Annotations
+namespace SecurityLogin.Redis.Annotations
 {
     [AttributeUsage(AttributeTargets.Property,AllowMultiple =false,Inherited =false)]
     public sealed class CacheValueConverterAttribute:Attribute

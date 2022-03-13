@@ -1,5 +1,5 @@
 ﻿using StackExchange.Redis;
-namespace SecurityLogin.Cache
+namespace SecurityLogin.Redis
 {
     public interface IAutoWriteCache
     {

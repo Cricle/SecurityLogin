@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using MessagePack;
 using MessagePack.Resolvers;
-using SecurityLogin.Cache;
+using SecurityLogin.Redis;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;

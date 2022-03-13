@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Buffers;
 
-namespace SecurityLogin.Cache.Converters
+namespace SecurityLogin.Redis.Converters
 {
     public struct PoolBuffer:IDisposable
     {

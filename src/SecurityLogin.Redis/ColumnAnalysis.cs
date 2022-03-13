@@ -1,6 +1,6 @@
 ﻿using Ao.ObjectDesign;
-using SecurityLogin.Cache.Annotations;
-using SecurityLogin.Cache.Converters;
+using SecurityLogin.Redis.Annotations;
+using SecurityLogin.Redis.Converters;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
 
-namespace SecurityLogin.Cache
+namespace SecurityLogin.Redis
 {
     public class CacheColumnAnalysis : ICacheColumnAnalysis
     {

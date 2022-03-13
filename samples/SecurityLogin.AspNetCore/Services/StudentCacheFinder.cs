@@ -1,8 +1,8 @@
 ﻿using MessagePack;
 using MessagePack.Resolvers;
-using SecurityLogin.Cache.Annotations;
-using SecurityLogin.Cache.Converters;
-using SecurityLogin.Cache.Finders;
+using SecurityLogin.Redis.Annotations;
+using SecurityLogin.Redis.Converters;
+using SecurityLogin.Redis.Finders;
 using SecurityLogin.Redis.Finders;
 using StackExchange.Redis;
 using System;

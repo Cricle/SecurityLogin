@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SecurityLogin.Cache.Finders
+namespace SecurityLogin.Redis.Finders
 {
     public interface IBatchCacheFinder<TIdentity, TEntity>
     {

@@ -1,10 +1,10 @@
 ﻿using StackExchange.Redis;
 using Ao.ObjectDesign;
-using SecurityLogin.Cache.Converters;
+using SecurityLogin.Redis.Converters;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace SecurityLogin.Cache
+namespace SecurityLogin.Redis
 {
     public interface ICacheColumn
     {

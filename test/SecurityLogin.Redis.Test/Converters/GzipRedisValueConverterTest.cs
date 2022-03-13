@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecurityLogin.Cache.Converters;
+using SecurityLogin.Redis.Converters;
 using System;
 using System.Linq;
 

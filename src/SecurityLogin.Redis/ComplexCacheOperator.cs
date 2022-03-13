@@ -3,7 +3,7 @@ using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 
-namespace SecurityLogin.Cache
+namespace SecurityLogin.Redis
 {
     public abstract class ComplexCacheOperator
     {
