@@ -11,7 +11,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\SecurityLogin.Mode.RSA\SecurityLogin.Mode.RSA.csproj" />
-		<ProjectReference Include="..\SecurityLogin.Redis\SecurityLogin.Redis.csproj" />
 		<ProjectReference Include="..\SecurityLogin.Store.Redis\SecurityLogin.Store.Redis.csproj" />
 		<ProjectReference Include="..\SecurityLogin.Transfer.TextJson\SecurityLogin.Transfer.TextJson.csproj" />
 		<ProjectReference Include="..\SecurityLogin\SecurityLogin.csproj" />

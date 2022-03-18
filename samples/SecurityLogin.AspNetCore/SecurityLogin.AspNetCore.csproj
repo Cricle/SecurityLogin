@@ -16,7 +16,6 @@
     <ProjectReference Include="..\..\src\SecurityLogin.Mode.AES\SecurityLogin.Mode.AES.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Mode.RSA\SecurityLogin.Mode.RSA.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Normal\SecurityLogin.Normal.csproj" />
-    <ProjectReference Include="..\..\src\SecurityLogin.Redis\SecurityLogin.Redis.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Store.Redis\SecurityLogin.Store.Redis.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Transfer.TextJson\SecurityLogin.Transfer.TextJson.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin\SecurityLogin.csproj" />

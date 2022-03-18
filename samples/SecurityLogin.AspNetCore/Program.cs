@@ -45,9 +45,7 @@ builder.Services.AddSingleton<IDistributedLockFactory>(new RedLockFactory(new Re
 })));
 builder.Services.AddNormalSecurityService();
 builder.Services.AddScoped<LoginService>();
-builder.Services.AddScoped<StudentCacheFinder>();
-builder.Services.AddScoped<StudentIdCacheFinder>();
-builder.Services.AddScoped<MessagePackCacheFinder>();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

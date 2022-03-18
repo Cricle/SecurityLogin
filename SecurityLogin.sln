@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin", "src\SecurityLogin\SecurityLogin.csproj", "{FEBA21AF-75A6-4D5C-8184-482B585CA892}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Redis", "src\SecurityLogin.Redis\SecurityLogin.Redis.csproj", "{5327E964-C9BA-4C7B-8141-D81F9AE33085}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Mode.RSA", "src\SecurityLogin.Mode.RSA\SecurityLogin.Mode.RSA.csproj", "{4AB7A3B4-9E16-4A84-ABE0-0C19DBB594EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Store.Memory", "src\SecurityLogin.Store.Memory\SecurityLogin.Store.Memory.csproj", "{D460B90F-B3EF-4F67-A951-0E911B10F989}"
@@ -29,10 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.RedisCmd", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{39318083-160A-400F-A530-0171E2FA72E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Redis.Benchmarks", "test\SecurityLogin.Redis.Benchmarks\SecurityLogin.Redis.Benchmarks.csproj", "{E3A386DD-FA75-46C4-8BF1-C5E56B6AD707}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Redis.Test", "test\SecurityLogin.Redis.Test\SecurityLogin.Redis.Test.csproj", "{99745AC9-BF8E-47AD-8D75-1CBEF9E54B4C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,10 +37,6 @@ Global
 		{FEBA21AF-75A6-4D5C-8184-482B585CA892}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEBA21AF-75A6-4D5C-8184-482B585CA892}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEBA21AF-75A6-4D5C-8184-482B585CA892}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5327E964-C9BA-4C7B-8141-D81F9AE33085}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5327E964-C9BA-4C7B-8141-D81F9AE33085}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5327E964-C9BA-4C7B-8141-D81F9AE33085}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5327E964-C9BA-4C7B-8141-D81F9AE33085}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4AB7A3B4-9E16-4A84-ABE0-0C19DBB594EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4AB7A3B4-9E16-4A84-ABE0-0C19DBB594EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AB7A3B4-9E16-4A84-ABE0-0C19DBB594EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -83,14 +73,6 @@ Global
 		{7B98BE17-BB39-475D-BEB3-CA2759ADF332}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B98BE17-BB39-475D-BEB3-CA2759ADF332}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B98BE17-BB39-475D-BEB3-CA2759ADF332}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E3A386DD-FA75-46C4-8BF1-C5E56B6AD707}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E3A386DD-FA75-46C4-8BF1-C5E56B6AD707}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E3A386DD-FA75-46C4-8BF1-C5E56B6AD707}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E3A386DD-FA75-46C4-8BF1-C5E56B6AD707}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99745AC9-BF8E-47AD-8D75-1CBEF9E54B4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99745AC9-BF8E-47AD-8D75-1CBEF9E54B4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99745AC9-BF8E-47AD-8D75-1CBEF9E54B4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99745AC9-BF8E-47AD-8D75-1CBEF9E54B4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,8 +81,6 @@ Global
 		{9C51AAE9-892F-4016-8C90-0C185CED6D87} = {9E3617AB-DA18-4D28-BEA4-EA468A91B43B}
 		{F1D6D11E-6EA5-413F-8090-A6BADC188F4B} = {9E3617AB-DA18-4D28-BEA4-EA468A91B43B}
 		{7B98BE17-BB39-475D-BEB3-CA2759ADF332} = {9E3617AB-DA18-4D28-BEA4-EA468A91B43B}
-		{E3A386DD-FA75-46C4-8BF1-C5E56B6AD707} = {39318083-160A-400F-A530-0171E2FA72E3}
-		{99745AC9-BF8E-47AD-8D75-1CBEF9E54B4C} = {39318083-160A-400F-A530-0171E2FA72E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5D02978E-A003-4A04-923D-D18538D41981}
