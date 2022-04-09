@@ -27,6 +27,16 @@ namespace SecurityLogin.Store.Memory
             return Task.FromResult(Delete(key));
         }
 
+        public bool Exists(string key)
+        {
+            return Cache.TryGetValue(key, out _);
+        }
+
+        public Task<bool> ExistsAsync(string key)
+        {
+            return Task.FromResult(Cache.TryGetValue(key, out _));
+        }
+
         public T Get<T>(string key)
         {
             return Cache.Get<T>(key);

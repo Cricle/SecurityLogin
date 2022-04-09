@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin
 {
-    public abstract class SecurityLoginService<TFullKey>
+    public abstract class SecurityLoginService<TFullKey> : ISecurityLoginService<TFullKey>
         where TFullKey : IIdentityable
     {
         public static readonly TimeSpan DefaultKeyCacheTime = TimeSpan.FromHours(1);
@@ -90,13 +90,13 @@ namespace SecurityLogin
         }
         protected virtual string GetSharedIdentityKey()
         {
-            return GetHeader()+".Identity";            
+            return GetHeader() + ".Identity";
         }
         protected virtual string GetSharedLockKey()
         {
-            return "Lock."+GetHeader() + ".Shared";
+            return "Lock." + GetHeader() + ".Shared";
         }
-        public async Task<string> DecryptAsync(string connectId, string textHash,IEncryptor<TFullKey> encrypter)
+        public async Task<string> DecryptAsync(string connectId, string textHash, IEncryptor<TFullKey> encrypter)
         {
             if (encrypter is null)
             {

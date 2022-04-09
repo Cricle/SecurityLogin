@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.RedisCmd", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{39318083-160A-400F-A530-0171E2FA72E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityLogin.AppLogin", "src\SecurityLogin.AppLogin\SecurityLogin.AppLogin.csproj", "{92665A81-88FC-453C-862A-79713569065A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{7B98BE17-BB39-475D-BEB3-CA2759ADF332}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B98BE17-BB39-475D-BEB3-CA2759ADF332}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B98BE17-BB39-475D-BEB3-CA2759ADF332}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92665A81-88FC-453C-862A-79713569065A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92665A81-88FC-453C-862A-79713569065A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92665A81-88FC-453C-862A-79713569065A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92665A81-88FC-453C-862A-79713569065A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

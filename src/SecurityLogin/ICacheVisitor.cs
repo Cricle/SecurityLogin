@@ -5,6 +5,10 @@ namespace SecurityLogin
 {
     public interface ICacheVisitor
     {
+        bool Exists(string key);
+
+        Task<bool> ExistsAsync(string key);
+
         T Get<T>(string key);
 
         Task<T> GetAsync<T>(string key);

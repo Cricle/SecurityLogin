@@ -28,6 +28,16 @@ namespace SecurityLogin.Store.Redis
             return Database.KeyDeleteAsync(key);
         }
 
+        public bool Exists(string key)
+        {
+            return Database.KeyExists(key);
+        }
+
+        public Task<bool> ExistsAsync(string key)
+        {
+            return Database.KeyExistsAsync(key);
+        }
+
         public T Get<T>(string key)
         {
             var val = Database.StringGet(key);
