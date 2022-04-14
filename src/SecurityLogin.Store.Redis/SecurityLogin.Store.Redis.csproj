@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\eng\pkg.props"/>
+	<Import Project="..\..\eng\pkg.props" />
 
 	<PropertyGroup>
 	  <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RedLock.net" Version="2.3.1" />
+    <PackageReference Include="RedLock.net" Version="2.3.2" />
   </ItemGroup>
 
   <ItemGroup>

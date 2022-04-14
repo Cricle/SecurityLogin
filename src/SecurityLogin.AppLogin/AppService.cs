@@ -6,25 +6,35 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.AppLogin
 {
-    public class AppLoginResult
+    public class AppService : AppService<IAppInfo, IAppInfoSnapshot, AppLoginResult, AppServiceOptions>
     {
-        public AppLoginCode Code { get; set; }
+        public AppService(IKeyGenerator keyGenerator, ITimeHelper timeHelper, ICacheVisitor cacheVisitor)
+            : base(keyGenerator, timeHelper, cacheVisitor)
+        {
+        }
 
-        public string AccessToken { get; set; }
-
-        public TimeSpan? ExpireTime { get; set; }
-
-        public DateTime CreateAt { get; set; }
+        public static AppService FromDefault(ICacheVisitor cacheVisitor)
+        {
+            return new AppService(DefaultKeyGenerator.Default, DefaultTimeHelper.Instance, cacheVisitor);
+        }
     }
-    public abstract class AppService<TAppInfo,TAppInfoSnapshot, TOptions>
+    public class AppService<TAppInfo,TAppInfoSnapshot,TAppLoginResult, TOptions>
         where TAppInfo : IAppInfo
-        where TOptions : AppServiceOptions
         where TAppInfoSnapshot:IAppInfoSnapshot
+        where TAppLoginResult:AppLoginResult,new()
+        where TOptions : AppServiceOptions
     {
         public static readonly TimeSpan NotExistsCacheTime = TimeSpan.FromSeconds(3);
         public static readonly TimeSpan AppInfoCacheTime = TimeSpan.FromMinutes(1);
         public static readonly TimeSpan DefaultTimestampTimeOut = TimeSpan.FromMinutes(5);
         public static readonly TimeSpan DefaultSessionTime = TimeSpan.FromHours(6);
+
+        public AppService(IKeyGenerator keyGenerator, ITimeHelper timeHelper, ICacheVisitor cacheVisitor)
+        {
+            KeyGenerator = keyGenerator ?? throw new ArgumentNullException(nameof(keyGenerator));
+            TimeHelper = timeHelper ?? throw new ArgumentNullException(nameof(timeHelper));
+            CacheVisitor = cacheVisitor ?? throw new ArgumentNullException(nameof(cacheVisitor));
+        }
 
         public IKeyGenerator KeyGenerator { get; }
 
@@ -32,10 +42,24 @@ namespace SecurityLogin.AppLogin
 
         public ICacheVisitor CacheVisitor { get; }
 
-        protected abstract string GetNotExistKey(string appKey);
-        protected abstract string GetInfoKey(string appKey);
+        protected virtual string GetNotExistKey(string appKey)
+        {
+            return "Red." + GetInfoKey(appKey);
+        }
+        protected virtual string GetSectionKey(string appKey,string session)
+        {
+            return GetInfoKey(appKey) + "." + session;
+        }
+        protected virtual string GetInfoKey(string appKey)
+        {
+            return TypeNameHelper.GetFriendlyFullName(GetType()) + "." + appKey;
+        }
 
-        protected abstract Task<TAppInfoSnapshot> GetAppInfoSnapshotAsync(string appKey);
+        protected virtual Task<TAppInfoSnapshot> GetAppInfoSnapshotAsync(string appKey)
+        {
+            var infoKey = GetInfoKey(appKey);
+            return CacheVisitor.GetAsync<TAppInfoSnapshot>(infoKey);
+        }
 
         protected virtual TimeSpan? GetNotExistsCacheTime(string appKey)
         {
@@ -86,33 +110,49 @@ namespace SecurityLogin.AppLogin
         {
             var csTime = TimeHelper.ToDateTime(timestamp);
             var subTime = Math.Abs((now - csTime).TotalMilliseconds);
-            return subTime <= DefaultTimestampTimeOut.TotalMilliseconds;
+            return subTime <= GetTimestampTimeOut(appKey,timestamp,now).TotalMilliseconds;
         }
-        protected abstract Task WriteSessionAsync(string appKey, long timestamp,in TimeSpan? cacheTime,AppLoginResult result);
-        public abstract Task<bool> HasSessionAsync(string appKey, string session);
-        public abstract AppLoginResult GetSessionAsync(string appKey, string session);
+        protected virtual TimeSpan GetTimestampTimeOut(string appKey, long timestamp, in DateTime now)
+        {
+            return DefaultTimestampTimeOut;
+        }
+        protected virtual Task WriteSessionAsync(string appKey, long timestamp,in TimeSpan? cacheTime, TAppLoginResult result)
+        {
+            var key = GetSectionKey(appKey, result.AccessToken);
+            return CacheVisitor.SetAsync(key, result, cacheTime);
+        }
+        public virtual Task<bool> HasSessionAsync(string appKey, string session)
+        {
+            var key = GetSectionKey(appKey, session);
+            return CacheVisitor.ExistsAsync(key);
+        }
+        public virtual Task<TAppLoginResult> GetSessionAsync(string appKey, string session)
+        {
+            var key = GetSectionKey(appKey, session);
+            return CacheVisitor.GetAsync<TAppLoginResult>(key);
+        }
 
-        public async Task<AppLoginResult> LoginAsync(string appKey, long timestamp, string sign)
+        public async Task<TAppLoginResult> LoginAsync(string appKey, long timestamp, string sign)
         {
             var sn = await GetAppAsync(appKey);
             if (sn == null)
             {
-                return new AppLoginResult { Code = AppLoginCode.NoSuchAppKey };
+                return new TAppLoginResult { Code = AppLoginCode.NoSuchAppKey };
             }
             var now = DateTime.Now;
             if (sn.EndTime != null && sn.EndTime <= now)
             {
-                return new AppLoginResult { Code = AppLoginCode.AppEndOfTime };
+                return new TAppLoginResult { Code = AppLoginCode.AppEndOfTime };
             }
             if (IsTimestampTimeOut(appKey, timestamp, now))
             {
-                return new AppLoginResult { Code = AppLoginCode.TimestampOutOfTime };
+                return new TAppLoginResult { Code = AppLoginCode.TimestampOutOfTime };
             }
             var mysignStr = appKey + timestamp + sn.AppSecret;
             var mysign = Md5Helper.ComputeHashToString(mysignStr);
             if (!mysign.Equals(sign, StringComparison.OrdinalIgnoreCase))
             {
-                return new AppLoginResult { Code = AppLoginCode.SignError };
+                return new TAppLoginResult { Code = AppLoginCode.SignError };
             }
             var accessToken = GenerateToken(appKey,timestamp);
             var tokenTime = GetSessionCacheTime(appKey, timestamp, null);
@@ -124,14 +164,19 @@ namespace SecurityLogin.AppLogin
                     : minTime;
                 tokenTime = GetSessionCacheTime(appKey, timestamp, minTime);
             }
-            var session = new AppLoginResult
+            var session = new TAppLoginResult
             {
                 CreateAt = now,
                 AccessToken = accessToken,
                 ExpireTime = tokenTime
             };
-            await WriteSessionAsync(appKey,timestamp, tokenTime, session);
+            await FillAppLoginResultAsync(appKey, timestamp, tokenTime, session);
+            await WriteSessionAsync(appKey, timestamp, tokenTime, session);
             return session;
+        }
+        protected virtual Task FillAppLoginResultAsync(string appKey, long timestamp, in TimeSpan? cacheTime, TAppLoginResult result)
+        {
+            return Task.CompletedTask;
         }
 
     }
