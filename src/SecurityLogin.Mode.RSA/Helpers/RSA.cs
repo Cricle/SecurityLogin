@@ -13,6 +13,7 @@ using Org.BouncyCastle.X509;
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using CRSA = System.Security.Cryptography.RSACryptoServiceProvider;
 
 namespace SecurityLogin.Mode.RSA.Helpers
 {
@@ -23,8 +24,8 @@ namespace SecurityLogin.Mode.RSA.Helpers
         public static RSAKey GetKey(int keyLen = 1024)
         {
             using var rsa = new RSACryptoServiceProvider(keyLen);
-            var privateKey = rsa.ExportRSAPrivateKey();
-            var publicKey = rsa.ExportRSAPublicKey();
+            var privateKey = rsa.ExportPkcs8PrivateKey();
+            var publicKey = rsa.ExportSubjectPublicKeyInfo();
             var pub = Convert.ToBase64String(publicKey);
             var pri = Convert.ToBase64String(privateKey);
             return new RSAKey(pub, pri);
@@ -32,21 +33,21 @@ namespace SecurityLogin.Mode.RSA.Helpers
         public static byte[] EncryptByPrivateKey(byte[] data, string privateKey)
         {
             using var rsa = new RSACryptoServiceProvider();
-            rsa.ImportRSAPrivateKey(Convert.FromBase64String(privateKey), out _);
+            rsa.ImportPkcs8PrivateKey(Convert.FromBase64String(privateKey), out _);
             var buffer = rsa.Encrypt(data, false);
             return buffer;
         }
         public static byte[] DecryptByPrivateKey(byte[] data, string privateKey)
         {
             using var rsa = new RSACryptoServiceProvider();
-            rsa.ImportRSAPrivateKey(Convert.FromBase64String(privateKey), out _);
+            rsa.ImportPkcs8PrivateKey(Convert.FromBase64String(privateKey), out _);
             var buffer = rsa.Decrypt(data, false);
             return buffer;
         }
         public static byte[] EncryptByPublicKey(byte[] data, string publicKey)
         {
             using var rsa = new RSACryptoServiceProvider();
-            rsa.ImportRSAPublicKey(Convert.FromBase64String(publicKey), out _);
+            rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(publicKey), out _);
             var buffer = rsa.Encrypt(data, false);
             return buffer;
 
