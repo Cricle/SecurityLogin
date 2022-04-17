@@ -6,19 +6,15 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.AppLogin
 {
-    public class AppService : AppService<IAppInfo, IAppInfoSnapshot, AppLoginResult, AppServiceOptions>
+    public abstract class AppService : AppService<IAppInfo, IAppInfoSnapshot, AppLoginResult, AppServiceOptions>
     {
         public AppService(IKeyGenerator keyGenerator, ITimeHelper timeHelper, ICacheVisitor cacheVisitor)
             : base(keyGenerator, timeHelper, cacheVisitor)
         {
         }
 
-        public static AppService FromDefault(ICacheVisitor cacheVisitor)
-        {
-            return new AppService(DefaultKeyGenerator.Default, DefaultTimeHelper.Instance, cacheVisitor);
-        }
     }
-    public class AppService<TAppInfo,TAppInfoSnapshot,TAppLoginResult, TOptions>
+    public abstract class AppService<TAppInfo,TAppInfoSnapshot,TAppLoginResult, TOptions>
         where TAppInfo : IAppInfo
         where TAppInfoSnapshot:IAppInfoSnapshot
         where TAppLoginResult:AppLoginResult,new()
@@ -55,11 +51,7 @@ namespace SecurityLogin.AppLogin
             return TypeNameHelper.GetFriendlyFullName(GetType()) + "." + appKey;
         }
 
-        protected virtual Task<TAppInfoSnapshot> GetAppInfoSnapshotAsync(string appKey)
-        {
-            var infoKey = GetInfoKey(appKey);
-            return CacheVisitor.GetAsync<TAppInfoSnapshot>(infoKey);
-        }
+        protected abstract Task<TAppInfoSnapshot> GetAppInfoSnapshotAsync(string appKey);
 
         protected virtual TimeSpan? GetNotExistsCacheTime(string appKey)
         {
@@ -110,7 +102,7 @@ namespace SecurityLogin.AppLogin
         {
             var csTime = TimeHelper.ToDateTime(timestamp);
             var subTime = Math.Abs((now - csTime).TotalMilliseconds);
-            return subTime <= GetTimestampTimeOut(appKey,timestamp,now).TotalMilliseconds;
+            return subTime >= GetTimestampTimeOut(appKey,timestamp,now).TotalMilliseconds;
         }
         protected virtual TimeSpan GetTimestampTimeOut(string appKey, long timestamp, in DateTime now)
         {
