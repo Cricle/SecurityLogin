@@ -28,5 +28,10 @@ namespace SecurityLogin
         bool Delete(string key);
 
         Task<bool> DeleteAsync(string key);
+
+        bool Expire(string key, TimeSpan? cacheTime);
+        
+        Task<bool> ExpireAsync(string key, TimeSpan? cacheTime);
+
     }
 }

@@ -90,5 +90,14 @@ namespace SecurityLogin.Store.Redis
         {
             return Database.StringSetAsync(key, value, cacheTime);
         }
+
+        public bool Expire(string key,TimeSpan? cacheTime)
+        {
+            return Database.KeyExpire(key, cacheTime);
+        }
+        public Task<bool> ExpireAsync(string key, TimeSpan? cacheTime)
+        {
+            return Database.KeyExpireAsync(key, cacheTime);
+        }
     }
 }

@@ -37,6 +37,26 @@ namespace SecurityLogin.Store.Memory
             return Task.FromResult(Cache.TryGetValue(key, out _));
         }
 
+        public bool Expire(string key, TimeSpan? cacheTime)
+        {
+            var val = Cache.Get(key);
+            if (val == null)
+            {
+                return false;
+            }
+            var options = new MemoryCacheEntryOptions
+            {
+                SlidingExpiration = cacheTime
+            };
+            Cache.Set(key, val, options);
+            return true;
+        }
+
+        public Task<bool> ExpireAsync(string key, TimeSpan? cacheTime)
+        {
+            return Task.FromResult(Expire(key, cacheTime));
+        }
+
         public T Get<T>(string key)
         {
             return Cache.Get<T>(key);
