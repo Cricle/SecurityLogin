@@ -85,8 +85,8 @@ namespace SecurityLogin
         }
         protected abstract TFullKey GetFullKey();
         protected virtual string GetHeader()
-        {
-            return GetType().FullName;
+        {           
+            return TypeNameHelper.GetFriendlyFullName(GetType());
         }
         protected virtual string GetSharedIdentityKey()
         {

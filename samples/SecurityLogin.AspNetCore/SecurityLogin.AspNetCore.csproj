@@ -6,14 +6,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.4" />
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-preview.5.22301.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.4" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
-	  <PackageReference Include="MessagePack" Version="2.3.85" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SecurityLogin.Mode.AES\SecurityLogin.Mode.AES.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Mode.RSA\SecurityLogin.Mode.RSA.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Normal\SecurityLogin.Normal.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Store.Redis\SecurityLogin.Store.Redis.csproj" />

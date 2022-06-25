@@ -1,13 +1,9 @@
-﻿using Microsoft.Extensions.Options;
-using RedLockNet;
+﻿using RedLockNet;
 using SecurityLogin;
 using SecurityLogin.Store.Redis;
 using SecurityLogin.Transfer.TextJson;
 using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -19,7 +15,15 @@ namespace Microsoft.Extensions.DependencyInjection
             action?.Invoke(opt);
             services.AddSingleton<ILockerFactory>(x => new RedisLockFactory(x.GetRequiredService<IDistributedLockFactory>()));
             services.AddSingleton<IObjectTransfer>(new JsonObjectTransfer(opt.JsonOptions, opt.Encoding));
-            services.AddSingleton<ICacheVisitor>(x => new RedisCacheVisitor(x.GetRequiredService<IConnectionMultiplexer>().GetDatabase(), x.GetRequiredService<IObjectTransfer>()));
+            services.AddSingleton<ICacheVisitor>(x =>
+            {
+                var db = x.GetService<IDatabase>();
+                if (db==null)
+                {
+                    db = x.GetRequiredService<IConnectionMultiplexer>().GetDatabase();
+                }
+                return new RedisCacheVisitor(db, x.GetRequiredService<IObjectTransfer>());
+            });
             return services;
         }
     }

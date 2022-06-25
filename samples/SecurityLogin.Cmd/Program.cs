@@ -42,21 +42,6 @@ namespace SecurityLogin.Cmd
             return RSAHelper.GenerateRSASecretKey();
         }
 
-        protected override string GetHeader()
-        {
-            return "My";
-        }
-
-        protected override string GetSharedIdentityKey()
-        {
-            return "My.Shared";
-        }
-
-        protected override string GetSharedLockKey()
-        {
-            return "My.Lock";
-        }
-
         public Task<string> LoginAsync(string connectId,string pwd)
         {
             return DecryptAsync(connectId, pwd);
