@@ -6,7 +6,7 @@ namespace SecurityLogin.AspNetCore.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class LoginController:ControllerBase
+    public class LoginController : ControllerBase
     {
         private readonly LoginService loginService;
 
@@ -19,12 +19,12 @@ namespace SecurityLogin.AspNetCore.Controllers
         public async Task<IActionResult> FlushKey()
         {
             var res = await loginService.FlushKeyAsync();
-            return Ok(new { res .Identity, res .PublicKey});
+            return Ok(new { res.Identity, res.PublicKey });
         }
         [HttpGet("[action]")]
-        public async Task<IActionResult> Regist(string connectId,string userName,string password)
+        public async Task<IActionResult> Regist(string connectId, string userName, string password)
         {
-            var res = await loginService.RegistAsync(connectId,userName,password);
+            var res = await loginService.RegistAsync(connectId, userName, password);
             return Ok(res);
         }
         [HttpGet("[action]")]

@@ -1,32 +1,36 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace SecurityLogin.AppLogin
+namespace SecurityLogin
 {
-    internal static class Md5Helper
+    public class Md5EncryptionHelper : IEncryptionHelper
     {
+        private Md5EncryptionHelper() { }
+
+        public static readonly Md5EncryptionHelper Instance = new Md5EncryptionHelper();
+
         private static readonly MD5 md5 = MD5.Create();
 
-        public static byte[] ComputeHash(byte[] input)
+        public byte[] ComputeHash(byte[] input)
         {
             return md5.ComputeHash(input);
         }
-        public static byte[] ComputeHash(string input)
+        public byte[] ComputeHash(string input)
         {
-            var bytes=Encoding.UTF8.GetBytes(input);
+            var bytes = Encoding.UTF8.GetBytes(input);
             return md5.ComputeHash(bytes, 0, bytes.Length);
         }
-        public static string ComputeHashToString(byte[] input)
+        public string ComputeHashToString(byte[] input)
         {
             var buffer = md5.ComputeHash(input);
             return ToHexString(buffer);
         }
-        public static string ComputeHashToString(string input)
+        public string ComputeHashToString(string input)
         {
             var buffer = ComputeHash(input);
             return ToHexString(buffer);
         }
-        private static string ToHexString(byte[] buffer)
+        private string ToHexString(byte[] buffer)
         {
             var sb = new StringBuilder();
             for (int i = 0; i < buffer.Length; i++)

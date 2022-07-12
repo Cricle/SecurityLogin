@@ -2,7 +2,7 @@
 
 namespace SecurityLogin.AppLogin
 {
-    public interface IAppInfoSnapshot 
+    public interface IAppInfoSnapshot
     {
         string AppSecret { get; }
 

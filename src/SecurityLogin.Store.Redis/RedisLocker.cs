@@ -18,9 +18,9 @@ namespace SecurityLogin.Store.Redis
 
         public bool IsAcquired => Locker.IsAcquired;
 
-        public DateTime CreateTime { get;set; }
+        public DateTime CreateTime { get; set; }
 
-        public TimeSpan ExpireTime { get;set; }
+        public TimeSpan ExpireTime { get; set; }
 
         public void Dispose()
         {

@@ -15,13 +15,13 @@ namespace SecurityLogin.Store.Redis
 
         public ILocker CreateLock(string resource, TimeSpan expiryTime)
         {
-             var locker=LockFactory.CreateLock(resource, expiryTime);
+            var locker = LockFactory.CreateLock(resource, expiryTime);
             return new RedisLocker(locker) { CreateTime = DateTime.Now, ExpireTime = expiryTime };
         }
 
         public async Task<ILocker> CreateLockAsync(string resource, TimeSpan expiryTime)
         {
-            var locker =await LockFactory.CreateLockAsync(resource, expiryTime);
+            var locker = await LockFactory.CreateLockAsync(resource, expiryTime);
             return new RedisLocker(locker) { CreateTime = DateTime.Now, ExpireTime = expiryTime };
         }
     }

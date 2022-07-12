@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.Store.Memory
@@ -23,7 +20,7 @@ namespace SecurityLogin.Store.Memory
         }
 
         public Task<bool> DeleteAsync(string key)
-        {            
+        {
             return Task.FromResult(Delete(key));
         }
 
@@ -74,7 +71,7 @@ namespace SecurityLogin.Store.Memory
 
         public Task<string> GetStringAsync(string key)
         {
-           return Task.FromResult(GetString(key));
+            return Task.FromResult(GetString(key));
         }
 
         public bool Set<T>(string key, T value, TimeSpan? cacheTime)
@@ -98,7 +95,7 @@ namespace SecurityLogin.Store.Memory
 
         public bool SetString(string key, string value, TimeSpan? cacheTime)
         {
-           return Set(key, value, cacheTime);
+            return Set(key, value, cacheTime);
         }
 
         public Task<bool> SetStringAsync(string key, string value, TimeSpan? cacheTime)

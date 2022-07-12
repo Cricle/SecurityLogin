@@ -1,7 +1,5 @@
 ﻿using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.Store.Redis
@@ -20,7 +18,7 @@ namespace SecurityLogin.Store.Redis
 
         public bool Delete(string key)
         {
-            return Database.KeyDelete(key);            
+            return Database.KeyDelete(key);
         }
 
         public Task<bool> DeleteAsync(string key)
@@ -50,7 +48,7 @@ namespace SecurityLogin.Store.Redis
 
         public async Task<T> GetAsync<T>(string key)
         {
-            var val =await Database.StringGetAsync(key);
+            var val = await Database.StringGetAsync(key);
             if (val.HasValue)
             {
                 return ObjectTransfer.Transfer<T>(val);
@@ -71,7 +69,7 @@ namespace SecurityLogin.Store.Redis
 
         public bool Set<T>(string key, T value, TimeSpan? cacheTime)
         {
-            var buffer=ObjectTransfer.Transfer(value);
+            var buffer = ObjectTransfer.Transfer(value);
             return Database.StringSet(key, buffer, cacheTime);
         }
 
@@ -91,7 +89,7 @@ namespace SecurityLogin.Store.Redis
             return Database.StringSetAsync(key, value, cacheTime);
         }
 
-        public bool Expire(string key,TimeSpan? cacheTime)
+        public bool Expire(string key, TimeSpan? cacheTime)
         {
             return Database.KeyExpire(key, cacheTime);
         }

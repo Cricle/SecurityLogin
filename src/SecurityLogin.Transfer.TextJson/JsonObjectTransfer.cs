@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
@@ -19,13 +18,13 @@ namespace SecurityLogin.Transfer.TextJson
 
         public byte[] Transfer<T>(T obj)
         {
-            var str=TransferToString(obj);
+            var str = TransferToString(obj);
             return Encoding.GetBytes(str);
         }
 
         public T Transfer<T>(byte[] data)
         {
-            var str=Encoding.GetString(data);
+            var str = Encoding.GetString(data);
             return TransferByString<T>(str);
         }
 
@@ -36,7 +35,7 @@ namespace SecurityLogin.Transfer.TextJson
 
         public string TransferToString<T>(T obj)
         {
-           return JsonSerializer.Serialize(obj,Options);
+            return JsonSerializer.Serialize(obj, Options);
         }
     }
 }

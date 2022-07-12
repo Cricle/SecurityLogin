@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SecurityLogin.Mode.RSA;
-using SecurityLogin.Mode.RSA.Helpers;
 using System;
 using System.Threading.Tasks;
 
@@ -21,7 +20,7 @@ namespace SecurityLogin.AspNetCore.Services
         {
             UserManager = userManager;
         }
-        
+
         public async Task<bool> RegistAsync(string connectId, string userName, string passwordHash)
         {
             try
@@ -29,8 +28,8 @@ namespace SecurityLogin.AspNetCore.Services
                 var pwd = await DecryptAsync(connectId, passwordHash);
                 var user = new IdentityUser
                 {
-                    UserName=userName,
-                    NormalizedUserName=userName,
+                    UserName = userName,
+                    NormalizedUserName = userName,
                 };
                 var res = await UserManager.CreateAsync(user, pwd);
                 return res.Succeeded;

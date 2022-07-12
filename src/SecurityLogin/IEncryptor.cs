@@ -2,7 +2,7 @@
 {
     public interface IEncryptor<TFullKey>
     {
-        byte[] Encrypt(TFullKey fullKey,byte[] data);
+        byte[] Encrypt(TFullKey fullKey, byte[] data);
 
         byte[] Encrypt(TFullKey fullKey, string data);
 

@@ -8,8 +8,8 @@ namespace SecurityLogin
     {
         public IEncryptor<TFullKey> Encryptor { get; }
 
-        protected AsymmetricLoginService(ILockerFactory lockerFactory, 
-            ICacheVisitor cacheVisitor, 
+        protected AsymmetricLoginService(ILockerFactory lockerFactory,
+            ICacheVisitor cacheVisitor,
             IEncryptor<TFullKey> encryptor)
             : base(lockerFactory, cacheVisitor)
         {

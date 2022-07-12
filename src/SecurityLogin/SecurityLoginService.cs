@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SecurityLogin
@@ -85,7 +83,7 @@ namespace SecurityLogin
         }
         protected abstract TFullKey GetFullKey();
         protected virtual string GetHeader()
-        {           
+        {
             return TypeNameHelper.GetFriendlyFullName(GetType());
         }
         protected virtual string GetSharedIdentityKey()

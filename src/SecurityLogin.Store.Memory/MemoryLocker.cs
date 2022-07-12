@@ -12,7 +12,7 @@ namespace SecurityLogin.Store.Memory
 
         public DateTime CreateTime { get; set; }
 
-        public TimeSpan ExpireTime{get; set; }
+        public TimeSpan ExpireTime { get; set; }
 
         public bool IsInvalid => CreateTime.Add(ExpireTime) >= DateTime.Now;
 

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace SecurityLogin.AppLogin
+namespace SecurityLogin
 {
     public interface IKeyGenerator
     {

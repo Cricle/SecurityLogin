@@ -1,4 +1,4 @@
-﻿namespace SecurityLogin.AppLogin
+﻿namespace SecurityLogin
 {
     public interface IRandomProvider
     {

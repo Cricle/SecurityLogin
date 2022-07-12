@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace SecurityLogin.AppLogin
+namespace SecurityLogin
 {
     public interface ITimeHelper
     {
-        long GetTimeStamp(in DateTime time);
+        long GetTimeStamp(DateTime time);
 
         DateTime ToDateTime(long timestamp);
     }

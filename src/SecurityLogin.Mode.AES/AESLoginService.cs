@@ -1,8 +1,5 @@
 ﻿using SecurityLogin.Mode.AES.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.Mode.AES
@@ -25,13 +22,13 @@ namespace SecurityLogin.Mode.AES
     public abstract class AESLoginService<TFullKey> : SecurityLoginService<TFullKey>, IEncryptable<TFullKey>
         where TFullKey : AESFullKey
     {
-        protected AESLoginService(ILockerFactory lockerFactory, ICacheVisitor cacheVisitor, IEncryptor<TFullKey> encryptor) 
+        protected AESLoginService(ILockerFactory lockerFactory, ICacheVisitor cacheVisitor, IEncryptor<TFullKey> encryptor)
             : base(lockerFactory, cacheVisitor)
         {
             Encryptor = encryptor ?? throw new ArgumentNullException(nameof(encryptor));
         }
         protected AESLoginService(ILockerFactory lockerFactory, ICacheVisitor cacheVisitor)
-            : this(lockerFactory, cacheVisitor,AESEncryptor<TFullKey>.SharedUTF8)
+            : this(lockerFactory, cacheVisitor, AESEncryptor<TFullKey>.SharedUTF8)
         {
         }
 

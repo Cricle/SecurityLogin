@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 using SecurityLogin.Mode.RSA.Helpers;
 
 namespace SecurityLogin.Mode.RSA
@@ -24,7 +22,7 @@ namespace SecurityLogin.Mode.RSA
         }
     }
     public abstract class RSALoginService<TFullKey> : AsymmetricLoginService<TFullKey>
-        where TFullKey :AsymmetricFullKey
+        where TFullKey : AsymmetricFullKey
     {
         protected RSALoginService(ILockerFactory lockerFactory,
                ICacheVisitor cacheVisitor)
@@ -34,7 +32,7 @@ namespace SecurityLogin.Mode.RSA
 
         protected RSALoginService(ILockerFactory lockerFactory,
             ICacheVisitor cacheVisitor,
-            IEncryptor<TFullKey> encryptor) 
+            IEncryptor<TFullKey> encryptor)
             : base(lockerFactory, cacheVisitor, encryptor)
         {
         }

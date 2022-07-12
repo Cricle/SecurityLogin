@@ -23,8 +23,8 @@ namespace SecurityLogin.Cmd
             Console.WriteLine(res.PublicKey);
             Console.WriteLine();
 
-            var d=Console.ReadLine();
-            Console.WriteLine(await ser.LoginAsync(res.Identity,d));
+            var d = Console.ReadLine();
+            Console.WriteLine(await ser.LoginAsync(res.Identity, d));
         }
     }
     internal class MyLoginService : RSALoginService<AsymmetricFullKey>
@@ -42,7 +42,7 @@ namespace SecurityLogin.Cmd
             return RSAHelper.GenerateRSASecretKey();
         }
 
-        public Task<string> LoginAsync(string connectId,string pwd)
+        public Task<string> LoginAsync(string connectId, string pwd)
         {
             return DecryptAsync(connectId, pwd);
         }

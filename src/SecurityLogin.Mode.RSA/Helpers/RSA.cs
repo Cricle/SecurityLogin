@@ -13,7 +13,6 @@ using Org.BouncyCastle.X509;
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using CRSA = System.Security.Cryptography.RSACryptoServiceProvider;
 
 namespace SecurityLogin.Mode.RSA.Helpers
 {
@@ -90,7 +89,7 @@ namespace SecurityLogin.Mode.RSA.Helpers
             var pub = Convert.ToBase64String(publicInfoByte);
             var pri = Convert.ToBase64String(privateInfoByte);
 
-            var item = new RSAKey(pub,pri);
+            var item = new RSAKey(pub, pri);
             return item;
         }
         private static AsymmetricKeyParameter GetPublicKeyParameter(string keyBase64)
@@ -166,7 +165,7 @@ namespace SecurityLogin.Mode.RSA.Helpers
         /// <returns>返回明文</returns>
         public static byte[] DecryptByPublicKey(byte[] data, string publicKey)
         {
-            data=UTF8.GetBytes(UTF8.GetString(data).Replace("\r", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty));
+            data = UTF8.GetBytes(UTF8.GetString(data).Replace("\r", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty));
             //非对称加密算法，加解密用  
             var engine = new Pkcs1Encoding(new RsaEngine());
 

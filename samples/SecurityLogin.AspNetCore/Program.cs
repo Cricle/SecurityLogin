@@ -2,19 +2,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using RedLockNet;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
-using SecurityLogin;
 using SecurityLogin.AspNetCore;
 using SecurityLogin.AspNetCore.Services;
-using SecurityLogin.Store.Redis;
-using SecurityLogin.Transfer.TextJson;
 using StackExchange.Redis;
 using System.Net;
-using System.Text;
-using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<AppDbContext>(x=>x.UseSqlite("Data Source=app.db"))
+builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlite("Data Source=app.db"))
     .AddIdentity<IdentityUser, IdentityRole>(x =>
     {
         x.Password.RequireDigit = false;
@@ -38,7 +32,7 @@ builder.Services.AddDbContext<AppDbContext>(x=>x.UseSqlite("Data Source=app.db")
     .AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddStackExchangeRedisCache(x => x.Configuration = "127.0.0.1:6379");
 builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("127.0.0.1:6379"));
-builder.Services.AddSingleton<IDatabase>(x=>x.GetRequiredService<IConnectionMultiplexer>().GetDatabase());
+builder.Services.AddSingleton<IDatabase>(x => x.GetRequiredService<IConnectionMultiplexer>().GetDatabase());
 builder.Services.AddSingleton<IDistributedLockFactory>(new RedLockFactory(new RedLockConfiguration(new RedLockEndPoint[]
 {
     new RedLockEndPoint(new DnsEndPoint("127.0.0.1",6379))

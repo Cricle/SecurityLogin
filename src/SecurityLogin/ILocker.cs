@@ -2,7 +2,7 @@
 
 namespace SecurityLogin
 {
-    public interface ILocker: IDisposable
+    public interface ILocker : IDisposable
     {
         string Resource { get; }
 

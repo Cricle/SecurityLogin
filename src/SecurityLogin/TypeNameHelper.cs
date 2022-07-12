@@ -1,43 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace SecurityLogin
 {
     public static class TypeNameHelper
     {
-        private static readonly object SycRoot = new object();
-        private static readonly Dictionary<Type, string> TypeNameCaches = new Dictionary<Type, string>();
+        private static readonly Dictionary<Type, string> friendlyName = new Dictionary<Type, string>();
 
         public static string GetFriendlyFullName(Type type)
         {
-            if (!TypeNameCaches.TryGetValue(type, out var name))
+            if (friendlyName.TryGetValue(type, out var n))
             {
-                lock (SycRoot)
-                {
-                    if (!TypeNameCaches.TryGetValue(type, out name))
-                    {
-                        name = string.Concat(type.FullName.Split('`')[0], GetFriendlyName(type));
-                        TypeNameCaches[type] = name;
-                    }
-                }
+                return n;
             }
-            return name;
+            n = string.Concat(GetGenericName(type.Name), GetFriendlyName(type));
+            friendlyName[type] = n;
+            return n;
         }
         private static string GetFriendlyName(Type type)
         {
-            var genType = type.GenericTypeArguments;
-            if (genType != null && genType.Length != 0)
+            var gens = type.GenericTypeArguments;
+            if (gens != null && gens.Length != 0)
             {
-                var names = new string[genType.Length];
-                for (int i = 0; i < genType.Length; i++)
+                var names = new string[gens.Length];
+                for (int i = 0; i < gens.Length; i++)
                 {
-                    var gen = genType[i];
-                    names[i] = GetFriendlyName(gen);
+                    names[i] = GetFriendlyName(gens[i]);
                 }
-                var actualName = type.Name.Split('`')[0];
+                var actualName = GetGenericName(type.Name);
                 return string.Concat(actualName, "<", string.Join(",", names), ">");
             }
             return type.Name;
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static string GetGenericName(string name)
+        {
+            var index = name.IndexOf('`');
+            if (index == -1)
+            {
+                return name;
+            }
+            return name.Substring(0, index);
         }
     }
 }

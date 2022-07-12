@@ -22,7 +22,7 @@ namespace SecurityLogin
         public virtual string DecryptToString(TFullKey fullKey, byte[] data)
         {
             var bs = Decrypt(fullKey, data);
-            return Encoding.GetString(bs,0,bs.Length);
+            return Encoding.GetString(bs, 0, bs.Length);
         }
 
         public virtual string DecryptToString(TFullKey fullKey, string data)

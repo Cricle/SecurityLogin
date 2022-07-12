@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.Store.Memory
@@ -16,7 +14,7 @@ namespace SecurityLogin.Store.Memory
             lock (syncRoot)
             {
                 var now = DateTime.Now;
-                if (resourceMap.TryGetValue(resource,out var locker)&& !locker.IsInvalid)
+                if (resourceMap.TryGetValue(resource, out var locker) && !locker.IsInvalid)
                 {
                     return new MemoryLocker
                     {
@@ -28,7 +26,7 @@ namespace SecurityLogin.Store.Memory
                         MemoryLockFactory = this
                     };
                 }
-                locker= new MemoryLocker
+                locker = new MemoryLocker
                 {
                     CreateTime = now,
                     ExpireTime = expiryTime,
@@ -48,7 +46,10 @@ namespace SecurityLogin.Store.Memory
         }
         internal void Remove(string resource)
         {
-            resourceMap.Remove(resource);
+            lock (syncRoot)
+            {
+                resourceMap.Remove(resource);
+            }
         }
     }
 }

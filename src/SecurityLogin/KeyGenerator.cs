@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SecurityLogin
 {
@@ -65,7 +63,7 @@ namespace SecurityLogin
             }
             return string.Concat(header, split, string.Join(split, objs));
         }
-        
+
         private static readonly Random random = new Random();
         public static TimeSpan GetEmitTime(TimeSpan time)
         {

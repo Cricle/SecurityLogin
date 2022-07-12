@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace SecurityLogin.AppLogin
+namespace SecurityLogin
 {
-    public class DefaultRandomProvider : IRandomProvider 
+    public class DefaultRandomProvider : IRandomProvider
     {
         public static readonly DefaultRandomProvider Instance = new DefaultRandomProvider();
 
