@@ -9,6 +9,8 @@ using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+#else
+using Microsoft.Extensions.ObjectPool;
 #endif
 using System;
 using System.Security.Cryptography;
@@ -19,6 +21,20 @@ namespace SecurityLogin.Mode.RSA.Helpers
 #if NET5_0_OR_GREATER
     public static class RSA
     {
+        class RSAProviderPooledObjectPolicy : PooledObjectPolicy<RSACryptoServiceProvider>
+        {
+            public override RSACryptoServiceProvider Create()
+            {
+                return new RSACryptoServiceProvider();
+            }
+
+            public override bool Return(RSACryptoServiceProvider obj)
+            {
+                obj.Clear();
+                return true;
+            }
+        }
+        private static readonly ObjectPool<RSACryptoServiceProvider> providerPool = new DefaultObjectPool<RSACryptoServiceProvider>(new RSAProviderPooledObjectPolicy());
         public static readonly Encoding UTF8 = Encoding.UTF8;
         public static RSAKey GetKey(int keyLen = 1024)
         {
@@ -31,25 +47,46 @@ namespace SecurityLogin.Mode.RSA.Helpers
         }
         public static byte[] EncryptByPrivateKey(byte[] data, string privateKey)
         {
-            using var rsa = new RSACryptoServiceProvider();
-            rsa.ImportPkcs8PrivateKey(Convert.FromBase64String(privateKey), out _);
-            var buffer = rsa.Encrypt(data, false);
-            return buffer;
+            var rsa = providerPool.Get();
+            try
+            {
+                rsa.ImportPkcs8PrivateKey(Convert.FromBase64String(privateKey), out _);
+                var buffer = rsa.Encrypt(data, false);
+                return buffer;
+            }
+            finally
+            {
+                providerPool.Return(rsa);
+            }
         }
         public static byte[] DecryptByPrivateKey(byte[] data, string privateKey)
         {
-            using var rsa = new RSACryptoServiceProvider();
-            rsa.ImportPkcs8PrivateKey(Convert.FromBase64String(privateKey), out _);
-            var buffer = rsa.Decrypt(data, false);
-            return buffer;
+            var rsa = providerPool.Get();
+            try
+            {
+                rsa.ImportPkcs8PrivateKey(Convert.FromBase64String(privateKey), out _);
+                var buffer = rsa.Decrypt(data, false);
+                return buffer;
+            }
+            finally
+            {
+                providerPool.Return(rsa);
+            }
         }
         public static byte[] EncryptByPublicKey(byte[] data, string publicKey)
         {
-            using var rsa = new RSACryptoServiceProvider();
-            rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(publicKey), out _);
-            var buffer = rsa.Encrypt(data, false);
-            return buffer;
+            var rsa = providerPool.Get();
+            try
+            {
+                rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(publicKey), out _);
+                var buffer = rsa.Encrypt(data, false);
+                return buffer;
 
+            }
+            finally
+            {
+                providerPool.Return(rsa);
+            }
         }
     }
 #else

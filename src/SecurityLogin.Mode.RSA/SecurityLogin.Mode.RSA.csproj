@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\eng\pkg.props"/>
+	<Import Project="..\..\eng\pkg.props" />
 
 	<PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
@@ -10,7 +10,8 @@
   </ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='net5.0'">
 		<PackageReference Include="System.Security.Cryptography.OpenSsl" Version="5.0.0" />
-	</ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.7" />
+  </ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'!='net5.0'">
 		<PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
 	</ItemGroup>
