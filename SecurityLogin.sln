@@ -34,7 +34,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{6A04DB12-C17
 		eng\pkg.props = eng\pkg.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityLogin.AccessSession", "src\SecurityLogin.AccessSession\SecurityLogin.AccessSession.csproj", "{298E0176-D9DE-4606-830A-F4776B1617D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.AccessSession", "src\SecurityLogin.AccessSession\SecurityLogin.AccessSession.csproj", "{298E0176-D9DE-4606-830A-F4776B1617D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityLogin.Transfer.MessagePack", "src\SecurityLogin.Transfer.MessagePack\SecurityLogin.Transfer.MessagePack.csproj", "{5127386F-CFEC-4554-A2B4-C3F269F9BD64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +92,10 @@ Global
 		{298E0176-D9DE-4606-830A-F4776B1617D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{298E0176-D9DE-4606-830A-F4776B1617D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{298E0176-D9DE-4606-830A-F4776B1617D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5127386F-CFEC-4554-A2B4-C3F269F9BD64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5127386F-CFEC-4554-A2B4-C3F269F9BD64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5127386F-CFEC-4554-A2B4-C3F269F9BD64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5127386F-CFEC-4554-A2B4-C3F269F9BD64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

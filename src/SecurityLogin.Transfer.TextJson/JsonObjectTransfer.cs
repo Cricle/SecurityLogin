@@ -6,6 +6,15 @@ namespace SecurityLogin.Transfer.TextJson
 {
     public class JsonObjectTransfer : IObjectTransfer
     {
+        public JsonObjectTransfer()
+            : this(null)
+        {
+        }
+        public JsonObjectTransfer(JsonSerializerOptions options)
+              : this(options, Encoding.UTF8)
+        {
+        }
+
         public JsonObjectTransfer(JsonSerializerOptions options, Encoding encoding)
         {
             Options = options;

@@ -17,30 +17,45 @@ namespace SecurityLogin
 
         public ILockerFactory LockerFactory { get; }
         public ICacheVisitor CacheVisitor { get; }
-
+        static async Task<TFullKey> GetAsync(ICacheVisitor cacheVisitor,string header,string identityKey)
+        {
+            var identity = await cacheVisitor.GetStringAsync(identityKey);
+            if (identity != null)
+            {
+                var redisKey = KeyGenerator.Concat(header, identity);
+                var val = await cacheVisitor.GetAsync<TFullKey>(redisKey);
+                if (val != null)
+                {
+                    return val;
+                }
+            }
+            return default;
+        }
         public async Task<TFullKey> FlushKeyAsync()
         {
             var header = GetHeader();
             if (IsShared())
             {
                 var identityKey = GetSharedIdentityKey();
-                var identity = await CacheVisitor.GetStringAsync(identityKey);
-                if (identity != null)
+
+                var fullKey= await GetAsync(CacheVisitor, header, identityKey);
+                if (fullKey != null)
                 {
-                    var redisKey = KeyGenerator.Concat(header, identity);
-                    var val = await CacheVisitor.GetAsync<TFullKey>(redisKey);
-                    if (val != null)
-                    {
-                        return val;
-                    }
+                    return fullKey;
                 }
+
                 using (var locker = LockerFactory.CreateLock(GetSharedLockKey(), GetLockWaitTime()))
                 {
                     if (locker.IsAcquired)
                     {
-                        var fullKey = GetFullKey();
-                        await CacheVisitor.SetStringAsync(identityKey, fullKey.Identity, GetKeyCacheTime());
-                        await SetRSAIdentityAsync(header, fullKey);
+                        fullKey = await GetAsync(CacheVisitor, header, identityKey);
+                        if (fullKey == null)
+                        {
+                            fullKey = GetFullKey();
+                            await CacheVisitor.SetStringAsync(identityKey, fullKey.Identity, GetKeyCacheTime());
+                            await SetRSAIdentityAsync(header, fullKey);
+                            return fullKey;
+                        }
                         return fullKey;
                     }
                 }
