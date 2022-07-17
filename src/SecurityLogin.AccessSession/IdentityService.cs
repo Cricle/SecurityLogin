@@ -40,7 +40,7 @@ namespace SecurityLogin.AccessSession
             return res;
         }
 
-        public virtual async Task<string> IssureTokenAsync(TInput input)
+        public virtual async Task<IssureTokenResult> IssureTokenAsync(TInput input)
         {
             var token = await GenerateTokenAsync(input);
             var key = GetKey(token);
@@ -50,7 +50,9 @@ namespace SecurityLogin.AccessSession
             {
                 token = await FailSetCacheAsync(input, token, cacheTime);
             }
-            return token;
+            var res = new IssureTokenResult(
+                token, cacheTime, ok);
+            return res;
         }
 
         protected virtual Task<string> FailSetCacheAsync(TInput input,string token,TimeSpan? cacheTime)

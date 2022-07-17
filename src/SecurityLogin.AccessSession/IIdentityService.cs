@@ -10,7 +10,7 @@ namespace SecurityLogin.AccessSession
 
         Task<TTokenInfo> GetTokenInfoAsync(string token);
 
-        Task<string> IssureTokenAsync(TInput input);
+        Task<IssureTokenResult> IssureTokenAsync(TInput input);
 
         Task<bool> RenewAsync(string token);
     }
