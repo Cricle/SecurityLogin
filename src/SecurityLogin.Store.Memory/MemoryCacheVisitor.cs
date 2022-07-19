@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.Store.Memory
 {
-    public class MemoryCacheVisitor : ICacheVisitor
+    public partial class MemoryCacheVisitor : ICacheVisitor
     {
         public MemoryCacheVisitor(IMemoryCache cache)
         {
@@ -74,8 +74,16 @@ namespace SecurityLogin.Store.Memory
             return Task.FromResult(GetString(key));
         }
 
-        public bool Set<T>(string key, T value, TimeSpan? cacheTime)
+        public bool Set<T>(string key, T value, TimeSpan? cacheTime, CacheSetIf cacheSetIf = CacheSetIf.Always)
         {
+            if (cacheSetIf != CacheSetIf.Always)
+            {
+                var exists = Cache.Get(key) != null;
+                if ((cacheSetIf == CacheSetIf.Exists && !exists) || (cacheSetIf == CacheSetIf.NotExists && exists))
+                {
+                    return false;
+                }
+            }
             if (cacheTime.HasValue)
             {
                 Cache.Set(key, value, cacheTime.Value);
@@ -87,20 +95,20 @@ namespace SecurityLogin.Store.Memory
             return true;
         }
 
-        public Task<bool> SetAsync<T>(string key, T value, TimeSpan? cacheTime)
+        public Task<bool> SetAsync<T>(string key, T value, TimeSpan? cacheTime, CacheSetIf cacheSetIf = CacheSetIf.Always)
         {
-            Set(key, value, cacheTime);
+            Set(key, value, cacheTime,cacheSetIf);
             return Task.FromResult(true);
         }
 
-        public bool SetString(string key, string value, TimeSpan? cacheTime)
+        public bool SetString(string key, string value, TimeSpan? cacheTime, CacheSetIf cacheSetIf = CacheSetIf.Always)
         {
-            return Set(key, value, cacheTime);
+            return Set(key, value, cacheTime, cacheSetIf);
         }
 
-        public Task<bool> SetStringAsync(string key, string value, TimeSpan? cacheTime)
+        public Task<bool> SetStringAsync(string key, string value, TimeSpan? cacheTime, CacheSetIf cacheSetIf = CacheSetIf.Always)
         {
-            return SetAsync(key, value, cacheTime);
+            return SetAsync(key, value, cacheTime, cacheSetIf);
         }
     }
 }

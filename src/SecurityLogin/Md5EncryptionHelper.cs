@@ -17,8 +17,10 @@ namespace SecurityLogin
         }
         public byte[] ComputeHash(string input)
         {
-            var bytes = Encoding.UTF8.GetBytes(input);
-            return md5.ComputeHash(bytes, 0, bytes.Length);
+            using (var res = EncodingHelper.SharedEncoding(input, Encoding.UTF8))
+            {
+                return md5.ComputeHash(res.Buffers, 0, res.Count);
+            }
         }
         public string ComputeHashToString(byte[] input)
         {
@@ -32,7 +34,7 @@ namespace SecurityLogin
         }
         private string ToHexString(byte[] buffer)
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(32);
             for (int i = 0; i < buffer.Length; i++)
                 sb.Append(buffer[i].ToString("X2"));
             return sb.ToString();

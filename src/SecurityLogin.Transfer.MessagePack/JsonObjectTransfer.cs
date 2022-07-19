@@ -16,7 +16,7 @@ namespace SecurityLogin.Transfer.MessagePack
 
         }
         public JsonObjectTransfer(MessagePackSerializerOptions options)
-            :this(options,Encoding.UTF8)
+            : this(options, Encoding.UTF8)
         {
 
         }
@@ -42,8 +42,12 @@ namespace SecurityLogin.Transfer.MessagePack
 
         public T TransferByString<T>(string data)
         {
-            var bs = Encoding.GetBytes(data);
-            return Transfer<T>(bs);
+            using (var bytes = EncodingHelper.SharedEncoding(data, Encoding))
+            {
+                return (T)MessagePackSerializer.Deserialize(typeof(T),
+                    new ReadOnlyMemory<byte>(bytes.Buffers, 0, bytes.Count),
+                    Options);
+            }
         }
 
         public string TransferToString<T>(T obj)

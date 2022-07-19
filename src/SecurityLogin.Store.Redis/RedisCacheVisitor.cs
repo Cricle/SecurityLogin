@@ -1,10 +1,11 @@
 ﻿using StackExchange.Redis;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.Store.Redis
 {
-    public class RedisCacheVisitor : ICacheVisitor
+    public partial class RedisCacheVisitor : ICacheVisitor
     {
         public RedisCacheVisitor(IDatabase database, IObjectTransfer objectTransfer)
         {
@@ -67,26 +68,26 @@ namespace SecurityLogin.Store.Redis
             return res;
         }
 
-        public bool Set<T>(string key, T value, TimeSpan? cacheTime)
+        public bool Set<T>(string key, T value, TimeSpan? cacheTime, CacheSetIf cacheSetIf = CacheSetIf.Always)
         {
             var buffer = ObjectTransfer.Transfer(value);
-            return Database.StringSet(key, buffer, cacheTime);
+            return Database.StringSet(key, buffer, cacheTime,(When)cacheSetIf);
         }
 
-        public Task<bool> SetAsync<T>(string key, T value, TimeSpan? cacheTime)
+        public Task<bool> SetAsync<T>(string key, T value, TimeSpan? cacheTime, CacheSetIf cacheSetIf = CacheSetIf.Always)
         {
             var buffer = ObjectTransfer.Transfer(value);
-            return Database.StringSetAsync(key, buffer, cacheTime);
+            return Database.StringSetAsync(key, buffer, cacheTime, (When)cacheSetIf);
         }
 
-        public bool SetString(string key, string value, TimeSpan? cacheTime)
+        public bool SetString(string key, string value, TimeSpan? cacheTime, CacheSetIf cacheSetIf = CacheSetIf.Always)
         {
-            return Database.StringSet(key, value, cacheTime);
+            return Database.StringSet(key, value, cacheTime, (When)cacheSetIf);
         }
 
-        public Task<bool> SetStringAsync(string key, string value, TimeSpan? cacheTime)
+        public Task<bool> SetStringAsync(string key, string value, TimeSpan? cacheTime, CacheSetIf cacheSetIf = CacheSetIf.Always)
         {
-            return Database.StringSetAsync(key, value, cacheTime);
+            return Database.StringSetAsync(key, value, cacheTime, (When)cacheSetIf);
         }
 
         public bool Expire(string key, TimeSpan? cacheTime)
@@ -97,5 +98,6 @@ namespace SecurityLogin.Store.Redis
         {
             return Database.KeyExpireAsync(key, cacheTime);
         }
+
     }
 }
