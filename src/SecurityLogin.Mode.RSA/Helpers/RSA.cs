@@ -30,7 +30,6 @@ namespace SecurityLogin.Mode.RSA.Helpers
 
             public override bool Return(RSACryptoServiceProvider obj)
             {
-                obj.Clear();
                 return true;
             }
         }
