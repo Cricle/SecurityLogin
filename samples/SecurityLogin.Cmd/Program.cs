@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Ao.Cache;
+using Ao.Cache.InMemory;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using SecurityLogin.Mode.RSA;
 using SecurityLogin.Mode.RSA.Helpers;
-using SecurityLogin.Store.Memory;
 
 namespace SecurityLogin.Cmd
 {

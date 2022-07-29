@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Ao.Cache;
+using Microsoft.AspNetCore.Identity;
 using SecurityLogin.Mode.RSA;
 using System;
 using System.Threading.Tasks;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ao.Cache;
+using System;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.AccessSession

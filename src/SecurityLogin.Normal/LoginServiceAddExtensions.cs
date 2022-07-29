@@ -1,6 +1,7 @@
-﻿using RedLockNet;
+﻿using Ao.Cache;
+using Ao.Cache.InRedis;
+using RedLockNet;
 using SecurityLogin;
-using SecurityLogin.Store.Redis;
 using SecurityLogin.Transfer.TextJson;
 using StackExchange.Redis;
 using System;

@@ -7,10 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin", "src\Securi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Mode.RSA", "src\SecurityLogin.Mode.RSA\SecurityLogin.Mode.RSA.csproj", "{4AB7A3B4-9E16-4A84-ABE0-0C19DBB594EC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Store.Memory", "src\SecurityLogin.Store.Memory\SecurityLogin.Store.Memory.csproj", "{D460B90F-B3EF-4F67-A951-0E911B10F989}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Store.Redis", "src\SecurityLogin.Store.Redis\SecurityLogin.Store.Redis.csproj", "{3DB608B1-2382-4797-8DF0-EF170467F8ED}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{9E3617AB-DA18-4D28-BEA4-EA468A91B43B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Cmd", "samples\SecurityLogin.Cmd\SecurityLogin.Cmd.csproj", "{9C51AAE9-892F-4016-8C90-0C185CED6D87}"
@@ -36,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{6A04DB12-C17
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.AccessSession", "src\SecurityLogin.AccessSession\SecurityLogin.AccessSession.csproj", "{298E0176-D9DE-4606-830A-F4776B1617D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityLogin.Transfer.MessagePack", "src\SecurityLogin.Transfer.MessagePack\SecurityLogin.Transfer.MessagePack.csproj", "{5127386F-CFEC-4554-A2B4-C3F269F9BD64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Transfer.MessagePack", "src\SecurityLogin.Transfer.MessagePack\SecurityLogin.Transfer.MessagePack.csproj", "{5127386F-CFEC-4554-A2B4-C3F269F9BD64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,14 +48,6 @@ Global
 		{4AB7A3B4-9E16-4A84-ABE0-0C19DBB594EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AB7A3B4-9E16-4A84-ABE0-0C19DBB594EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AB7A3B4-9E16-4A84-ABE0-0C19DBB594EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D460B90F-B3EF-4F67-A951-0E911B10F989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D460B90F-B3EF-4F67-A951-0E911B10F989}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D460B90F-B3EF-4F67-A951-0E911B10F989}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D460B90F-B3EF-4F67-A951-0E911B10F989}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3DB608B1-2382-4797-8DF0-EF170467F8ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3DB608B1-2382-4797-8DF0-EF170467F8ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3DB608B1-2382-4797-8DF0-EF170467F8ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3DB608B1-2382-4797-8DF0-EF170467F8ED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9C51AAE9-892F-4016-8C90-0C185CED6D87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9C51AAE9-892F-4016-8C90-0C185CED6D87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C51AAE9-892F-4016-8C90-0C185CED6D87}.Release|Any CPU.ActiveCfg = Release|Any CPU

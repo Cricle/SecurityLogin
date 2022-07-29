@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ao.Cache.InMemory" Version="1.2.0-preview.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\SecurityLogin.Mode.RSA\SecurityLogin.Mode.RSA.csproj" />
-    <ProjectReference Include="..\..\src\SecurityLogin.Store.Memory\SecurityLogin.Store.Memory.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin\SecurityLogin.csproj" />
   </ItemGroup>
 

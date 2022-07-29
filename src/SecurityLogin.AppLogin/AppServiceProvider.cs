@@ -1,4 +1,5 @@
-﻿namespace SecurityLogin.AppLogin
+﻿using Ao.Cache;
+namespace SecurityLogin.AppLogin
 {
     public class AppServiceProvider : IAppServiceProvider
     {

@@ -6,7 +6,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\SecurityLogin.Store.Redis\SecurityLogin.Store.Redis.csproj" />
+	  <PackageReference Include="Ao.Cache.InRedis" Version="1.2.0-preview.1" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\SecurityLogin.Transfer.TextJson\SecurityLogin.Transfer.TextJson.csproj" />
 		<ProjectReference Include="..\SecurityLogin\SecurityLogin.csproj" />
 	</ItemGroup>
