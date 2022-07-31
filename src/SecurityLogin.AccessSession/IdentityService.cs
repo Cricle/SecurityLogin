@@ -4,7 +4,18 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.AccessSession
 {
-    public class IdentityService<TInput, TTokenInfo> : IIdentityService<TInput, TTokenInfo>
+    public class IdentityService<T> : IdentityService<T, T>
+    {
+        public IdentityService(ICacheVisitor cacheVisitor) : base(cacheVisitor)
+        {
+        }
+
+        protected override Task<T> AsTokenInfoAsync(T input, TimeSpan? cacheTime, string key, string token)
+        {
+            return Task.FromResult(input);
+        }
+    }
+    public abstract class IdentityService<TInput, TTokenInfo> : IIdentityService<TInput, TTokenInfo>
     {
         public static readonly TimeSpan? DefaultCacheTime = TimeSpan.FromMinutes(10);
         private static readonly Task<TimeSpan?> defaultCacheTimeTask = Task.FromResult(DefaultCacheTime);
@@ -40,13 +51,15 @@ namespace SecurityLogin.AccessSession
             var res = await CacheVisitor.ExpireAsync(key, cacheTime);
             return res;
         }
-
+        protected abstract Task<TTokenInfo> AsTokenInfoAsync(TInput input, TimeSpan? cacheTime, string key, string token);
+        
         public virtual async Task<IssureTokenResult> IssureTokenAsync(TInput input)
         {
             var token = await GenerateTokenAsync(input);
             var key = GetKey(token);
             var cacheTime = await GetCacheTimeAsync(token, input);
-            var ok=await CacheVisitor.SetAsync(key, input, cacheTime);
+            var output = await AsTokenInfoAsync(input, cacheTime, key, token);
+            var ok=await CacheVisitor.SetAsync(key, output, cacheTime);
             if (!ok)
             {
                 token = await FailSetCacheAsync(input, token, cacheTime);
@@ -69,7 +82,6 @@ namespace SecurityLogin.AccessSession
         {
             return Task.FromResult(Guid.NewGuid().ToString("N"));
         }
-
         protected virtual string GetKey(string token)
         {
             var name = TypeNameHelper.GetFriendlyFullName(GetType());
