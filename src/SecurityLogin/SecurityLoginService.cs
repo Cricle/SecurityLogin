@@ -17,7 +17,9 @@ namespace SecurityLogin
         }
 
         public ILockerFactory LockerFactory { get; }
+
         public ICacheVisitor CacheVisitor { get; }
+
         static async Task<TFullKey> GetAsync(ICacheVisitor cacheVisitor,string header,string identityKey)
         {
             var identity = await cacheVisitor.GetStringAsync(identityKey);

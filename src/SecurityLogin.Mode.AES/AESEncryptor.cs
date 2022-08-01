@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Microsoft.IO;
+using System;
+using System.Buffers;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -7,6 +12,8 @@ namespace SecurityLogin.Mode.AES
     public class AESEncryptor<TFullKey> : Base64Encryptor<TFullKey>
         where TFullKey : AESFullKey
     {
+        private static readonly RecyclableMemoryStreamManager streamManager = new RecyclableMemoryStreamManager();
+
         public static readonly AESEncryptor<TFullKey> SharedUTF8 = new AESEncryptor<TFullKey>(Encoding.UTF8);
         public AESEncryptor(Encoding encoding) : base(encoding)
         {
@@ -14,42 +21,64 @@ namespace SecurityLogin.Mode.AES
 
         public override byte[] Decrypt(TFullKey fullKey, byte[] data)
         {
-            using (var aes = new RijndaelManaged())
+            using (var aes = Aes.Create())
             {
-                InitAES(aes);
-                aes.Key = Convert.FromBase64String(fullKey.Key);
-                using (var transform = aes.CreateDecryptor())
+                InitAes(fullKey, aes);
+                using (var mem = streamManager.GetStream(data))
+                using (var cs = new CryptoStream(mem, aes.CreateDecryptor(aes.Key, aes.IV), CryptoStreamMode.Read))
                 {
-                    var res = transform.TransformFinalBlock(data, 0, data.Length);
-                    return res;
+                    return Read(cs);
                 }
+            }
+        }
+        private static byte[] Read(Stream stream)
+        {
+            var res = new List<byte>();
+            var buffer = ArrayPool<byte>.Shared.Rent(2048);
+            try
+            {
+                var read = 0;
+                while ((read = stream.Read(buffer, 0, buffer.Length)) != 0)
+                {
+                    if (buffer.Length == read)
+                    {
+                        res.AddRange(buffer);
+                    }
+                    else
+                    {
+                        res.AddRange(buffer.Take(read));
+                    }
+                }
+                return res.ToArray();
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
             }
         }
         public override byte[] Encrypt(TFullKey fullKey, byte[] data)
         {
-            using (var aes = new RijndaelManaged())
+            using (var aes = Aes.Create())
             {
-                InitAES(aes);
-                aes.Key = Convert.FromBase64String(fullKey.Key);
-                using (var transform = aes.CreateEncryptor())
+                InitAes(fullKey, aes);
+                using (var mem = streamManager.GetStream())
                 {
-                    return transform.TransformFinalBlock(data, 0, data.Length);
+                    using (var cs = new CryptoStream(mem, aes.CreateEncryptor(aes.Key, aes.IV), CryptoStreamMode.Write))
+                    {
+                        cs.Write(data, 0, data.Length);
+                        cs.FlushFinalBlock();
+                        return mem.ToArray();
+                    }
                 }
             }
         }
-        protected virtual void InitAES(RijndaelManaged aes)
+        protected virtual void InitAes(TFullKey fullKey, Aes aes)
         {
-            AESIniter.InitAES(aes);
-        }
-    }
-    internal static class AESIniter
-    {
-        public static void InitAES(RijndaelManaged aes)
-        {
-            aes.Mode = CipherMode.CBC;
-            aes.Padding = PaddingMode.PKCS7;
-            aes.KeySize = 128;
-            aes.BlockSize = 128;
+            aes.KeySize = fullKey.KeySize;
+            aes.Padding = fullKey.PaddingMode;
+            aes.Mode = fullKey.CipherMode;
+            aes.Key = fullKey.Key;
+            aes.IV = fullKey.IV;
         }
     }
 }

@@ -5,18 +5,22 @@ namespace SecurityLogin.Mode.AES.Helpers
 {
     public static class AESHelper
     {
-        public static AESFullKey CreateKey()
+        public static AESFullKey CreateKey(PaddingMode paddingMode= PaddingMode.PKCS7,CipherMode mode= CipherMode.ECB)
         {
-            using (var aes = new RijndaelManaged())
+            using (var aes = Aes.Create())
             {
-                AESIniter.InitAES(aes);
+                aes.Padding = paddingMode;
+                aes.Mode = mode;
                 aes.GenerateIV();
                 aes.GenerateKey();
                 return new AESFullKey
                 {
                     Identity = Guid.NewGuid().ToString(),
-                    IV = Convert.ToBase64String(aes.IV),
-                    Key = Convert.ToBase64String(aes.Key)
+                    IV = aes.IV,
+                    Key = aes.Key,
+                    PaddingMode = aes.Padding,
+                    CipherMode = mode,
+                    KeySize = aes.KeySize,
                 };
             }
         }
