@@ -1,11 +1,9 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace SecurityLogin.Mode.AES
 {
     public partial class AESFullKey : AsymmetricFullKey, IIdentityable
     {
-        public string Identity { get; set; }
     }
     public partial class AESFullKey
     {

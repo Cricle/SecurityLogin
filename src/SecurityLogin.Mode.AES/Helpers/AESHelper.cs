@@ -5,7 +5,7 @@ namespace SecurityLogin.Mode.AES.Helpers
 {
     public static class AESHelper
     {
-        public static AESFullKey CreateKey(PaddingMode paddingMode= PaddingMode.PKCS7,CipherMode mode= CipherMode.ECB)
+        public static AESFullKey CreateKey(PaddingMode paddingMode = PaddingMode.PKCS7, CipherMode mode = CipherMode.ECB)
         {
             using (var aes = Aes.Create())
             {

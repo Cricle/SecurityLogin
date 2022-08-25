@@ -3,8 +3,6 @@ using Ao.Cache.InMemory;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using SecurityLogin.Mode.AES;
-using SecurityLogin.Mode.AES.Helpers;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace SecurityLogin.Cmd
@@ -25,7 +23,7 @@ namespace SecurityLogin.Cmd
             var ser = new MyLoginService(fc, cv);
             var res = await ser.FlushKeyAsync();
 
-            Console.WriteLine("IV:"+Convert.ToBase64String(res.IV));
+            Console.WriteLine("IV:" + Convert.ToBase64String(res.IV));
             Console.WriteLine("Key:" + Convert.ToBase64String(res.Key));
             var buf = AESEncryptor<AESFullKey>.SharedUTF8.Encrypt(res, Encoding.UTF8.GetBytes("world"));
             Console.WriteLine(Convert.ToBase64String(buf));

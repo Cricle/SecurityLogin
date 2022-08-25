@@ -35,7 +35,7 @@ namespace SecurityLogin.AspNetCore.Services
                 var res = await UserManager.CreateAsync(user, pwd);
                 return res.Succeeded;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -53,7 +53,7 @@ namespace SecurityLogin.AspNetCore.Services
                 var res = await UserManager.CheckPasswordAsync(user, pwd);
                 return res;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

@@ -7,7 +7,7 @@ namespace SecurityLogin
 {
     public static class EncodingHelper
     {
-        private readonly static ArrayPool<byte> pool = ArrayPool<byte>.Shared;
+        private static readonly ArrayPool<byte> pool = ArrayPool<byte>.Shared;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static EncodingResult SharedEncoding(string str, Encoding encoding)

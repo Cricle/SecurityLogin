@@ -1,8 +1,8 @@
 ﻿using Ao.Cache;
 using Ao.Cache.InRedis;
+using Ao.Cache.Serizlier.TextJson;
 using RedLockNet;
 using SecurityLogin;
-using SecurityLogin.Transfer.TextJson;
 using StackExchange.Redis;
 using System;
 
@@ -15,8 +15,8 @@ namespace Microsoft.Extensions.DependencyInjection
             var opt = new LoginServiceOptions();
             action?.Invoke(opt);
             services.AddSingleton<ILockerFactory>(x => new RedisLockFactory(x.GetRequiredService<IDistributedLockFactory>()));
-            services.AddSingleton<IObjectTransfer>(new JsonObjectTransfer(opt.JsonOptions, opt.Encoding));
-            services.AddSingleton<ICacheVisitor>(x =>
+            services.AddSingleton<IObjectTransfer>(TextJsonObjectTransfer.Instance);
+            services.AddScoped<ICacheVisitor>(x =>
             {
                 var db = x.GetService<IDatabase>();
                 if (db == null)

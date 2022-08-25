@@ -52,14 +52,14 @@ namespace SecurityLogin.AccessSession
             return res;
         }
         protected abstract Task<TTokenInfo> AsTokenInfoAsync(TInput input, TimeSpan? cacheTime, string key, string token);
-        
+
         public virtual async Task<IssureTokenResult> IssureTokenAsync(TInput input)
         {
             var token = await GenerateTokenAsync(input);
             var key = GetKey(token);
             var cacheTime = await GetCacheTimeAsync(token, input);
             var output = await AsTokenInfoAsync(input, cacheTime, key, token);
-            var ok=await CacheVisitor.SetAsync(key, output, cacheTime);
+            var ok = await CacheVisitor.SetAsync(key, output, cacheTime);
             if (!ok)
             {
                 token = await FailSetCacheAsync(input, token, cacheTime);
@@ -69,7 +69,7 @@ namespace SecurityLogin.AccessSession
             return res;
         }
 
-        protected virtual Task<string> FailSetCacheAsync(TInput input,string token,TimeSpan? cacheTime)
+        protected virtual Task<string> FailSetCacheAsync(TInput input, string token, TimeSpan? cacheTime)
         {
             throw new InvalidOperationException($"Fail to set cache with {token}");
         }
