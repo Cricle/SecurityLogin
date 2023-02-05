@@ -40,7 +40,7 @@ namespace SecurityLogin.AspNetCore.Services
                 var res = await UserManager.CreateAsync(user, pwd);
                 return res.Succeeded;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -62,7 +62,7 @@ namespace SecurityLogin.AspNetCore.Services
                 }
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

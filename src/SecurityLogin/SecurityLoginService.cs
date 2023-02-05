@@ -17,8 +17,10 @@ namespace SecurityLogin
         }
 
         public ILockerFactory LockerFactory { get; }
+
         public ICacheVisitor CacheVisitor { get; }
-        static async Task<TFullKey> GetAsync(ICacheVisitor cacheVisitor,string header,string identityKey)
+
+        static async Task<TFullKey> GetAsync(ICacheVisitor cacheVisitor, string header, string identityKey)
         {
             var identity = await cacheVisitor.GetStringAsync(identityKey);
             if (identity != null)
@@ -39,7 +41,7 @@ namespace SecurityLogin
             {
                 var identityKey = GetSharedIdentityKey();
 
-                var fullKey= await GetAsync(CacheVisitor, header, identityKey);
+                var fullKey = await GetAsync(CacheVisitor, header, identityKey);
                 if (fullKey != null)
                 {
                     return fullKey;

@@ -170,7 +170,7 @@ namespace SecurityLogin.AppLogin
             return session;
         }
 
-        protected virtual TimeSpan? GetTokenTime(string appKey, long timestamp,TimeSpan? givenTime,DateTime now,TAppInfoSnapshot snapshot)
+        protected virtual TimeSpan? GetTokenTime(string appKey, long timestamp, TimeSpan? givenTime, DateTime now, TAppInfoSnapshot snapshot)
         {
             if (snapshot.EndTime != null)
             {
@@ -183,7 +183,7 @@ namespace SecurityLogin.AppLogin
             return givenTime;
         }
 
-        protected virtual string GetSignString(string appKey, long timestamp,TAppInfoSnapshot snapshot)
+        protected virtual string GetSignString(string appKey, long timestamp, TAppInfoSnapshot snapshot)
         {
             return appKey + timestamp + snapshot.AppSecret;
         }

@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{9E36
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Cmd", "samples\SecurityLogin.Cmd\SecurityLogin.Cmd.csproj", "{9C51AAE9-892F-4016-8C90-0C185CED6D87}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Transfer.TextJson", "src\SecurityLogin.Transfer.TextJson\SecurityLogin.Transfer.TextJson.csproj", "{47539E1B-5E4D-4D16-ABAC-4FCBB8955EFB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Normal", "src\SecurityLogin.Normal\SecurityLogin.Normal.csproj", "{A773CEA6-7E52-44EE-BBFC-888E3C11BA36}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Mode.AES", "src\SecurityLogin.Mode.AES\SecurityLogin.Mode.AES.csproj", "{4AE5890C-B10A-460E-BC31-51A731F1236F}"
@@ -30,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{6A04DB12-C17
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.AccessSession", "src\SecurityLogin.AccessSession\SecurityLogin.AccessSession.csproj", "{298E0176-D9DE-4606-830A-F4776B1617D6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Transfer.MessagePack", "src\SecurityLogin.Transfer.MessagePack\SecurityLogin.Transfer.MessagePack.csproj", "{5127386F-CFEC-4554-A2B4-C3F269F9BD64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityLogin.InMemory", "src\SecurityLogin.InMemory\SecurityLogin.InMemory.csproj", "{B1305CCC-1108-49BC-9941-AADCB1A8E2FD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.AspNetCore", "src\SecurityLogin.AspNetCore\SecurityLogin.AspNetCore.csproj", "{CDA7601B-D7D6-4E27-8DEF-1BFB64E1773D}"
 EndProject
@@ -54,10 +52,6 @@ Global
 		{9C51AAE9-892F-4016-8C90-0C185CED6D87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C51AAE9-892F-4016-8C90-0C185CED6D87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C51AAE9-892F-4016-8C90-0C185CED6D87}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47539E1B-5E4D-4D16-ABAC-4FCBB8955EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47539E1B-5E4D-4D16-ABAC-4FCBB8955EFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47539E1B-5E4D-4D16-ABAC-4FCBB8955EFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47539E1B-5E4D-4D16-ABAC-4FCBB8955EFB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A773CEA6-7E52-44EE-BBFC-888E3C11BA36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A773CEA6-7E52-44EE-BBFC-888E3C11BA36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A773CEA6-7E52-44EE-BBFC-888E3C11BA36}.Release|Any CPU.ActiveCfg = Release|Any CPU
