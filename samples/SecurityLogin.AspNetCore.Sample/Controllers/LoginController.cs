@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SecurityLogin.AspNetCore.Services;
 using System.Threading.Tasks;
 
@@ -32,6 +33,12 @@ namespace SecurityLogin.AspNetCore.Controllers
         {
             var res = await loginService.LoginAsync(connectId, userName, password);
             return Ok(res);
+        }
+        [Authorize(AuthenticationSchemes ="default")]
+        [HttpGet("[action]")]
+        public IActionResult Auth()
+        {
+            return Ok(123);
         }
     }
 }
