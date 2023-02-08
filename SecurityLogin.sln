@@ -28,9 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{6A04DB12-C17
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.AccessSession", "src\SecurityLogin.AccessSession\SecurityLogin.AccessSession.csproj", "{298E0176-D9DE-4606-830A-F4776B1617D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityLogin.InMemory", "src\SecurityLogin.InMemory\SecurityLogin.InMemory.csproj", "{B1305CCC-1108-49BC-9941-AADCB1A8E2FD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.AspNetCore", "src\SecurityLogin.AspNetCore\SecurityLogin.AspNetCore.csproj", "{CDA7601B-D7D6-4E27-8DEF-1BFB64E1773D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.InMemory", "src\SecurityLogin.InMemory\SecurityLogin.InMemory.csproj", "{B1305CCC-1108-49BC-9941-AADCB1A8E2FD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Test.AspNetCore", "samples\SecurityLogin.AspNetCore.Sample\SecurityLogin.Test.AspNetCore.csproj", "{B36EF3CB-30B8-491C-B1C4-2A460FE33A21}"
 EndProject
@@ -72,14 +70,10 @@ Global
 		{298E0176-D9DE-4606-830A-F4776B1617D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{298E0176-D9DE-4606-830A-F4776B1617D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{298E0176-D9DE-4606-830A-F4776B1617D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5127386F-CFEC-4554-A2B4-C3F269F9BD64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5127386F-CFEC-4554-A2B4-C3F269F9BD64}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5127386F-CFEC-4554-A2B4-C3F269F9BD64}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5127386F-CFEC-4554-A2B4-C3F269F9BD64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDA7601B-D7D6-4E27-8DEF-1BFB64E1773D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDA7601B-D7D6-4E27-8DEF-1BFB64E1773D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDA7601B-D7D6-4E27-8DEF-1BFB64E1773D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDA7601B-D7D6-4E27-8DEF-1BFB64E1773D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1305CCC-1108-49BC-9941-AADCB1A8E2FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1305CCC-1108-49BC-9941-AADCB1A8E2FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1305CCC-1108-49BC-9941-AADCB1A8E2FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1305CCC-1108-49BC-9941-AADCB1A8E2FD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B36EF3CB-30B8-491C-B1C4-2A460FE33A21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B36EF3CB-30B8-491C-B1C4-2A460FE33A21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B36EF3CB-30B8-491C-B1C4-2A460FE33A21}.Release|Any CPU.ActiveCfg = Release|Any CPU

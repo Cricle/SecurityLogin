@@ -1,21 +1,14 @@
-using Ao.Cache;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using RedLockNet;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
-using SecurityLogin.AccessSession;
-using SecurityLogin.AppLogin;
 using SecurityLogin.AspNetCore;
 using SecurityLogin.AspNetCore.Services;
 using StackExchange.Redis;
-using System;
 using System.Net;
-using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,31 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("Auth", new OpenApiSecurityScheme
-    {
-        Name = "Auth",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Auth"
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference=new OpenApiReference
-                {
-                    Type= ReferenceType.SecurityScheme,
-                    Id="Auth"
-                },
-                Scheme= "Auth",
-                In= ParameterLocation.Header
-            },Array.Empty<string>()
-        }
-    });
-});
 
 builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlite("Data Source=app.db"))
     .AddIdentity<IdentityUser, IdentityRole>(x =>
@@ -71,15 +39,6 @@ builder.Services.AddSingleton<IDistributedLockFactory>(new RedLockFactory(new Re
 builder.Services.AddNormalSecurityService();
 builder.Services.AddScoped<LoginService>();
 builder.Services.AddMemoryCache();
-builder.Services.AddDefaultSecurityLoginHandler<string,UserSnapshot>();
-builder.Services.AddScoped<IIdentityService<string,UserSnapshot>, MyIdentityService>();
-builder.Services.AddAuthorization(x =>
-{
-});
-builder.Services.AddAuthentication(x =>
-{
-    x.AddScheme<CrossAuthenticationHandler<UserSnapshot>>("default", "default");
-});
 
 //builder.Services.AddScoped<DefaultRequestContainerConverter>();
 
@@ -99,21 +58,6 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
-
-class MyIdentityService : IdentityService<string, UserSnapshot>
-{
-    public MyIdentityService(ICacheVisitor cacheVisitor) : base(cacheVisitor)
-    {
-    }
-
-    protected override Task<UserSnapshot> AsTokenInfoAsync(string input, TimeSpan? cacheTime, string key, string token)
-    {
-        return Task.FromResult(new UserSnapshot { Token=token,Name=input,Id=input});
-    }
-}
