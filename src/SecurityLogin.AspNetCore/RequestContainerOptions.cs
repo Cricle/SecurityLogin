@@ -7,11 +7,11 @@ namespace SecurityLogin.AspNetCore
 {
     public class RequestContainerOptions
     {
-        public string APPKeyHeader { get; set; } = "SecurityLogin.AppKey";
+        public string APPKeyHeader { get; set; } = SecurityLoginConsts.DefaultAPPKeyHeader;
 
-        public string AccessHeader { get; set; } = "SecurityLogin.Access";
+        public string AccessHeader { get; set; } = SecurityLoginConsts.DefaultAPPAccessHeader;
 
-        public string AuthHeader { get; set; } = "Auth";
+        public string AuthHeader { get; set; } = SecurityLoginConsts.DefaultAuthHeader;
 
         public Func<HttpContext,Task<bool>> IsSkip { get; set; }
 
@@ -23,6 +23,6 @@ namespace SecurityLogin.AspNetCore
 
         public bool AppFailNoUser { get; set; }
 
-        public string AuthenticationScheme { get; set; } = "se-default";
+        public string AuthenticationScheme { get; set; } = SecurityLoginConsts.AuthenticationScheme;
     }
 }

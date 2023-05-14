@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.InMemory", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Test.AspNetCore", "samples\SecurityLogin.AspNetCore.Sample\SecurityLogin.Test.AspNetCore.csproj", "{B36EF3CB-30B8-491C-B1C4-2A460FE33A21}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.AspNetCore", "src\SecurityLogin.AspNetCore\SecurityLogin.AspNetCore.csproj", "{F2ED4260-E35B-482D-B510-C341AB3C0202}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,14 +76,14 @@ Global
 		{B1305CCC-1108-49BC-9941-AADCB1A8E2FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1305CCC-1108-49BC-9941-AADCB1A8E2FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1305CCC-1108-49BC-9941-AADCB1A8E2FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDA7601B-D7D6-4E27-8DEF-1BFB64E1773D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDA7601B-D7D6-4E27-8DEF-1BFB64E1773D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDA7601B-D7D6-4E27-8DEF-1BFB64E1773D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDA7601B-D7D6-4E27-8DEF-1BFB64E1773D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B36EF3CB-30B8-491C-B1C4-2A460FE33A21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B36EF3CB-30B8-491C-B1C4-2A460FE33A21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B36EF3CB-30B8-491C-B1C4-2A460FE33A21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B36EF3CB-30B8-491C-B1C4-2A460FE33A21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2ED4260-E35B-482D-B510-C341AB3C0202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2ED4260-E35B-482D-B510-C341AB3C0202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2ED4260-E35B-482D-B510-C341AB3C0202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2ED4260-E35B-482D-B510-C341AB3C0202}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

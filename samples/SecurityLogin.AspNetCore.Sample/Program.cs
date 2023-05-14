@@ -26,12 +26,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.AddSecurityDefinition("Auth", new OpenApiSecurityScheme
+    c.AddSecurityDefinition("Authorization", new OpenApiSecurityScheme
     {
-        Name = "Auth",
+        Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
-        Scheme = "Auth"
+        Scheme = "Authorization"
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -41,9 +41,9 @@ builder.Services.AddSwaggerGen(c =>
                 Reference=new OpenApiReference
                 {
                     Type= ReferenceType.SecurityScheme,
-                    Id="Auth"
+                    Id="Authorization"
                 },
-                Scheme= "Auth",
+                Scheme= "Authorization",
                 In= ParameterLocation.Header
             },Array.Empty<string>()
         }
@@ -77,8 +77,8 @@ builder.Services.AddSingleton<IEntityConvertor, TextJsonEntityConvertor>();
 builder.Services.AddInRedisFinder();
 builder.Services.AddAuthentication(x =>
 {
-    x.DefaultAuthenticateScheme = "se-default";
-    x.AddScheme<CrossAuthenticationHandler<UserSnapshot>>("se-default", "se-default");
+    x.DefaultAuthenticateScheme = SecurityLoginConsts.AuthenticationScheme;
+    x.AddScheme<CrossAuthenticationHandler<UserSnapshot>>(SecurityLoginConsts.AuthenticationScheme, "se-default");
 });
 
 var app = builder.Build();
@@ -111,5 +111,9 @@ public class MyIdentityService : IdentityService<string, UserSnapshot>
     protected override Task<UserSnapshot> AsTokenInfoAsync(string input, TimeSpan? cacheTime, string key, string token)
     {
         return Task.FromResult(new UserSnapshot { Token = token, Id = input, Name = key });
+    }
+    protected override string GetKey(string token)
+    {
+        return "Security.Login.Tokens." + token;
     }
 }
