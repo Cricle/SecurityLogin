@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using SecurityLogin.AccessSession;
 using System;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.AspNetCore
@@ -52,7 +53,13 @@ namespace SecurityLogin.AspNetCore
         }
         protected virtual Task<AuthenticationTicket> SucceedAsync(UserStatusContainer<TUserSnapshot> container,RequestContainerOptions options)
         {
-            return Task.FromResult(new AuthenticationTicket(new ClaimsPrincipal(Array.Empty<ClaimsIdentity>()), options.AuthenticationScheme));
+            return Task.FromResult(new AuthenticationTicket(new ClaimsPrincipal(new ClaimsIdentity[]
+            {
+                new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name,"aaa")
+                },options.AuthenticationScheme)
+            }), options.AuthenticationScheme));
         }
         protected virtual Task<AuthenticateResult> FailAsync(UserStatusFailTypes type)
         {

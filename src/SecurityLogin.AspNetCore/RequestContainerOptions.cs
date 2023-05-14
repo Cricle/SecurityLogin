@@ -23,6 +23,6 @@ namespace SecurityLogin.AspNetCore
 
         public bool AppFailNoUser { get; set; }
 
-        public string AuthenticationScheme { get; set; } = "default";
+        public string AuthenticationScheme { get; set; } = "se-default";
     }
 }

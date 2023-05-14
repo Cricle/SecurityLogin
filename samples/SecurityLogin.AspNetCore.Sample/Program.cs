@@ -1,4 +1,5 @@
 using Ao.Cache;
+using Ao.Cache.Serizlier.TextJson;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -73,15 +74,14 @@ builder.Services.AddScoped<LoginService>();
 builder.Services.AddMemoryCache();
 builder.Services.AddDefaultSecurityLoginHandler<string,UserSnapshot>();
 builder.Services.AddScoped<IIdentityService<string,UserSnapshot>, MyIdentityService>();
-builder.Services.AddAuthorization(x =>
-{
-});
+builder.Services.AddAuthorization();
+builder.Services.AddSingleton<IEntityConvertor, TextJsonEntityConvertor>();
+builder.Services.AddInRedisFinder();
 builder.Services.AddAuthentication(x =>
 {
-    x.AddScheme<CrossAuthenticationHandler<UserSnapshot>>("default", "default");
+    x.DefaultAuthenticateScheme = "se-default";
+    x.AddScheme<CrossAuthenticationHandler<UserSnapshot>>("se-default", "se-default");
 });
-
-//builder.Services.AddScoped<DefaultRequestContainerConverter>();
 
 var app = builder.Build();
 

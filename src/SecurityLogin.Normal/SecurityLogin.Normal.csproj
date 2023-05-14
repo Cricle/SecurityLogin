@@ -2,12 +2,12 @@
 	<Import Project="..\..\eng\pkg.props" />
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net461;net5.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net7.0</TargetFrameworks>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Ao.Cache.InRedis" Version="1.2.1-preview.8" />
-	  <PackageReference Include="Ao.Cache.Serizlier.TextJson" Version="1.2.1-preview.8" />
+	  <PackageReference Include="Ao.Cache.InRedis" Version="1.5.0-preview-7" />
+	  <PackageReference Include="Ao.Cache.Serizlier.TextJson" Version="1.5.0-preview-7" />
 	</ItemGroup>
 
 	<ItemGroup>

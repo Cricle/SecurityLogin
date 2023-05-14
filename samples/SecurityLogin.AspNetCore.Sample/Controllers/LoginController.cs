@@ -34,7 +34,7 @@ namespace SecurityLogin.AspNetCore.Controllers
             var res = await loginService.LoginAsync(connectId, userName, password);
             return Ok(res);
         }
-        [Authorize(AuthenticationSchemes ="default")]
+        [Authorize]
         [HttpGet("[action]")]
         public IActionResult Auth()
         {

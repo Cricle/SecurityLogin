@@ -51,6 +51,13 @@ namespace SecurityLogin.AccessSession
             var res = await CacheVisitor.ExpireAsync(key, cacheTime);
             return res;
         }
+        public virtual async Task<bool> UpdateAsync(string token,TTokenInfo info,CacheSetIf cacheSetIf= CacheSetIf.Always)
+        {
+            var key = GetKey(token);
+            var cacheTime = await GetCacheTimeAsync(token, default);
+            var res = await CacheVisitor.SetAsync(key, info, cacheTime, cacheSetIf);
+            return res;
+        }
         protected abstract Task<TTokenInfo> AsTokenInfoAsync(TInput input, TimeSpan? cacheTime, string key, string token);
 
         public virtual async Task<IssureTokenResult> IssureTokenAsync(TInput input)
