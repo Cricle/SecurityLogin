@@ -1,6 +1,5 @@
 ﻿using Ao.Cache;
 using Microsoft.AspNetCore.Identity;
-using SecurityLogin.AccessSession;
 using SecurityLogin.Mode.RSA;
 using System;
 using System.Threading.Tasks;
@@ -14,16 +13,11 @@ namespace SecurityLogin.AspNetCore.Services
         public static readonly string SharedLockKey = "Lock.SecurityLogin.AspNetCore.Services.LoginService.Shared";
 
         public UserManager<IdentityUser> UserManager { get; }
-
-        public IIdentityService<string, UserSnapshot> IdentityService { get; }
-
         public LoginService(ILockerFactory lockerFactory,
             ICacheVisitor cacheVisitor,
-            UserManager<IdentityUser> userManager,
-           IIdentityService<string, UserSnapshot> identityService )
+            UserManager<IdentityUser> userManager )
             : base(lockerFactory, cacheVisitor)
         {
-            IdentityService = identityService;
             UserManager = userManager;
         }
 
@@ -45,26 +39,22 @@ namespace SecurityLogin.AspNetCore.Services
                 return false;
             }
         }
-        public async Task<IssureTokenResult> LoginAsync(string connectId, string userName, string passwordHash)
+        public async Task<bool> LoginAsync(string connectId, string userName, string passwordHash)
         {
             var user = await UserManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return null;
+                return false;
             }
             try
             {
                 var pwd = await DecryptAsync(connectId, passwordHash);
                 var res = await UserManager.CheckPasswordAsync(user, pwd);
-                if (res)
-                {
-                    return await IdentityService.IssureTokenAsync(userName);
-                }
-                return null;
+                return res;
             }
             catch (Exception)
             {
-                return null;
+                return false;
             }
         }
     }

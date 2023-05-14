@@ -30,8 +30,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.AccessSession
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.InMemory", "src\SecurityLogin.InMemory\SecurityLogin.InMemory.csproj", "{B1305CCC-1108-49BC-9941-AADCB1A8E2FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.AspNetCore", "src\SecurityLogin.AspNetCore\SecurityLogin.AspNetCore.csproj", "{CDA7601B-D7D6-4E27-8DEF-1BFB64E1773D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Test.AspNetCore", "samples\SecurityLogin.AspNetCore.Sample\SecurityLogin.Test.AspNetCore.csproj", "{B36EF3CB-30B8-491C-B1C4-2A460FE33A21}"
 EndProject
 Global

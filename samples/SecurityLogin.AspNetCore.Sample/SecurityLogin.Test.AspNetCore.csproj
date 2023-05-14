@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SecurityLogin.AspNetCore\SecurityLogin.AspNetCore.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Mode.AES\SecurityLogin.Mode.AES.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Mode.RSA\SecurityLogin.Mode.RSA.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Normal\SecurityLogin.Normal.csproj" />
