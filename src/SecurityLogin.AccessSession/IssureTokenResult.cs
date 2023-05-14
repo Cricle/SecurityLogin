@@ -19,7 +19,6 @@ namespace SecurityLogin.AccessSession
     }
 
     public class UserStatusContainer<TUserSnapshot>
-        where TUserSnapshot : UserSnapshot
     {
         public AppSnapshot AppSnapshot { get; set; }
 
