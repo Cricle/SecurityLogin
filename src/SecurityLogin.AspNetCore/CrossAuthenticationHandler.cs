@@ -55,10 +55,7 @@ namespace SecurityLogin.AspNetCore
         {
             return Task.FromResult(new AuthenticationTicket(new ClaimsPrincipal(new ClaimsIdentity[]
             {
-                new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name,"aaa")
-                },options.AuthenticationScheme)
+                new ClaimsIdentity(Array.Empty<Claim>(),options.AuthenticationScheme)
             }), options.AuthenticationScheme));
         }
         protected virtual Task<AuthenticateResult> FailAsync(UserStatusFailTypes type)
