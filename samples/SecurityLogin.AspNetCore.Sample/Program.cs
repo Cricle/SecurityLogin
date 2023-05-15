@@ -72,14 +72,9 @@ builder.Services.AddScoped<LoginService>();
 builder.Services.AddMemoryCache();
 builder.Services.AddDefaultSecurityLoginHandler<string, UserSnapshot>();
 builder.Services.AddScoped<IIdentityService<string,UserSnapshot>, MyIdentityService>();
-builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IEntityConvertor, TextJsonEntityConvertor>();
 builder.Services.AddInRedisFinder();
-builder.Services.AddAuthentication(x =>
-{
-    x.DefaultAuthenticateScheme = SecurityLoginConsts.AuthenticationScheme;
-    x.AddScheme<CrossAuthenticationHandler<UserSnapshot>>(SecurityLoginConsts.AuthenticationScheme, "se-default");
-});
+builder.Services.AddSecurityLogin<UserSnapshot>();
 
 var app = builder.Build();
 

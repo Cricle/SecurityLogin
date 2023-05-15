@@ -1,11 +1,15 @@
 <Project>
-  <PropertyGroup>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.2.0-preview.2</Version>
-    <Authors>Cricle</Authors>
-    <Description>An security method to login</Description>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
+	<PropertyGroup>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Version>1.3.0</Version>
+		<Authors>Cricle</Authors>
+		<Description>An security method to login</Description>
+		<Title>SecurityLogin</Title>
+		<PackageProjectUrl>https://github.com/Cricle/SecurityLogin</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Cricle/SecurityLogin</RepositoryUrl>
+		<PackageTags>aspnetcore,login,security,fast</PackageTags>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
 </Project>

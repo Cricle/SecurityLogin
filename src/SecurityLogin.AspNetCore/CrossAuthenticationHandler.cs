@@ -26,7 +26,6 @@ namespace SecurityLogin.AspNetCore
         NoUserSnapshot
     }
     public class CrossAuthenticationHandler<TUserSnapshot> : CrossAuthenticationHandlerBase<UserStatusContainer<TUserSnapshot>>
-        where TUserSnapshot : UserSnapshot
     {
         public RequestContainerOptions RequestContainerOptions { get; }
 

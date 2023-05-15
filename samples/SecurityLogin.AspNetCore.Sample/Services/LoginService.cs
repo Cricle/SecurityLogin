@@ -9,10 +9,6 @@ namespace SecurityLogin.AspNetCore.Services
 {
     public class LoginService : RSALoginService
     {
-        public static readonly string HeaderKey = "SecurityLogin.AspNetCore.Services.LoginService";
-        public static readonly string SharedIdentityKey = "SecurityLogin.AspNetCore.Services.LoginService.SharedIdentity";
-        public static readonly string SharedLockKey = "Lock.SecurityLogin.AspNetCore.Services.LoginService.Shared";
-
         public UserManager<IdentityUser> UserManager { get; }
         public IIdentityService<string, UserSnapshot> IdentityService { get; }
         public LoginService(ILockerFactory lockerFactory,
