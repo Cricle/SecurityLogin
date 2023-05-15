@@ -6,17 +6,14 @@
 
   <ItemGroup>
     <PackageReference Include="Ao.Cache.InRedis.Microsoft.DependencyInjection" Version="1.5.0-preview-7" />
-    <PackageReference Include="Ao.Cache.Serizlier.TextJson" Version="1.5.0-preview-7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.4" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
-	  <PackageReference Include="MessagePack" Version="2.3.85" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SecurityLogin.AspNetCore\SecurityLogin.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\src\SecurityLogin.Mode.AES\SecurityLogin.Mode.AES.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Mode.RSA\SecurityLogin.Mode.RSA.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin.Normal\SecurityLogin.Normal.csproj" />
     <ProjectReference Include="..\..\src\SecurityLogin\SecurityLogin.csproj" />
