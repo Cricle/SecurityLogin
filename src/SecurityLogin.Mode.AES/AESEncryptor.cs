@@ -1,17 +1,16 @@
-﻿using Microsoft.IO;
-using System.Buffers;
+﻿using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using ValueBuffer;
 
 namespace SecurityLogin.Mode.AES
 {
     public class AESEncryptor<TFullKey> : Base64Encryptor<TFullKey>
         where TFullKey : AESFullKey
     {
-        private static readonly RecyclableMemoryStreamManager streamManager = new RecyclableMemoryStreamManager();
 
         public static readonly AESEncryptor<TFullKey> SharedUTF8 = new AESEncryptor<TFullKey>(Encoding.UTF8);
         public AESEncryptor(Encoding encoding) : base(encoding)
@@ -23,7 +22,7 @@ namespace SecurityLogin.Mode.AES
             using (var aes = Aes.Create())
             {
                 InitAes(fullKey, aes);
-                using (var mem = streamManager.GetStream(data))
+                using (var mem = new MemoryStream(data))
                 using (var cs = new CryptoStream(mem, aes.CreateDecryptor(aes.Key, aes.IV), CryptoStreamMode.Read))
                 {
                     return Read(cs);
@@ -60,7 +59,7 @@ namespace SecurityLogin.Mode.AES
             using (var aes = Aes.Create())
             {
                 InitAes(fullKey, aes);
-                using (var mem = streamManager.GetStream())
+                using (var mem = new ValueBufferMemoryStream())
                 {
                     using (var cs = new CryptoStream(mem, aes.CreateEncryptor(aes.Key, aes.IV), CryptoStreamMode.Write))
                     {
