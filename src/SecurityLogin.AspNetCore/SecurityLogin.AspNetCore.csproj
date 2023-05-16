@@ -2,15 +2,16 @@
 	<Import Project="..\..\eng\pkg.props" />
 
 	<PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-  </PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SecurityLogin.AccessSession\SecurityLogin.AccessSession.csproj" />
-    <ProjectReference Include="..\SecurityLogin.AppLogin\SecurityLogin.AppLogin.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SecurityLogin.AccessSession\SecurityLogin.AccessSession.csproj" />
+		<ProjectReference Include="..\SecurityLogin.AppLogin\SecurityLogin.AppLogin.csproj" />
+	</ItemGroup>
 
 </Project>

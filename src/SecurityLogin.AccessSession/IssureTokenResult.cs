@@ -20,9 +20,9 @@ namespace SecurityLogin.AccessSession
 
     public class UserStatusContainer<TUserSnapshot>
     {
-        public AppSnapshot AppSnapshot { get; set; }
+        public AppSnapshot? AppSnapshot { get; set; }
 
-        public TUserSnapshot UserSnapshot { get; set; }
+        public TUserSnapshot? UserSnapshot { get; set; }
 
         public bool HasAppSnapshot => AppSnapshot != null;
 
@@ -30,16 +30,16 @@ namespace SecurityLogin.AccessSession
     }
     public class AppSnapshot
     {
-        public string AppKey { get; set; }
+        public string? AppKey { get; set; }
 
-        public string AppSession { get; set; }
+        public string? AppSession { get; set; }
     }
     public class UserSnapshot
     {
-        public string Token { get; set; }
+        public string? Token { get; set; }
 
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

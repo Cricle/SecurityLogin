@@ -8,7 +8,6 @@ using Microsoft.Extensions.Options;
 namespace SecurityLogin.AspNetCore
 {
     public class DefaultRequestContainerConverter<TUserSnapshot, TInput> : IRequestContainerConverter<UserStatusContainer<TUserSnapshot>>
-        where TUserSnapshot : UserSnapshot
     {
         public async Task<UserStatusContainer<TUserSnapshot>> ConvertAsync(HttpContext context)
         {

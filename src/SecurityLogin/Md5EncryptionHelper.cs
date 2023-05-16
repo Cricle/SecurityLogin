@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using ValueBuffer;
 
 namespace SecurityLogin
 {
@@ -32,12 +33,14 @@ namespace SecurityLogin
             var buffer = ComputeHash(input);
             return ToHexString(buffer);
         }
-        private string ToHexString(byte[] buffer)
+        private static string ToHexString(byte[] buffer)
         {
-            var sb = new StringBuilder(32);
-            for (int i = 0; i < buffer.Length; i++)
-                sb.Append(buffer[i].ToString("X2"));
-            return sb.ToString();
+            using (var vs = new ValueStringBuilder())
+            {
+                for (int i = 0; i < buffer.Length; i++)
+                    vs.Append(buffer[i].ToString("X2"));
+                return vs.ToString();
+            }
         }
     }
 }

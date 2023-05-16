@@ -34,6 +34,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.Test.AspNetCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityLogin.AspNetCore", "src\SecurityLogin.AspNetCore\SecurityLogin.AspNetCore.csproj", "{F2ED4260-E35B-482D-B510-C341AB3C0202}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityLogin.Test", "test\SecurityLogin.Test\SecurityLogin.Test.csproj", "{2912B4A8-6154-47BD-8CC3-10C12EBDE36A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{F2ED4260-E35B-482D-B510-C341AB3C0202}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2ED4260-E35B-482D-B510-C341AB3C0202}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2ED4260-E35B-482D-B510-C341AB3C0202}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2912B4A8-6154-47BD-8CC3-10C12EBDE36A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2912B4A8-6154-47BD-8CC3-10C12EBDE36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2912B4A8-6154-47BD-8CC3-10C12EBDE36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2912B4A8-6154-47BD-8CC3-10C12EBDE36A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,6 +98,7 @@ Global
 		{9C51AAE9-892F-4016-8C90-0C185CED6D87} = {9E3617AB-DA18-4D28-BEA4-EA468A91B43B}
 		{7B98BE17-BB39-475D-BEB3-CA2759ADF332} = {9E3617AB-DA18-4D28-BEA4-EA468A91B43B}
 		{B36EF3CB-30B8-491C-B1C4-2A460FE33A21} = {9E3617AB-DA18-4D28-BEA4-EA468A91B43B}
+		{2912B4A8-6154-47BD-8CC3-10C12EBDE36A} = {39318083-160A-400F-A530-0171E2FA72E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5D02978E-A003-4A04-923D-D18538D41981}

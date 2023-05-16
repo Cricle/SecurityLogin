@@ -11,7 +11,6 @@ namespace SecurityLogin.AspNetCore
     public static class AuthExtensions
     {
         public static IServiceCollection AddDefaultSecurityLoginHandler<TInput,TUserSnapshot>(this IServiceCollection services)
-            where TUserSnapshot : UserSnapshot
         {
             services.AddSingleton<IRequestContainerConverter<UserStatusContainer<TUserSnapshot>>,DefaultRequestContainerConverter<TUserSnapshot, TInput>>();
             services.AddScoped<CrossAuthenticationHandler<TUserSnapshot>>();

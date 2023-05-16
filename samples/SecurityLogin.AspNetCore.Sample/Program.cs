@@ -69,12 +69,10 @@ builder.Services.AddSingleton<IDistributedLockFactory>(new RedLockFactory(new Re
 })));
 builder.Services.AddNormalSecurityService();
 builder.Services.AddScoped<LoginService>();
-builder.Services.AddMemoryCache();
-builder.Services.AddDefaultSecurityLoginHandler<string, UserSnapshot>();
-builder.Services.AddScoped<IIdentityService<string,UserSnapshot>, MyIdentityService>();
 builder.Services.AddSingleton<IEntityConvertor, TextJsonEntityConvertor>();
 builder.Services.AddInRedisFinder();
-builder.Services.AddSecurityLogin<UserSnapshot>();
+builder.Services.AddSecurityLoginWithDefaultIdentity<string,UserSnapshot>(
+    req => Task.FromResult(new UserSnapshot { Id = req.Input, Name = req.Key, Token = req.Token }),"SecurityLogin.Session");
 
 var app = builder.Build();
 
@@ -96,19 +94,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-public class MyIdentityService : IdentityService<string, UserSnapshot>
-{
-    public MyIdentityService(ICacheVisitor cacheVisitor) : base(cacheVisitor)
-    {
-    }
-
-    protected override Task<UserSnapshot> AsTokenInfoAsync(string input, TimeSpan? cacheTime, string key, string token)
-    {
-        return Task.FromResult(new UserSnapshot { Token = token, Id = input, Name = key });
-    }
-    protected override string GetKey(string token)
-    {
-        return "Security.Login.Tokens." + token;
-    }
-}
