@@ -14,7 +14,7 @@ namespace SecurityLogin.AspNetCore
         {
             services.AddSingleton<IRequestContainerConverter<UserStatusContainer<TUserSnapshot>>,DefaultRequestContainerConverter<TUserSnapshot, TInput>>();
             services.AddScoped<CrossAuthenticationHandler<TUserSnapshot>>();
-            services.AddSingleton<RequestContainerOptions>();
+            services.AddSingleton<RequestContainerOptions<TUserSnapshot>>();
             return services;
         }
     }

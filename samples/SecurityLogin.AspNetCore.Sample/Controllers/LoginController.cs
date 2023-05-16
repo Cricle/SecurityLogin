@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SecurityLogin.AccessSession;
 using SecurityLogin.AspNetCore.Services;
 using System.Threading.Tasks;
 
@@ -38,7 +39,8 @@ namespace SecurityLogin.AspNetCore.Controllers
         [HttpGet("[action]")]
         public IActionResult Auth()
         {
-            return Ok(123);
+            var usn = HttpContext.Features.Get<UserSnapshot>();
+            return Ok(usn);
         }
     }
 }

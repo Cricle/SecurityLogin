@@ -1,5 +1,6 @@
 using Ao.Cache;
 using Ao.Cache.Serizlier.TextJson;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using SecurityLogin.AspNetCore;
 using SecurityLogin.AspNetCore.Services;
 using StackExchange.Redis;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,8 +60,8 @@ builder.Services.AddNormalSecurityService();
 builder.Services.AddScoped<LoginService>();
 builder.Services.AddSingleton<IEntityConvertor, TextJsonEntityConvertor>();
 builder.Services.AddDistributedLockFactory().AddInRedisFinder();
-builder.Services.AddSecurityLoginWithDefaultIdentity<string,UserSnapshot>(
-    req => Task.FromResult(new UserSnapshot { Id = req.Input, Name = req.Key, Token = req.Token }),"SecurityLogin.Session");
+builder.Services.AddSecurityLoginWithDefaultIdentity<UserSnapshot, UserSnapshot, MyCross>(
+    req => Task.FromResult(req.Input.Set(x => x.Token = req.Token)), "SecurityLogin.Session");
 
 var app = builder.Build();
 
@@ -78,3 +80,22 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public class MyCross : CrossAuthenticationHandler<UserSnapshot>
+{
+    public MyCross(IRequestContainerConverter<UserStatusContainer<UserSnapshot>> requestContainerConverter, RequestContainerOptions<UserSnapshot> requestContainerOptions)
+        : base(requestContainerConverter, requestContainerOptions)
+    {
+    }
+    protected override Task<AuthenticationTicket> SucceedAsync(UserStatusContainer<UserSnapshot> container, RequestContainerOptions<UserSnapshot> options)
+    {
+        return Task.FromResult(new AuthenticationTicket(new ClaimsPrincipal(new ClaimsIdentity[]
+        {
+                new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name,container.UserSnapshot?.Name),
+                    new Claim(ClaimTypes.NameIdentifier,container.UserSnapshot?.Id),
+                },options.AuthenticationScheme)
+        }), options.AuthenticationScheme));
+    }
+}

@@ -11,12 +11,12 @@ namespace SecurityLogin.AspNetCore.Services
     {
         public UserManager<IdentityUser> UserManager { get; }
 
-        public IIdentityService<string, UserSnapshot> IdentityService { get; }
+        public IIdentityService<UserSnapshot, UserSnapshot> IdentityService { get; }
 
         public LoginService(ILockerFactory lockerFactory,
             ICacheVisitor cacheVisitor,
             UserManager<IdentityUser> userManager,
-            IIdentityService<string, UserSnapshot> identityService)
+            IIdentityService<UserSnapshot, UserSnapshot> identityService)
             : base(lockerFactory, cacheVisitor)
         {
             IdentityService = identityService;
@@ -54,7 +54,11 @@ namespace SecurityLogin.AspNetCore.Services
                 var res = await UserManager.CheckPasswordAsync(user, pwd);
                 if (res)
                 {
-                    return await IdentityService.IssureTokenAsync(userName);
+                    return await IdentityService.IssureTokenAsync(new UserSnapshot
+                    {
+                        Name = userName,
+                        Id = user.Id
+                    });
                 }
                 return null;
             }

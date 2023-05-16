@@ -11,7 +11,7 @@ namespace SecurityLogin.AspNetCore
     {
         public async Task<UserStatusContainer<TUserSnapshot>> ConvertAsync(HttpContext context)
         {
-            var options = context.RequestServices.GetRequiredService<IOptions<RequestContainerOptions>>();
+            var options = context.RequestServices.GetRequiredService<IOptions<RequestContainerOptions<TUserSnapshot>>>();
 
             var container = new UserStatusContainer<TUserSnapshot>();
 
