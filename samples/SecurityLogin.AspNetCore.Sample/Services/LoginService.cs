@@ -10,7 +10,9 @@ namespace SecurityLogin.AspNetCore.Services
     public class LoginService : RSALoginService
     {
         public UserManager<IdentityUser> UserManager { get; }
+
         public IIdentityService<string, UserSnapshot> IdentityService { get; }
+
         public LoginService(ILockerFactory lockerFactory,
             ICacheVisitor cacheVisitor,
             UserManager<IdentityUser> userManager,

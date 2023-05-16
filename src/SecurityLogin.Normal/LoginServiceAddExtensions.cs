@@ -1,6 +1,5 @@
 ﻿using Ao.Cache;
 using Ao.Cache.InRedis;
-using Ao.Cache.Serizlier.TextJson;
 using RedLockNet;
 using SecurityLogin;
 using StackExchange.Redis;
