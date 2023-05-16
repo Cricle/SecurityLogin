@@ -58,13 +58,13 @@ namespace SecurityLogin.AspNetCore
 
         protected abstract Task<AuthenticateResult> SkipAsync();
 
-        public virtual Task ChallengeAsync(AuthenticationProperties properties)
+        public virtual Task ChallengeAsync(AuthenticationProperties? properties)
         {
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             return Task.CompletedTask;
         }
 
-        public virtual Task ForbidAsync(AuthenticationProperties properties)
+        public virtual Task ForbidAsync(AuthenticationProperties? properties)
         {
             context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
             return Task.CompletedTask;

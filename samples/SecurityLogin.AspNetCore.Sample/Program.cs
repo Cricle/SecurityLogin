@@ -60,6 +60,7 @@ builder.Services.AddNormalSecurityService();
 builder.Services.AddScoped<LoginService>();
 builder.Services.AddSingleton<IEntityConvertor, TextJsonEntityConvertor>();
 builder.Services.AddDistributedLockFactory().AddInRedisFinder();
+builder.Services.AddScoped<MyCross>();
 builder.Services.AddSecurityLoginWithDefaultIdentity<UserSnapshot, UserSnapshot, MyCross>(
     req => Task.FromResult(req.Input.Set(x => x.Token = req.Token)), "SecurityLogin.Session");
 

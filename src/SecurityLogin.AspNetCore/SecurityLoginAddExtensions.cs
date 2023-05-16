@@ -35,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
             string getKeyPrefx,
             Action<SecurityLoginAddOptions<TUserSnapshot>>? optionsFun = null,
             IdentityGenerateTokenHandler<TInput>? generateTokenHandler = null)
-                          where THandler : IAuthenticationHandler
+                where THandler : IAuthenticationHandler
         {
             AddSecurityLogin<TInput, TUserSnapshot,THandler>(services, optionsFun);
             services.AddScoped<IIdentityService<TInput, TUserSnapshot>>(p =>
@@ -122,12 +122,9 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddSecurityLogin<TInput, TUserSnapshot>(this IServiceCollection services,
             Action<SecurityLoginAddOptions<TUserSnapshot>>? optionsFun = null)
         {
-            return AddSecurityLoginCustom<TInput, TUserSnapshot>(services,
-                optionsFun, (opt, x) =>
-                {
-                    x.DefaultAuthenticateScheme = SecurityLoginConsts.AuthenticationScheme;
-                    x.AddScheme<CrossAuthenticationHandler<TUserSnapshot>>(SecurityLoginConsts.AuthenticationScheme, opt.SchemeDisplayDescript ?? "se-default");
-                });
+            services.AddScoped<CrossAuthenticationHandler<TUserSnapshot>>();
+            return AddSecurityLogin<TInput, TUserSnapshot, CrossAuthenticationHandler<TUserSnapshot>>(services,
+                optionsFun);
         }
         public static IServiceCollection AddSecurityLoginCustom<TInput, TUserSnapshot>(this IServiceCollection services,
             Action<SecurityLoginAddOptions<TUserSnapshot>>? optionsFun = null,

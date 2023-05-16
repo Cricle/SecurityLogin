@@ -1,11 +1,51 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SecurityLogin.AccessSession;
 using SecurityLogin.AspNetCore.Services;
+using SecurityLogin.Test.AspNetCore.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.AspNetCore.Controllers
 {
+    [Authorize]
+    [ApiController]
+    [Route("[controller]")]
+    public class DataController:ControllerBase
+    {
+        private readonly AppDbContext dbContext;
+
+        public DataController(AppDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetValue()
+        {
+            var us = HttpContext.Features.Get<UserSnapshot>();
+            var val = await dbContext.ValueStores.FirstOrDefaultAsync(x => x.UserId == us.Id);
+            return Ok(val?.Value);
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> SetValue([FromForm] int value)
+        {
+            var us = HttpContext.Features.Get<UserSnapshot>();
+            var val = await dbContext.ValueStores.FirstOrDefaultAsync(x => x.UserId == us.Id);
+            if (val == null)
+            {
+                val = new ValueStore { UserId = us.Id, Value = value };
+                dbContext.ValueStores.Add(val);
+            }
+            else
+            {
+                val.Value = value;
+            }
+            dbContext.SaveChanges();
+            return Ok(val.Value);
+        }
+    }
     [ApiController]
     [Route("[controller]")]
     public class LoginController : ControllerBase
