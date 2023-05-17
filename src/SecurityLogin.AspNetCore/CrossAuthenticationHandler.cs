@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using SecurityLogin.AccessSession;
 using System;
-using System.ComponentModel;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -35,7 +34,8 @@ namespace SecurityLogin.AspNetCore
 
         protected override async Task<AuthenticateResult> CheckAsync()
         {
-            var res = await RequestContainerConverter.ConvertAsync(HttpContext);
+            Throws.ThrowHttpContextIsNull(HttpContext);
+            var res = await RequestContainerConverter.ConvertAsync(HttpContext!);
             var val = RequestContainerOptions;
             if (!val.NoAppLogin)
             {
@@ -57,9 +57,9 @@ namespace SecurityLogin.AspNetCore
             var succeed = RequestContainerOptions.Succeed;
             if (succeed != null)
             {
-                await RequestContainerOptions.Succeed!.Invoke(HttpContext, res, succeedTicket);
+                await RequestContainerOptions.Succeed!.Invoke(HttpContext!, res, succeedTicket);
             }
-            HttpContext.Features.Set(res);
+            HttpContext!.Features.Set(res);
             if (res.UserSnapshot != null)
             {
                 HttpContext.Features.Set(res.UserSnapshot);

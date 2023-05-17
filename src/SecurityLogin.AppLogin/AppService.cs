@@ -41,7 +41,7 @@ namespace SecurityLogin.AppLogin
         {
             return "Red." + GetInfoKey(appKey);
         }
-        protected virtual string GetSectionKey(string appKey, string session)
+        protected virtual string GetSectionKey(string appKey, string? session)
         {
             return GetInfoKey(appKey) + "." + session;
         }
@@ -61,7 +61,7 @@ namespace SecurityLogin.AppLogin
             return AppInfoCacheTime;
         }
 
-        private async Task<TAppInfoSnapshot> GetAppAsync(string appKey)
+        private async Task<TAppInfoSnapshot?> GetAppAsync(string appKey)
         {
             var notExistsKey = GetNotExistKey(appKey);
             var notExists = await CacheVisitor.ExistsAsync(notExistsKey);

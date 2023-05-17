@@ -23,14 +23,14 @@ namespace SecurityLogin.Cmd
             var ser = new MyLoginService(fc, cv);
             var res = await ser.FlushKeyAsync();
 
-            Console.WriteLine("IV:" + Convert.ToBase64String(res.IV));
-            Console.WriteLine("Key:" + Convert.ToBase64String(res.Key));
+            Console.WriteLine("IV:" + Convert.ToBase64String(res!.IV!));
+            Console.WriteLine("Key:" + Convert.ToBase64String(res.Key!));
             var buf = AESEncryptor<AESFullKey>.SharedUTF8.Encrypt(res, Encoding.UTF8.GetBytes("world"));
             Console.WriteLine(Convert.ToBase64String(buf));
             Console.WriteLine(Encoding.UTF8.GetString(AESEncryptor<AESFullKey>.SharedUTF8.Decrypt(res, buf)));
             Console.WriteLine();
             var d = Console.ReadLine();
-            Console.WriteLine(await ser.LoginAsync(res.Identity, d));
+            Console.WriteLine(await ser.LoginAsync(res.Identity!, d!));
         }
     }
 

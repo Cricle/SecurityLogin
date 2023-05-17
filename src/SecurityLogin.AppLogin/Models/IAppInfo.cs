@@ -4,9 +4,9 @@ namespace SecurityLogin.AppLogin.Models
 {
     public interface IAppInfo
     {
-        string AppKey { get; set; }
+        string? AppKey { get; set; }
 
-        string AppSecret { get; set; }
+        string? AppSecret { get; set; }
 
         DateTime? EndTime { get; set; }
 

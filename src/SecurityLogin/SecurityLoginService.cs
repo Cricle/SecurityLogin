@@ -20,7 +20,7 @@ namespace SecurityLogin
 
         public ICacheVisitor CacheVisitor { get; }
 
-        static async Task<TFullKey> GetAsync(ICacheVisitor cacheVisitor, string header, string identityKey)
+        static async Task<TFullKey?> GetAsync(ICacheVisitor cacheVisitor, string header, string identityKey)
         {
             var identity = await cacheVisitor.GetStringAsync(identityKey);
             if (identity != null)
@@ -34,7 +34,7 @@ namespace SecurityLogin
             }
             return default;
         }
-        public async Task<TFullKey> FlushKeyAsync()
+        public async Task<TFullKey?> FlushKeyAsync()
         {
             var header = GetHeader();
             if (IsShared())
@@ -112,7 +112,7 @@ namespace SecurityLogin
         {
             return "Lock." + GetHeader() + ".Shared";
         }
-        public async Task<string> DecryptAsync(string connectId, string textHash, IEncryptor<TFullKey> encrypter)
+        public async Task<string?> DecryptAsync(string connectId, string textHash, IEncryptor<TFullKey> encrypter)
         {
             if (encrypter is null)
             {

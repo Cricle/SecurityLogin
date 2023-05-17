@@ -2,6 +2,6 @@
 {
     public interface IIdentityable
     {
-        string Identity { get; }
+        string? Identity { get; }
     }
 }

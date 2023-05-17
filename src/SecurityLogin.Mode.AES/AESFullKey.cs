@@ -7,13 +7,13 @@ namespace SecurityLogin.Mode.AES
     }
     public partial class AESFullKey
     {
-        public byte[] IV { get; set; }
+        public byte[]? IV { get; set; }
 
         public PaddingMode PaddingMode { get; set; }
 
         public CipherMode CipherMode { get; set; }
 
-        public byte[] Key { get; set; }
+        public byte[]? Key { get; set; }
 
         public int KeySize { get; set; }
     }

@@ -95,20 +95,14 @@ namespace SecurityLogin.Mode.RSA.Helpers
 
         public static RSAKey GetKey(int keyLen = 1024)
         {
-            //RSA密钥对的构造器  
             var keyGenerator = new RsaKeyPairGenerator();
 
-            //RSA密钥构造器的参数  
             var param = new RsaKeyGenerationParameters(
                 BigInteger.ValueOf(3),
                 new SecureRandom(),
-                keyLen,   //密钥长度  
-                25);
-            //用参数初始化密钥构造器  
+                keyLen, 25);
             keyGenerator.Init(param);
-            //产生密钥对  
             var keyPair = keyGenerator.GenerateKeyPair();
-            //获取公钥和密钥  
             var publicKey = keyPair.Public;
             var privateKey = keyPair.Private;
 
@@ -144,15 +138,8 @@ namespace SecurityLogin.Mode.RSA.Helpers
             return priKey;
         }
 
-        /// <summary>
-        /// 私钥加密
-        /// </summary>
-        /// <param name="data">加密内容</param>
-        /// <param name="privateKey">私钥（Base64后的）</param>
-        /// <returns>返回Base64内容</returns>
         public static byte[] EncryptByPrivateKey(byte[] data, string privateKey)
         {
-            //非对称加密算法，加解密用  
             var engine = new Pkcs1Encoding(new RsaEngine());
 
             engine.Init(true, GetPrivateKeyParameter(privateKey));
@@ -160,16 +147,9 @@ namespace SecurityLogin.Mode.RSA.Helpers
             return ResultData;
         }
 
-        /// <summary>
-        /// 私钥解密
-        /// </summary>
-        /// <param name="data">待解密的内容</param>
-        /// <param name="privateKey">私钥（Base64编码后的）</param>
-        /// <returns>返回明文</returns>
         public static byte[] DecryptByPrivateKey(byte[] data, string privateKey)
         {
             data = UTF8.GetBytes(UTF8.GetString(data).Replace("\r", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty));
-            //非对称加密算法，加解密用  
             IAsymmetricBlockCipher engine = new Pkcs1Encoding(new RsaEngine());
 
             engine.Init(false, GetPrivateKeyParameter(privateKey));
@@ -177,15 +157,8 @@ namespace SecurityLogin.Mode.RSA.Helpers
             return ResultData;
         }
 
-        /// <summary>
-        /// 公钥加密
-        /// </summary>
-        /// <param name="data">加密内容</param>
-        /// <param name="publicKey">公钥（Base64编码后的）</param>
-        /// <returns>返回Base64内容</returns>
         public static byte[] EncryptByPublicKey(byte[] data, string publicKey)
         {
-            //非对称加密算法，加解密用  
             var engine = new Pkcs1Encoding(new RsaEngine());
 
             engine.Init(true, GetPublicKeyParameter(publicKey));
@@ -193,16 +166,9 @@ namespace SecurityLogin.Mode.RSA.Helpers
             return ResultData;
         }
 
-        /// <summary>
-        /// 公钥解密
-        /// </summary>
-        /// <param name="data">待解密的内容</param>
-        /// <param name="publicKey">公钥（Base64编码后的）</param>
-        /// <returns>返回明文</returns>
         public static byte[] DecryptByPublicKey(byte[] data, string publicKey)
         {
             data = UTF8.GetBytes(UTF8.GetString(data).Replace("\r", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty));
-            //非对称加密算法，加解密用  
             var engine = new Pkcs1Encoding(new RsaEngine());
 
             engine.Init(false, GetPublicKeyParameter(publicKey));

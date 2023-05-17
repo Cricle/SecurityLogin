@@ -16,7 +16,7 @@ namespace SecurityLogin
         {
             Encryptor = encryptor ?? throw new ArgumentNullException(nameof(encryptor));
         }
-        public Task<string> DecryptAsync(string connectId, string textHash)
+        public Task<string?> DecryptAsync(string connectId, string textHash)
         {
             return DecryptAsync(connectId, textHash, Encryptor);
         }

@@ -13,12 +13,14 @@ namespace SecurityLogin.Mode.RSA
 
         public override byte[] Decrypt(TFullKey fullKey, byte[] data)
         {
-            return Helpers.RSA.DecryptByPrivateKey(data, fullKey.PrivateKey);
+            fullKey.ThrowIfIPrivateKeyNull();
+            return Helpers.RSA.DecryptByPrivateKey(data, fullKey.PrivateKey!);
         }
 
         public override byte[] Encrypt(TFullKey fullKey, byte[] data)
         {
-            return Helpers.RSA.EncryptByPublicKey(data, fullKey.PublicKey);
+            fullKey.ThrowIfIPublicKeyNull();
+            return Helpers.RSA.EncryptByPublicKey(data, fullKey.PublicKey!);
         }
     }
 }

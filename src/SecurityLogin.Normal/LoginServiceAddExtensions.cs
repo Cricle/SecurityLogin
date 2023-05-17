@@ -9,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class LoginServiceAddExtensions
     {
-        public static IServiceCollection AddNormalSecurityService(this IServiceCollection services, Action<LoginServiceOptions> action = null)
+        public static IServiceCollection AddNormalSecurityService(this IServiceCollection services, Action<LoginServiceOptions>? action = null)
         {
             var opt = new LoginServiceOptions();
             action?.Invoke(opt);

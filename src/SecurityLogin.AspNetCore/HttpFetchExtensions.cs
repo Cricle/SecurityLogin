@@ -4,7 +4,7 @@ namespace SecurityLogin.AspNetCore
 {
     public static class HttpFetchExtensions
     {
-        public static string GetFromHeaderOrCookie(this HttpContext context, string key)
+        public static string? GetFromHeaderOrCookie(this HttpContext context, string key)
         {
             var accessToken = context.Request.Headers[key];
             if (accessToken.Count == 0)

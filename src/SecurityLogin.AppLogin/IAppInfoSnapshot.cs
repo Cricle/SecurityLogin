@@ -4,7 +4,7 @@ namespace SecurityLogin.AppLogin
 {
     public interface IAppInfoSnapshot
     {
-        string AppSecret { get; }
+        string? AppSecret { get; }
 
         DateTime? EndTime { get; }
     }

@@ -6,7 +6,7 @@ namespace SecurityLogin.AppLogin
     {
         public AppLoginCode Code { get; set; }
 
-        public string AccessToken { get; set; }
+        public string? AccessToken { get; set; }
 
         public TimeSpan? ExpireTime { get; set; }
 
