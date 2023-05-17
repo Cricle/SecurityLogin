@@ -18,7 +18,7 @@ namespace SecurityLogin.AspNetCore
 
         public Func<HttpContext?, Task<AuthenticateResult>>? SkipResult { get; set; }
 
-        public Func<HttpContext, UserStatusContainer<TUserSnapshot>, AuthenticationTicket, Task>? Succeed { get; set; }
+        public Func<HttpContext, UserStatusContainer<TUserSnapshot>, AuthenticationTicket, Task<AuthenticationTicket>>? Succeed { get; set; }
 
         public Func<HttpContext?, UserStatusContainer<TUserSnapshot>, UserStatusFailTypes, Task>? Failed { get; set; }
 
@@ -27,6 +27,8 @@ namespace SecurityLogin.AspNetCore
         public bool NoUserCheck { get; set; }
 
         public bool AppFailNoUser { get; set; }
+
+        public bool SucceedDoNothing { get; set; }
 
         public string AuthenticationScheme { get; set; } = SecurityLoginConsts.AuthenticationScheme;
     }

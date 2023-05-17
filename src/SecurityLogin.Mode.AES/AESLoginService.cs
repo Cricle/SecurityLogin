@@ -35,7 +35,7 @@ namespace SecurityLogin.Mode.AES
 
         public IEncryptor<TFullKey> Encryptor { get; }
 
-        public Task<string> DecryptAsync(string connectId, string textHash)
+        public Task<string?> DecryptAsync(string connectId, string textHash)
         {
             return DecryptAsync(connectId, textHash, Encryptor);
         }

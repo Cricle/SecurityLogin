@@ -11,6 +11,7 @@ using SecurityLogin.AspNetCore;
 using SecurityLogin.AspNetCore.Services;
 using StackExchange.Redis;
 using System;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -68,8 +69,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureCreated();
+    scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.EnsureCreated();
 }
 
 app.UseSwagger();

@@ -57,7 +57,7 @@ namespace SecurityLogin.AspNetCore
             var succeed = RequestContainerOptions.Succeed;
             if (succeed != null)
             {
-                await RequestContainerOptions.Succeed!.Invoke(HttpContext!, res, succeedTicket);
+                succeedTicket=await RequestContainerOptions.Succeed!.Invoke(HttpContext!, res, succeedTicket);
             }
             HttpContext!.Features.Set(res);
             if (res.UserSnapshot != null)
@@ -80,6 +80,10 @@ namespace SecurityLogin.AspNetCore
         }
         protected virtual Task<AuthenticationTicket> SucceedAsync(UserStatusContainer<TUserSnapshot> container,RequestContainerOptions<TUserSnapshot> options)
         {
+            if (options.SucceedDoNothing)
+            {
+                return Task.FromResult(new AuthenticationTicket(new ClaimsPrincipal(), options.AuthenticationScheme));
+            }
             return Task.FromResult(new AuthenticationTicket(new ClaimsPrincipal(new ClaimsIdentity[]
             {
                 new ClaimsIdentity(Array.Empty<Claim>(),options.AuthenticationScheme)
