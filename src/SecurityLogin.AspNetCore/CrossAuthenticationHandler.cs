@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SecurityLogin.AccessSession;
 using System;
 using System.Security.Claims;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.AspNetCore
@@ -25,17 +28,21 @@ namespace SecurityLogin.AspNetCore
 
         public RequestContainerOptions<TUserSnapshot> RequestContainerOptions { get; }
 
-        public CrossAuthenticationHandler(IRequestContainerConverter<UserStatusContainer<TUserSnapshot>> requestContainerConverter,
+        public CrossAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
+            ILoggerFactory logger,
+            UrlEncoder encoder,
+            ISystemClock clock, 
+            IRequestContainerConverter<UserStatusContainer<TUserSnapshot>> requestContainerConverter,
             RequestContainerOptions<TUserSnapshot> requestContainerOptions)
-            : base(requestContainerConverter)
+            : base(options, logger, encoder, clock,requestContainerConverter)
         {
             RequestContainerOptions = requestContainerOptions;
         }
 
         protected override async Task<AuthenticateResult> CheckAsync()
         {
-            Throws.ThrowHttpContextIsNull(HttpContext);
-            var res = await RequestContainerConverter.ConvertAsync(HttpContext!);
+            Throws.ThrowHttpContextIsNull(Context);
+            var res = await RequestContainerConverter.ConvertAsync(Context!);
             var val = RequestContainerOptions;
             if (!val.NoAppLogin)
             {
@@ -57,16 +64,16 @@ namespace SecurityLogin.AspNetCore
             var succeed = RequestContainerOptions.Succeed;
             if (succeed != null)
             {
-                succeedTicket=await RequestContainerOptions.Succeed!.Invoke(HttpContext!, res, succeedTicket);
+                succeedTicket=await RequestContainerOptions.Succeed!.Invoke(Context!, res, succeedTicket);
             }
-            HttpContext!.Features.Set(res);
+            Context!.Features.Set(res);
             if (res.UserSnapshot != null)
             {
-                HttpContext.Features.Set(res.UserSnapshot);
+                Context.Features.Set(res.UserSnapshot);
             }
             if (res.AppSnapshot != null)
             {
-                HttpContext.Features.Set(res.AppSnapshot);
+                Context.Features.Set(res.AppSnapshot);
             }
             return AuthenticateResult.Success(succeedTicket);            
         }
@@ -75,7 +82,7 @@ namespace SecurityLogin.AspNetCore
             var succeed = RequestContainerOptions.Failed;
             if (succeed != null)
             {
-                await RequestContainerOptions.Failed!.Invoke(HttpContext, container, type);
+                await RequestContainerOptions.Failed!.Invoke(Context, container, type);
             }
         }
         protected virtual Task<AuthenticationTicket> SucceedAsync(UserStatusContainer<TUserSnapshot> container,RequestContainerOptions<TUserSnapshot> options)
@@ -101,7 +108,7 @@ namespace SecurityLogin.AspNetCore
             {
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
-            return val.SkipResult(HttpContext);
+            return val.SkipResult(Context);
         }
 
         protected override Task<bool> IsSkipAuthAsync()
@@ -111,7 +118,7 @@ namespace SecurityLogin.AspNetCore
             {
                 return falseTask;
             }
-            return val.IsSkip(HttpContext);
+            return val.IsSkip(Context);
         }
     }
 }

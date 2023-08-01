@@ -12,6 +12,10 @@ namespace Microsoft.Extensions.DependencyInjection
         public string? SchemeDisplayDescript { get; set; } = "se-default";
 
         public Func<RequestContainerOptions<TUserSnapshot>, RequestContainerOptions<TUserSnapshot>>? ContainerOptionsFunc { get; set; }
+
+        public Action<SecurityLoginAddOptions<TUserSnapshot>, AuthenticationOptions>? ConfigurateAuthenticationOptions { get; set; }
+
+        public Action<SecurityLoginAddOptions<TUserSnapshot>, AuthorizationOptions>? ConfigurateAuthorizationOptions { get; set; }
     }
     public static class SecurityLoginAddExtensions
     {
@@ -51,8 +55,8 @@ namespace Microsoft.Extensions.DependencyInjection
             string getKeyPrefx,
             Action<SecurityLoginAddOptions<TUserSnapshot>>? optionsFun = null,
             IdentityGenerateTokenHandler<TInput>? generateTokenHandler = null,
-            Action<SecurityLoginAddOptions<TUserSnapshot>, AuthenticationOptions>? configurateAuthenticationOptions = null,
-            Action<SecurityLoginAddOptions<TUserSnapshot>, AuthorizationOptions>? configurateAuthorizationOptions = null)
+            Action<SecurityLoginAddOptions<TUserSnapshot>, RequestContainerOptions<TUserSnapshot>, AuthenticationOptions>? configurateAuthenticationOptions = null,
+            Action<SecurityLoginAddOptions<TUserSnapshot>, RequestContainerOptions<TUserSnapshot>, AuthorizationOptions>? configurateAuthorizationOptions = null)
         {
             AddSecurityLoginCustom<TInput, TUserSnapshot>(services, optionsFun, configurateAuthenticationOptions, configurateAuthorizationOptions);
             services.AddScoped<IIdentityService<TInput, TUserSnapshot>>(p =>
@@ -82,8 +86,8 @@ namespace Microsoft.Extensions.DependencyInjection
             IdentityGetKeyHandler? getKeyHandler = null,
             Action<SecurityLoginAddOptions<TUserSnapshot>>? optionsFun = null,
             IdentityGenerateTokenHandler<TInput>? generateTokenHandler = null,
-            Action<SecurityLoginAddOptions<TUserSnapshot>, AuthenticationOptions>? configurateAuthenticationOptions = null,
-            Action<SecurityLoginAddOptions<TUserSnapshot>, AuthorizationOptions>? configurateAuthorizationOptions = null)
+            Action<SecurityLoginAddOptions<TUserSnapshot>, RequestContainerOptions<TUserSnapshot>, AuthenticationOptions>? configurateAuthenticationOptions = null,
+            Action<SecurityLoginAddOptions<TUserSnapshot>, RequestContainerOptions<TUserSnapshot>, AuthorizationOptions>? configurateAuthorizationOptions = null)
         {
             AddSecurityLoginCustom<TInput, TUserSnapshot>(services, optionsFun,configurateAuthenticationOptions, configurateAuthorizationOptions);
             services.AddScoped<IIdentityService<TInput, TUserSnapshot>>(p =>
@@ -113,10 +117,9 @@ namespace Microsoft.Extensions.DependencyInjection
              where THandler : IAuthenticationHandler
         {
             return AddSecurityLoginCustom<TInput, TUserSnapshot>(services,
-                optionsFun, (opt, x) =>
+                optionsFun, (opt,copt, x) =>
                 {
-                    x.DefaultAuthenticateScheme = SecurityLoginConsts.AuthenticationScheme;
-                    x.AddScheme<THandler>(SecurityLoginConsts.AuthenticationScheme, opt.SchemeDisplayDescript ?? "se-default");
+                    x.AddScheme<THandler>(copt.AuthenticationScheme, opt.SchemeDisplayDescript ?? "se-default");
                 });
         }
         public static IServiceCollection AddSecurityLogin<TInput, TUserSnapshot>(this IServiceCollection services,
@@ -128,23 +131,29 @@ namespace Microsoft.Extensions.DependencyInjection
         }
         public static IServiceCollection AddSecurityLoginCustom<TInput, TUserSnapshot>(this IServiceCollection services,
             Action<SecurityLoginAddOptions<TUserSnapshot>>? optionsFun = null,
-            Action<SecurityLoginAddOptions<TUserSnapshot>, AuthenticationOptions>? configurateAuthenticationOptions = null,
-            Action<SecurityLoginAddOptions<TUserSnapshot>, AuthorizationOptions>? configurateAuthorizationOptions = null)
+            Action<SecurityLoginAddOptions<TUserSnapshot>, RequestContainerOptions<TUserSnapshot>, AuthenticationOptions>? configurateAuthenticationOptions = null,
+            Action<SecurityLoginAddOptions<TUserSnapshot>, RequestContainerOptions<TUserSnapshot>, AuthorizationOptions>? configurateAuthorizationOptions = null)
         {
             var opt = new SecurityLoginAddOptions<TUserSnapshot>();
             optionsFun?.Invoke(opt);
-            services.AddDefaultSecurityLoginHandler<TInput, TUserSnapshot>();
-            services.AddAuthorization(x =>
-            {
-                configurateAuthorizationOptions?.Invoke(opt, x);
-            });
-            services.AddAuthentication(x =>
-            {
-                configurateAuthenticationOptions?.Invoke(opt, x);
-            });
             var containerOpt = new RequestContainerOptions<TUserSnapshot>();
             containerOpt = opt.ContainerOptionsFunc?.Invoke(containerOpt) ?? containerOpt;
             services.AddSingleton(containerOpt);
+            services.AddDefaultSecurityLoginHandler<TInput, TUserSnapshot>();
+            services.AddAuthorization(x =>
+            {
+                opt.ConfigurateAuthorizationOptions?.Invoke(opt, x);
+                configurateAuthorizationOptions?.Invoke(opt!, containerOpt, x);
+            });
+            services.AddAuthentication(x =>
+            {
+                x.DefaultForbidScheme = containerOpt.AuthenticationScheme;
+                x.DefaultAuthenticateScheme = containerOpt.AuthenticationScheme;
+                x.DefaultScheme = containerOpt.AuthenticationScheme;
+                x.DefaultChallengeScheme = containerOpt.AuthenticationScheme;
+                opt.ConfigurateAuthenticationOptions?.Invoke(opt, x);
+                configurateAuthenticationOptions?.Invoke(opt,containerOpt, x);
+            });
             return services;
         }
     }

@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SecurityLogin.AccessSession;
 using System;
 using System.Net;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.AspNetCore
@@ -28,28 +31,26 @@ namespace SecurityLogin.AspNetCore
             }
         }
     }
-    public abstract class CrossAuthenticationHandlerBase<TRequestContainer>:IAuthenticationHandler
+    public abstract class CrossAuthenticationHandlerBase<TRequestContainer>: AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        private HttpContext? context;
-        private AuthenticationScheme? scheme;
-
-        protected CrossAuthenticationHandlerBase(IRequestContainerConverter<TRequestContainer> requestContainerConverter)
+        protected CrossAuthenticationHandlerBase(IOptionsMonitor<AuthenticationSchemeOptions> options,
+            ILoggerFactory logger, 
+            UrlEncoder encoder, 
+            ISystemClock clock,
+            IRequestContainerConverter<TRequestContainer> requestContainerConverter)
+            :base(options,logger,encoder,clock)
         {
             RequestContainerConverter = requestContainerConverter ?? throw new ArgumentNullException(nameof(requestContainerConverter));
         }
 
-        public AuthenticationScheme? AuthenticationScheme => scheme;
-
-        public HttpContext? HttpContext => context;
-
         public IRequestContainerConverter<TRequestContainer> RequestContainerConverter { get; }
 
-        public async Task<AuthenticateResult> AuthenticateAsync()
+        protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            Throws.ThrowHttpContextIsNull(context);
+            Throws.ThrowHttpContextIsNull(Context);
             if (!await IsSkipAuthAsync())
             {
-                var container = await RequestContainerConverter.ConvertAsync(context!);
+                var container = await RequestContainerConverter.ConvertAsync(Context);
                 try
                 {
                     return await CheckAsync();
@@ -64,34 +65,9 @@ namespace SecurityLogin.AspNetCore
             }
             return await SkipAsync();
         }
-
         protected abstract Task<AuthenticateResult> CheckAsync();
 
         protected abstract Task<AuthenticateResult> SkipAsync();
-
-        public virtual Task ChallengeAsync(AuthenticationProperties? properties)
-        {
-            if (context != null)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-            }
-            return Task.CompletedTask;
-        }
-
-        public virtual Task ForbidAsync(AuthenticationProperties? properties)
-        {
-            if (context != null)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-            }
-            return Task.CompletedTask;
-        }
-        public virtual Task InitializeAsync(AuthenticationScheme scheme, HttpContext context)
-        {
-            this.context = context;
-            this.scheme = scheme;
-            return Task.CompletedTask;
-        }
 
         protected abstract Task<bool> IsSkipAuthAsync();
     }

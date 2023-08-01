@@ -5,14 +5,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using SecurityLogin.AccessSession;
 using SecurityLogin.AspNetCore;
 using SecurityLogin.AspNetCore.Services;
 using StackExchange.Redis;
 using System;
-using System.Reflection;
 using System.Security.Claims;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,10 +86,10 @@ app.Run();
 
 public class MyCross : CrossAuthenticationHandler<UserSnapshot>
 {
-    public MyCross(IRequestContainerConverter<UserStatusContainer<UserSnapshot>> requestContainerConverter, RequestContainerOptions<UserSnapshot> requestContainerOptions)
-        : base(requestContainerConverter, requestContainerOptions)
+    public MyCross(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IRequestContainerConverter<UserStatusContainer<UserSnapshot>> requestContainerConverter, RequestContainerOptions<UserSnapshot> requestContainerOptions) : base(options, logger, encoder, clock, requestContainerConverter, requestContainerOptions)
     {
     }
+
     protected override Task<AuthenticationTicket> SucceedAsync(UserStatusContainer<UserSnapshot> container, RequestContainerOptions<UserSnapshot> options)
     {
         return Task.FromResult(new AuthenticationTicket(new ClaimsPrincipal(new ClaimsIdentity[]

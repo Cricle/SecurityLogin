@@ -441,3 +441,6 @@ uploadnuget.ps1
 
 .codacy-coverage/**/*.*
 .sonarqube/**/*.*
+/samples/SecurityLogin.AspNetCore.Sample/app.db
+/samples/SecurityLogin.AspNetCore.Sample/app.db-shm
+/samples/SecurityLogin.AspNetCore.Sample/app.db-wal
