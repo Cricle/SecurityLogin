@@ -24,12 +24,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.AddSecurityDefinition("Authorization", new OpenApiSecurityScheme
+    c.AddSecurityDefinition("asd", new OpenApiSecurityScheme
     {
-        Name = "Authorization",
+        Name = "asd",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
-        Scheme = "Authorization"
+        Scheme = "asd"
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -39,9 +39,9 @@ builder.Services.AddSwaggerGen(c =>
                 Reference=new OpenApiReference
                 {
                     Type= ReferenceType.SecurityScheme,
-                    Id="Authorization"
+                    Id="asd"
                 },
-                Scheme= "Authorization",
+                Scheme= "asd",
                 In= ParameterLocation.Header
             },Array.Empty<string>()
         }
@@ -65,7 +65,16 @@ builder.Services.AddSingleton<IEntityConvertor, TextJsonEntityConvertor>();
 builder.Services.AddDistributedLockFactory().AddInRedisFinder();
 builder.Services.AddScoped<MyCross>();
 builder.Services.AddSecurityLoginWithDefaultIdentity<UserSnapshot, UserSnapshot, MyCross>(
-    req => Task.FromResult(req.Input.Set(x => x.Token = req.Token)), "SecurityLogin.Session");
+    req => Task.FromResult(req.Input.Set(x => x.Token = req.Token)), "SecurityLogin.Session",
+    options =>
+    {
+        options.ContainerOptionsFunc = opt =>
+        {
+            opt.AuthenticationScheme = "asd";
+            opt.AuthHeader = "asd";
+            return opt;
+        };
+    });
 
 var app = builder.Build();
 
@@ -78,6 +87,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
