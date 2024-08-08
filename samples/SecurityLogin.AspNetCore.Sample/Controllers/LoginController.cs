@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SecurityLogin.AccessSession;
+using SecurityLogin.AppLogin;
+using SecurityLogin.AppLogin.Models;
 using SecurityLogin.AspNetCore.Services;
 using SecurityLogin.Test.AspNetCore.Models;
 using System.Linq;
@@ -52,12 +54,25 @@ namespace SecurityLogin.AspNetCore.Controllers
     public class AppController:ControllerBase
     {
         private readonly AppDbContext appDbContext;
+        private readonly IIdentityService<AppSession, AppSession> identityService;
+
+        public AppController(AppDbContext appDbContext, IIdentityService<AppSession, AppSession> identityService)
+        {
+            this.appDbContext = appDbContext;
+            this.identityService = identityService;
+        }
 
         [HttpGet("[action]")]
         public IActionResult All()
         {
             var allKeys = appDbContext.AppInfos.AsNoTracking().ToList();
             return Ok(allKeys);
+        }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Issure([FromQuery]string appKey)
+        {
+            var res = await identityService.IssureTokenAsync(new AppSession { AppKey = appKey });
+            return Ok(res);
         }
     }
     [ApiController]

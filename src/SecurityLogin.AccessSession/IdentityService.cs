@@ -4,68 +4,9 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.AccessSession
 {
-    public readonly record struct IdentityAsTokenInfoRequest<TInput>
-    {
-        public readonly TInput Input;
-
-        public readonly TimeSpan? CacheTime;
-
-        public readonly string Key;
-
-        public readonly string Token;
-
-        public IdentityAsTokenInfoRequest(TInput input, TimeSpan? cacheTime, string key, string token)
-        {
-            Input = input;
-            CacheTime = cacheTime;
-            Key = key;
-            Token = token;
-        }
-    }
     public delegate Task<TTokenInfo> IdentityAsTokenInfoHandler<TInput, TTokenInfo>(IdentityAsTokenInfoRequest<TInput> request);
     public delegate string IdentityGetKeyHandler(string token);
     public delegate Task<string> IdentityGenerateTokenHandler<TInput>(TInput input);
-
-    public class DelegateIdentityService<TInput, TTokenInfo> : IdentityService<TInput, TTokenInfo>
-    {
-        public DelegateIdentityService(ICacheVisitor cacheVisitor,
-            IdentityAsTokenInfoHandler<TInput, TTokenInfo> asTokenInfoHandler,
-            IdentityGetKeyHandler? getKeyHandler=null,
-            IdentityGenerateTokenHandler<TInput>? generateTokenHandler=null)
-            : base(cacheVisitor)
-        {
-            AsTokenInfoHandler = asTokenInfoHandler;
-            GetKeyHandler = getKeyHandler;
-            GenerateTokenHandler = generateTokenHandler;
-        }
-
-        public IdentityAsTokenInfoHandler<TInput, TTokenInfo> AsTokenInfoHandler { get; }
-
-        public IdentityGetKeyHandler? GetKeyHandler { get; }
-
-        public IdentityGenerateTokenHandler<TInput>? GenerateTokenHandler { get; }
-
-        protected override Task<TTokenInfo> AsTokenInfoAsync(TInput input, TimeSpan? cacheTime, string key, string token)
-        {
-            return AsTokenInfoHandler(new IdentityAsTokenInfoRequest<TInput>(input,cacheTime,key,token));
-        }
-        protected override Task<string> GenerateTokenAsync(TInput input)
-        {
-            if (GenerateTokenHandler != null)
-            {
-                return GenerateTokenHandler(input);
-            }
-            return base.GenerateTokenAsync(input);
-        }
-        protected override string GetKey(string token)
-        {
-            if (GetKeyHandler!=null)
-            {
-                return GetKeyHandler(token);
-            }
-            return base.GetKey(token);
-        }
-    }
     public class IdentityService<T> : IdentityService<T, T>
     {
         public IdentityService(ICacheVisitor cacheVisitor) : base(cacheVisitor)

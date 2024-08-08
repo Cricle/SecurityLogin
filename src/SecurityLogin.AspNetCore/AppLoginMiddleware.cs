@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using SecurityLogin.AccessSession;
 using SecurityLogin.AppLogin;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.AspNetCore
 {
-    internal sealed class AppLoginMiddleware<TAppInfoSnapshot> : IMiddleware
+    internal sealed class AppLoginMiddleware<TInput,TAppSession,TAppInfoSnapshot> : IMiddleware
         where TAppInfoSnapshot:IAppInfoSnapshot
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -27,15 +28,15 @@ namespace SecurityLogin.AspNetCore
                 var appKey = loginProvider.GetAppKey(context);
                 if (!string.IsNullOrEmpty(appKey))
                 {
-                    var snapshotProvider = context.RequestServices.GetRequiredService<IAppInfoSnapshotProvider<TAppInfoSnapshot>>();
-                    var snapshot = await snapshotProvider.GetAppInfoSnapshotAsync(appKey);
-                    if (snapshot != null)
+                    var snapshotProvider = context.RequestServices.GetRequiredService<IIdentityService<TInput, TAppSession>>();
+                    var session = await snapshotProvider.GetTokenInfoAsync(appKey);
+                    if (session != null)
                     {
-                        context.Features.Set(snapshot);
+                        context.Features.Set(session);
                     }
                     else
                     {
-                        await loginProvider.AppSnatsnopNotFoundHandlerAsync(context, appKey);
+                        await loginProvider.AppSessionEmptyHandlerAsync(context, appKey);
                         return;
                     }
                 }

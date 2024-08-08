@@ -12,9 +12,9 @@ namespace SecurityLogin.AspNetCore
 
         public string? AppKeyEmptyResponseMsg { get; set; } = "App key is empty";
 
-        public int AppSnatshopEmptyStatusCode { get; set; } = StatusCodes.Status403Forbidden;
+        public int AppSessionEmptyStatusCode { get; set; } = StatusCodes.Status403Forbidden;
 
-        public string? AppSnatshopEmptyResponseMsg { get; set; } = "App session not found";
+        public string? AppSessionEmptyResponseMsg { get; set; } = "App session not found";
 
         public List<PathString> NotNeedToCheck { get; } = new List<PathString>();
 

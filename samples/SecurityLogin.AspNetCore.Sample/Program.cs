@@ -68,22 +68,14 @@ builder.Services.AddScoped<LoginService>();
 builder.Services.AddSingleton<IEntityConvertor, TextJsonEntityConvertor>();
 builder.Services.AddDistributedLockFactory().AddInRedisFinder();
 builder.Services.AddScoped<MyCross>();
-builder.Services.AddScoped<LongAppInfoSnapshotProvider>()
-    .AddAppLogin<LongAppInfoSnapshotProvider>()
-    .AddAppLoginDefaultProvider(new AppLoginOptions 
+builder.Services.AddAppLogin<LongAppInfoSnapshotProvider>(new AppLoginOptions
+{
+    NotNeedToCheck =
     {
-    });
-builder.Services.AddSecurityLoginWithDefaultIdentity<UserSnapshot, UserSnapshot, MyCross>(
-    req => Task.FromResult(req.Input.Set(x => x.Token = req.Token)), "SecurityLogin.Session",
-    options =>
-    {
-        options.ContainerOptionsFunc = opt =>
-        {
-            opt.AuthenticationScheme = "asd";
-            opt.AuthHeader = "asd";
-            return opt;
-        };
-    });
+        new PathString("/app")
+    }
+});
+builder.Services.AddSecurityLoginWithDefaultIdentity<MyCross>();
 
 var app = builder.Build();
 

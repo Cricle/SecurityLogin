@@ -23,14 +23,14 @@ namespace SecurityLogin.AspNetCore
             return context.Response.WriteAsync(options.AppKeyEmptyResponseMsg);
         }
 
-        public Task AppSnatsnopNotFoundHandlerAsync(HttpContext context, string appKey)
+        public Task AppSessionEmptyHandlerAsync(HttpContext context,string appKey)
         {
-            context.Response.StatusCode = options.AppSnatshopEmptyStatusCode;
-            if (string.IsNullOrEmpty(options.AppSnatshopEmptyResponseMsg))
+            context.Response.StatusCode = options.AppSessionEmptyStatusCode;
+            if (string.IsNullOrEmpty(options.AppSessionEmptyResponseMsg))
             {
                 return Task.CompletedTask;
             }
-            return context.Response.WriteAsync(options.AppSnatshopEmptyResponseMsg);
+            return context.Response.WriteAsync(options.AppSessionEmptyResponseMsg);
         }
 
         public string? GetAppKey(HttpContext context)

@@ -9,7 +9,7 @@ namespace SecurityLogin.AspNetCore
 
         Task AppKeyEmptyHandlerAsync(HttpContext context);
 
-        Task AppSnatsnopNotFoundHandlerAsync(HttpContext context,string appKey);
+        Task AppSessionEmptyHandlerAsync(HttpContext context, string appKey);
 
         string? GetAppKey(HttpContext context);
     }

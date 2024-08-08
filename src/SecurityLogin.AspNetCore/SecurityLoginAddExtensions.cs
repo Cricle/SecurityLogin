@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using SecurityLogin.AccessSession;
+using SecurityLogin.AppLogin.Models;
 using SecurityLogin.AspNetCore;
 using System;
+using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -19,9 +21,34 @@ namespace Microsoft.Extensions.DependencyInjection
     }
     public static class SecurityLoginAddExtensions
     {
+        internal static T Set<T>(this T val,Action<T> action)
+        {
+            action(val);
+            return val;
+        }
+        public static IServiceCollection AddAppLoginDefaultSessionManager(this IServiceCollection services,
+            string getKeyPrefx="SecurityLogin:AppSession",
+            IdentityGenerateTokenHandler<AppSession>? generateTokenHandler = null)
+        {
+            return AddAppLoginDefaultSessionManager(services, req => Task.FromResult(req.Input.Set(x => x.Token = req.Token)), getKeyPrefx, generateTokenHandler);
+        }
+        public static IServiceCollection AddAppLoginDefaultSessionManager<TInput,TAppSession>(this IServiceCollection services,
+            IdentityAsTokenInfoHandler<TInput, TAppSession> asTokenInfoHandler,
+            string getKeyPrefx = "SecurityLogin:UserSession",
+            IdentityGenerateTokenHandler<TInput>? generateTokenHandler = null)
+        {
+            services.AddScoped<IIdentityService<TInput, TAppSession>>(p =>
+                new DelegateIdentityService<TInput, TAppSession>(
+                    p.GetRequiredService<ICacheVisitor>(),
+                    asTokenInfoHandler,
+                    tk => KeyGenerator.Concat(getKeyPrefx, tk),
+                    generateTokenHandler));
+            return services;
+        }
+
         public static IServiceCollection AddSecurityLoginWithDefaultIdentity<TInput, TUserSnapshot>(this IServiceCollection services,
             IdentityAsTokenInfoHandler<TInput, TUserSnapshot> asTokenInfoHandler,
-            string getKeyPrefx,
+            string getKeyPrefx = "SecurityLogin:UserSession",
             Action<SecurityLoginAddOptions<TUserSnapshot>>? optionsFun = null,
             IdentityGenerateTokenHandler<TInput>? generateTokenHandler = null)
         {
@@ -33,6 +60,29 @@ namespace Microsoft.Extensions.DependencyInjection
                     tk => KeyGenerator.Concat(getKeyPrefx, tk),
                     generateTokenHandler));
             return services;
+        }
+        public static IServiceCollection AddSecurityLoginWithDefaultIdentity<THandler>(this IServiceCollection services,
+            string getKeyPrefx = "SecurityLogin:UserSession",
+            string authenticationScheme = "SecurityLogin",
+            string authHeader = "SecurityLogin",
+            Action<SecurityLoginAddOptions<UserSnapshot>>? optionsFun = null,
+            IdentityGenerateTokenHandler<UserSnapshot>? generateTokenHandler = null)
+                where THandler : IAuthenticationHandler
+        {
+            return AddSecurityLoginWithDefaultIdentity<UserSnapshot, UserSnapshot, THandler>(services,
+                req => Task.FromResult(req.Input.Set(x => x.Token = req.Token)),
+                getKeyPrefx,
+                options =>
+                {
+                    options.ContainerOptionsFunc = opt =>
+                    {
+                        opt.AuthenticationScheme = authenticationScheme;
+                        opt.AuthHeader = authHeader;
+                        return opt;
+                    };
+                    optionsFun?.Invoke(options);
+                }, 
+                generateTokenHandler);
         }
         public static IServiceCollection AddSecurityLoginWithDefaultIdentity<TInput, TUserSnapshot, THandler>(this IServiceCollection services,
             IdentityAsTokenInfoHandler<TInput, TUserSnapshot> asTokenInfoHandler,

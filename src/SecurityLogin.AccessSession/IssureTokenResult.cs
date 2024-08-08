@@ -52,11 +52,5 @@ namespace SecurityLogin.AccessSession
         public string? Id { get; set; }
 
         public string? Name { get; set; }
-
-        public UserSnapshot Set(Action<UserSnapshot> action)
-        {
-            action?.Invoke(this);
-            return this;
-        }
     }
 }
