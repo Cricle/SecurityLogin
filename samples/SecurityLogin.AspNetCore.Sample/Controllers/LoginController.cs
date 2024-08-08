@@ -46,6 +46,20 @@ namespace SecurityLogin.AspNetCore.Controllers
             return Ok(val.Value);
         }
     }
+
+    [ApiController]
+    [Route("[controller]")]
+    public class AppController:ControllerBase
+    {
+        private readonly AppDbContext appDbContext;
+
+        [HttpGet("[action]")]
+        public IActionResult All()
+        {
+            var allKeys = appDbContext.AppInfos.AsNoTracking().ToList();
+            return Ok(allKeys);
+        }
+    }
     [ApiController]
     [Route("[controller]")]
     public class LoginController : ControllerBase

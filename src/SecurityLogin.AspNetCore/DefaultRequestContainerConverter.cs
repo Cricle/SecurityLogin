@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using SecurityLogin.AccessSession;
 using SecurityLogin.AppLogin;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace SecurityLogin.AspNetCore
 {

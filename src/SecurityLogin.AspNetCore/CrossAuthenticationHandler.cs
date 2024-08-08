@@ -9,19 +9,6 @@ using System.Threading.Tasks;
 
 namespace SecurityLogin.AspNetCore
 {
-    public static class SecurityLoginConsts
-    {
-        public const string AuthenticationScheme = "se-defaute";
-        public const string DefaultAuthHeader = "Authorization";
-        public const string DefaultAPPKeyHeader = "SecurityLogin.AppKey";
-        public const string DefaultAPPAccessHeader = "SecurityLogin.Access";
-    }
-    [Flags]
-    public enum UserStatusFailTypes
-    {
-        NoAppLogin,
-        NoUserSnapshot
-    }
     public class CrossAuthenticationHandler<TUserSnapshot> : CrossAuthenticationHandlerBase<UserStatusContainer<TUserSnapshot>>
     {
         private static readonly Task<bool> falseTask = Task.FromResult(false);
@@ -31,10 +18,16 @@ namespace SecurityLogin.AspNetCore
         public CrossAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
-            ISystemClock clock, 
+#if !NET8_0_OR_GREATER
+            ISystemClock clock,
+#endif
             IRequestContainerConverter<UserStatusContainer<TUserSnapshot>> requestContainerConverter,
             RequestContainerOptions<TUserSnapshot> requestContainerOptions)
-            : base(options, logger, encoder, clock,requestContainerConverter)
+            : base(options, logger, encoder
+#if !NET8_0_OR_GREATER
+                  , clock
+#endif
+                  , requestContainerConverter)
         {
             RequestContainerOptions = requestContainerOptions;
         }
@@ -56,7 +49,7 @@ namespace SecurityLogin.AspNetCore
             {
                 if (!res.HasUserSnapshot)
                 {
-                    await RunFailOptionsAsync(res,UserStatusFailTypes.NoUserSnapshot);
+                    await RunFailOptionsAsync(res, UserStatusFailTypes.NoUserSnapshot);
                     return await FailAsync(UserStatusFailTypes.NoUserSnapshot);
                 }
             }
@@ -64,7 +57,7 @@ namespace SecurityLogin.AspNetCore
             var succeed = RequestContainerOptions.Succeed;
             if (succeed != null)
             {
-                succeedTicket=await RequestContainerOptions.Succeed!.Invoke(Context!, res, succeedTicket);
+                succeedTicket = await RequestContainerOptions.Succeed!.Invoke(Context!, res, succeedTicket);
             }
             Context!.Features.Set(res);
             if (res.UserSnapshot != null)
@@ -75,9 +68,9 @@ namespace SecurityLogin.AspNetCore
             {
                 Context.Features.Set(res.AppSnapshot);
             }
-            return AuthenticateResult.Success(succeedTicket);            
+            return AuthenticateResult.Success(succeedTicket);
         }
-        protected async Task RunFailOptionsAsync(UserStatusContainer<TUserSnapshot> container,UserStatusFailTypes type)
+        protected async Task RunFailOptionsAsync(UserStatusContainer<TUserSnapshot> container, UserStatusFailTypes type)
         {
             var succeed = RequestContainerOptions.Failed;
             if (succeed != null)
@@ -85,7 +78,7 @@ namespace SecurityLogin.AspNetCore
                 await RequestContainerOptions.Failed!.Invoke(Context, container, type);
             }
         }
-        protected virtual Task<AuthenticationTicket> SucceedAsync(UserStatusContainer<TUserSnapshot> container,RequestContainerOptions<TUserSnapshot> options)
+        protected virtual Task<AuthenticationTicket> SucceedAsync(UserStatusContainer<TUserSnapshot> container, RequestContainerOptions<TUserSnapshot> options)
         {
             if (options.SucceedDoNothing)
             {

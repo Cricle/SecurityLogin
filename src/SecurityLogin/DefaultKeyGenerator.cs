@@ -16,7 +16,7 @@ namespace SecurityLogin.AppLogin
 
         public Task<string> GenSecretKeyAsync()
         {
-            var appSecretKey = Guid.NewGuid().ToString("N") + DateTime.Now.Ticks + RandomProvider.GetRandom(1111, 9999);
+            var appSecretKey = Guid.NewGuid().ToString("N") + DateTime.UtcNow.Ticks + RandomProvider.GetRandom(1111, 9999);
             var res = Md5EncryptionHelper.Instance.ComputeHashToString(appSecretKey);
             return Task.FromResult(res);
         }

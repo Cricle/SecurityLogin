@@ -1,43 +1,26 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SecurityLogin.AccessSession;
 using System;
-using System.Net;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace SecurityLogin.AspNetCore
 {
-    public static class AuthExtensions
-    {
-        public static IServiceCollection AddDefaultSecurityLoginHandler<TInput,TUserSnapshot>(this IServiceCollection services)
-        {
-            services.AddSingleton<IRequestContainerConverter<UserStatusContainer<TUserSnapshot>>,DefaultRequestContainerConverter<TUserSnapshot, TInput>>();
-            services.AddScoped<CrossAuthenticationHandler<TUserSnapshot>>();
-            return services;
-        }
-    }
-    internal static class Throws
-    {
-        public static void ThrowHttpContextIsNull(HttpContext? context)
-        {
-            if (context == null)
-            {
-                throw new InvalidOperationException("The HttpContext is null");
-            }
-        }
-    }
     public abstract class CrossAuthenticationHandlerBase<TRequestContainer>: AuthenticationHandler<AuthenticationSchemeOptions>
     {
         protected CrossAuthenticationHandlerBase(IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger, 
-            UrlEncoder encoder, 
+            UrlEncoder encoder,
+#if !NET8_0_OR_GREATER
             ISystemClock clock,
+#endif
             IRequestContainerConverter<TRequestContainer> requestContainerConverter)
-            :base(options,logger,encoder,clock)
+            :base(options,logger,encoder
+#if !NET8_0_OR_GREATER
+                 ,clock
+#endif
+                 )
         {
             RequestContainerConverter = requestContainerConverter ?? throw new ArgumentNullException(nameof(requestContainerConverter));
         }
