@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ao.Cache.InMemory" Version="1.5.0-preview-7" />
+    <PackageReference Include="Ao.Cache.InMemory" Version="1.5.1-preview.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
   </ItemGroup>
 
